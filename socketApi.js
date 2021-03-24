@@ -169,103 +169,97 @@ streamingChildProc2.kill('SIGINT');
 streamingChildProc3.kill('SIGINT');
 
 })
-      socket.on('startStreaming', function (data) {
+socket.on('startStreaming', function (data) {
           var nodenodeIP = data
-          console.log("STREAMING")
-var rtspURL = "rtsp://admin:UUnv9njxg123@" + nodenodeIP + ":554/cam/realmonitor?channel=1&subtype=0"
-var rtspURL2 = "rtsp://admin:UUnv9njxg123@" + nodenodeIP + ":555/cam/realmonitor?channel=1&subtype=0"
-var rtspURL3 = "rtsp://admin:UUnv9njxg123@" + nodenodeIP + ":556/cam/realmonitor?channel=1&subtype=0"
-            streamingChildProc = spawn("ffmpeg", [
-              "-fflags", "nobuffer", 
-            "-rtsp_transport", "tcp", 
-              "-i",  rtspURL,
-              "-vsync", "0" ,
-              "-copyts", 
-              "-vcodec", "copy" ,
-              "-movflags", "frag_keyframe+empty_moov", 
-              "-an", 
-              "-hls_flags", "delete_segments+append_list" ,
-              "-f", "segment", 
-              "-segment_list_flags", "live", 
-              "-segment_time", "1" ,
-              "-segment_list_size", "1" ,
-              "-segment_wrap", "10",
-              "-segment_format", "mpegts" ,
-              "-segment_list", "./public/streaming/index.m3u8"  ,
-              "-segment_list_type", "m3u8", 
-              "-segment_list_entry_prefix", "./public/streaming/", 
-              "./public/streaming/%3d.ts"
-            ]);
-            streamingChildProc.stdout.on('data', (data) => {
-              console.log(`stdout: ${data}`);
-            });
-            streamingChildProc.stderr.on('data', (data) => {
-              console.log(`stderr: ${data}`);
-            });
+         console.log('yup')
 
 
+streamingChildProc = spawn("ffmpeg", [
+  "-fflags", "nobuffer" ,
+ "-rtsp_transport", "tcp", 
+ "-i", "rtsp://admin:UUnv9njxg123@192.168.196.164:554/cam/realmonitor?channel=1&subtype=0", 
+ "-vsync", "0", 
+ "-copyts", 
+ "-vcodec", "copy", 
+ "-movflags", "frag_keyframe+empty_moov" ,
+ "-an", 
+ "-hls_flags", "delete_segments+append_list", 
+ "-f", "segment",
+ "-segment_list_flags", "live",
+ "-segment_time", "10",
+ "-segment_list_size", "3",
+ "-segment_format", "mpegts",
+ "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8",
+ "-segment_list_type", "m3u8",
+ "-segment_list_entry_prefix", "",
+ "-segment_wrap", "100",
+ "public/liveStream/cam1/%d.ts"
 
-            streamingChildProc2 = spawn("ffmpeg", [
-              "-fflags", "nobuffer", 
-            "-rtsp_transport", "tcp", 
-              "-i", rtspURL2 ,
-              "-vsync", "0" ,
-              "-copyts", 
-              "-vcodec", "copy" ,
-              "-movflags", "frag_keyframe+empty_moov", 
-              "-an", 
-              "-hls_flags", "delete_segments+append_list" ,
-              "-f", "segment", 
-              "-segment_list_flags", "live", 
-              "-segment_time", "10" ,
-              "-segment_list_size", "1" ,
-              "-segment_wrap", "10",
-              "-segment_format", "mpegts" ,
-              "-segment_list", "/home/spd/CrimeCameraBackEnd/public/streaming/index2.m3u8"  ,
-              "-segment_list_type", "m3u8", 
-              "-segment_list_entry_prefix", "/home/spd/CrimeCameraBackEnd/public/streaming", 
-              "/home/spd/CrimeCameraBackEnd/public/streaming/2%3d.ts"
-            ]);
-            streamingChildProc2.stdout.on('data', (data2) => {
-              console.log(`stdout: ${data2}`);
-            });
-            streamingChildProc2.stderr.on('data', (data2) => {
-              console.log(`stderr: ${data2}`);
-            });
+]);
+streamingChildProc2 = spawn("ffmpeg", [
+  "-fflags", "nobuffer" ,
+ "-rtsp_transport", "tcp", 
+ "-i", "rtsp://admin:UUnv9njxg123@192.168.196.164:555/cam/realmonitor?channel=1&subtype=0", 
+ "-vsync", "0", 
+ "-copyts", 
+ "-vcodec", "copy", 
+ "-movflags", "frag_keyframe+empty_moov" ,
+ "-an", 
+ "-hls_flags", "delete_segments+append_list", 
+ "-f", "segment",
+ "-segment_list_flags", "live",
+ "-segment_time", "10",
+ "-segment_list_size", "3",
+ "-segment_format", "mpegts",
+ "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam2/index2.m3u8",
+ "-segment_list_type", "m3u8",
+ "-segment_list_entry_prefix", "",
+ "-segment_wrap", "100",
+ "public/liveStream/cam2/2%d.ts"
 
+]);
+streamingChildProc3 = spawn("ffmpeg", [
+  "-fflags", "nobuffer" ,
+ "-rtsp_transport", "tcp", 
+ "-i", "rtsp://admin:UUnv9njxg123@192.168.196.164:556/cam/realmonitor?channel=1&subtype=0", 
+ "-vsync", "0", 
+ "-copyts", 
+ "-vcodec", "copy", 
+ "-movflags", "frag_keyframe+empty_moov" ,
+ "-an", 
+ "-hls_flags", "delete_segments+append_list", 
+ "-f", "segment",
+ "-segment_list_flags", "live",
+ "-segment_time", "10",
+ "-segment_list_size", "3",
+ "-segment_format", "mpegts",
+ "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam3/index3.m3u8",
+ "-segment_list_type", "m3u8",
+ "-segment_list_entry_prefix", "",
+ "-segment_wrap", "100",
+ "public/liveStream/cam3/3%d.ts"
 
-            streamingChildProc3 = spawn("ffmpeg", [
-              "-fflags", "nobuffer", 
-            "-rtsp_transport", "tcp", 
-              "-i", rtspURL3 ,
-              "-vsync", "0" ,
-              "-copyts", 
-              "-vcodec", "copy" ,
-              "-movflags", "frag_keyframe+empty_moov", 
-              "-an", 
-              "-hls_flags", "delete_segments+append_list" ,
-              "-f", "segment", 
-              "-segment_list_flags", "live", 
-              "-segment_time", "10" ,
-              "-segment_list_size", "1" ,
-              "-segment_format", "mpegts" ,
-              "-segment_wrap", "10",
-              "-segment_list", "/home/spd/CrimeCameraBackEnd/public/streaming/index3.m3u8"  ,
-              "-segment_list_type", "m3u8",
-              "-segment_list_entry_prefix", "/home/spd/CrimeCameraBackEnd/public/streaming", 
-              "/home/spd/CrimeCameraBackEnd/public/streaming/3%3d.ts"
-            ]);
-            streamingChildProc3.stdout.on('data', (data2) => {
-              console.log(`stdout: ${data2}`);
-            });
-            streamingChildProc3.stderr.on('data', (data2) => {
-              console.log(`stderr: ${data2}`);
-            });
+]);
+streamingChildProc.stdout.on('data', (data) => {
+console.log(`stdout: ${data}`);
+});
+streamingChildProc.stderr.on('data', (data) => {
+console.log(`stderr: ${data}`);
+});
+streamingChildProc2.stdout.on('data', (data) => {
+  console.log(`stdout: ${data}`);
+  });
+  streamingChildProc2.stderr.on('data', (data) => {
+  console.log(`stderr: ${data}`);
+  });
+  streamingChildProc3.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+    });
+    streamingChildProc3.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+    });
 
-            
-
-
-          })
+})
 
 
         socket.on('videoInfo', function (data) {

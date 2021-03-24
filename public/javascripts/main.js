@@ -112,8 +112,7 @@ var newGrid = `
               <div class= 'col  mx-n3 my-n3'>
                 
               <div class= 'card ' >
-                <video id='video1Cont' controls preload="none">
-                <source  src="http://192.168.196.128:3001/streaming/index.m3u8" type="application/x-mpegURL"/>
+                <video controls='controls' autoplay width='100%' height='100%' id='video' >
                 </video> 
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 1</h5>
@@ -134,9 +133,8 @@ var newGrid = `
               </div>
               <div class= 'col mx-n3 my-n3'>
               <div class= 'card ' >
-                <video  id='video2Cont' controls preload="none">
-                <source  src="http://192.168.196.128:3001/streaming/index2.m3u8" type="application/x-mpegURL"/>
-                </video> 
+                <video controls='controls' autoplay width='100%' height='100%' id='video2' >
+                </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 2</h5>
                   
@@ -159,9 +157,8 @@ var newGrid = `
               <div class= 'col  mx-n3 my-n3'>
                 
               <div class= 'card ' >
-                <video id='video3Cont' controls  preload="none">
-                <source src="http://192.168.196.128:3001/streaming/index3.m3u8" type="application/x-mpegURL"/>
-                </video> 
+               <video controls='controls' autoplay width='100%' height='100%' id='video3' >
+                </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 3</h5>
                   
@@ -200,11 +197,29 @@ $(function () {
     $('#myModal').modal('show');
   });
   $('body').on('click', '#liveStreamStart', function () {
-    dreamHost.emit('startStreaming', currentCamIP)
-    document.getElementById("video3Cont").play();
-    document.getElementById("video2Cont").play();
-    document.getElementById("video1Cont").play();
-
+dreamHost.emit('startStreaming')
+var video = document.getElementById('video');
+    var video2 = document.getElementById('video2');
+    var video3 = document.getElementById('video3');
+  var videoSrc = '/liveStream/cam1/index.m3u8';
+  var videoSrc2 = '/liveStream/cam2/index2.m3u8';
+  var videoSrc3 = '/liveStream/cam3/index3.m3u8';
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    var hls2 = new Hls();
+    var hls3 = new Hls();
+    hls.loadSource(videoSrc);
+    hls.attachMedia(video);
+    hls2.loadSource(videoSrc2);
+    hls2.attachMedia(video2);
+    hls3.loadSource(videoSrc3);
+    hls3.attachMedia(video3);
+  }
+  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = videoSrc;
+    video2.src = videoSrc2;
+    video3.src = videoSrc3;
+  }
 
   });
 
