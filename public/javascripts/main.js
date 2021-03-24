@@ -1,5 +1,5 @@
 var socket = io();
-var dreamHost = io('http://192.168.196.123:3001/cameras');
+var dreamHost = io('http://192.168.196.128:3001/cameras');
 var cameraNode1 = io('//192.168.196.89:3000/');
 let map
 var marker
@@ -113,7 +113,7 @@ var newGrid = `
                 
               <div class= 'card ' >
                 <video id='video1Cont' controls preload="none">
-                <source  src="http://192.168.196.123:3001/streaming/index.m3u8" type="application/x-mpegURL"/>
+                <source  src="http://192.168.196.128:3001/streaming/index.m3u8" type="application/x-mpegURL"/>
                 </video> 
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 1</h5>
@@ -135,7 +135,7 @@ var newGrid = `
               <div class= 'col mx-n3 my-n3'>
               <div class= 'card ' >
                 <video  id='video2Cont' controls preload="none">
-                <source  src="http://192.168.196.123:3001/streaming/index2.m3u8" type="application/x-mpegURL"/>
+                <source  src="http://192.168.196.128:3001/streaming/index2.m3u8" type="application/x-mpegURL"/>
                 </video> 
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 2</h5>
@@ -160,7 +160,7 @@ var newGrid = `
                 
               <div class= 'card ' >
                 <video id='video3Cont' controls  preload="none">
-                <source src="http://192.168.196.123:3001/streaming/index3.m3u8" type="application/x-mpegURL"/>
+                <source src="http://192.168.196.128:3001/streaming/index3.m3u8" type="application/x-mpegURL"/>
                 </video> 
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 3</h5>
@@ -260,7 +260,7 @@ $(function () {
       $("li").each(function (index) {
         $(this).css('background', 'white')
       })
-      var cameraVideoURL = "http://192.168.196.123:3001/cameras/videoDatesbyNode/" + marker.customInfo
+      var cameraVideoURL = "http://192.168.196.128:3001/cameras/videoDatesbyNode/" + marker.customInfo
       nodeID = marker.customInfo
       $.getJSON(cameraVideoURL, function (data) {
         console.log(data)
@@ -395,7 +395,7 @@ $(function () {
 
   var videoFiles = []
 
-  $.getJSON('http://192.168.196.123:3001/cameras/currentcameraList', function (data) {
+  $.getJSON('http://192.168.196.128:3001/cameras/currentcameraList', function (data) {
     console.log(data)
     var lihtmlCameras = ""
 
@@ -470,7 +470,7 @@ $(function () {
         });
         console.log(this.id);
         ///////
-        $.getJSON("http://192.168.196.123:3001/cameras/getCameraInfo/" + this.id, function (data) {
+        $.getJSON("http://192.168.196.128:3001/cameras/getCameraInfo/" + this.id, function (data) {
 
           console.log(data)
 
@@ -725,8 +725,8 @@ $(function () {
         this.selectedDate = new Date($target.dataset.date);
         console.log(this.selectedDate)
         var selectedDate = moment(this.selectedDate).format("YYYY-MM-DD")
-        var getIPString = "http://192.168.196.123:3001/cameras/getIP/" + nodeID
-        var getURLString = "http://192.168.196.123:3001/cameras/videosByDay/" + selectedDate + "/" + nodeID
+        var getIPString = "http://192.168.196.128:3001/cameras/getIP/" + nodeID
+        var getURLString = "http://192.168.196.128:3001/cameras/videosByDay/" + selectedDate + "/" + nodeID
         var dailyVidsItemsLIcam1 = ""
         var dailyVidsItemsLIcam2 = ""
         var dailyVidsItemsLIcam3 = ""
