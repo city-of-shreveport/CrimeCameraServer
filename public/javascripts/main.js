@@ -1,3 +1,5 @@
+var nodeName
+
 var socket = io();
 var dreamHost = io('http://192.168.196.128:3001/cameras');
 var cameraNode1 = io('//192.168.196.89:3000/');
@@ -15,24 +17,24 @@ var newGrid = `
     <div class= 'card '>
       <div class= 'card-body '>
         <div class= 'row '>
-          <div class= 'col-sm-7 '>
+          <div class= 'col-sm-6 '>
             <div class='card border-dark mb-4' style='max-width: 100%;'> 
               <div class='card-header actionHeader'>Cameras</div> 
               <div class='card-body text-dark'>  
                 <input class='form-control' id='filterCameras' type='text' placeholder='Search..'></input> 
-                <div class='list-group' id='cameraListItems' role='tablist'> 
-                </div> 
+                <ul class="list-group" id='cameraListItems'>
+                </ul> 
               </div> 
             </div>
           </div> 
-          <div class= 'col-sm-5 '>
-            <div class= 'card ' style= 'width: 14rem; '>
+          <div class= 'col-sm-6 '>
+            <div class= 'card ' >
               <div class='card-header actionHeader'>Camera Info</div>
               <ul class= 'list-group list-group-flush '>
-                <li class= 'list-group-item '>Camera Name</li>
-                <li class= 'list-group-item '>Oldest Video Date</li>
-                <li class= 'list-group-item '>Status</li>
-                <li class= 'list-group-item '>Drive Space</li>
+                <li class= 'list-group-item ' id='camNameLI'>Camera Name</li>
+                <li class= 'list-group-item ' id='oldestVidLI'>Oldest Video Date</li>
+                <li class= 'list-group-item ' id='camStatLI'>Status</li>
+                <li class= 'list-group-item ' id='driveSpaceLI'>Drive Space</li>
                 <li class= 'list-group-item ' id='liveStreamStart'>Start Streaming</li>
               </ul>
 
@@ -114,29 +116,27 @@ var newGrid = `
               <div class= 'card ' >
               <video
                 id="video"
-    class="video-js"
-    controls
-    preload="auto"
-    width="320"
-    height="200"
-    poster="MY_VIDEO_POSTER.jpg"
-    data-setup="{}"
-  >
-    <source src="/liveStream/cam1/index.m3u8" type="application/x-mpegURL" />
-    <p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a
-      web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</>
-    </p>
-  </video>
+                class="video-js"
+                controls
+                preload="auto"
+                width="320"
+                height="200"
+                
+                data-setup="{}"
+                >
+                <source src="/liveStream/cam1/index.m3u8" type="application/x-mpegURL" />
+                <p class="vjs-no-js">
+                  To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that
+                      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                  </p>
+                </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 1</h5>
                   
                 </div>
-                <ul class= 'list-group list-group-flush '>
-                  <li class= 'list-group-item '>On Line</li>
-                  <li class= 'list-group-item '>Date Time</li>
-                  <li class= 'list-group-item '>Something Else</li>
+                <ul class= 'list-group list-group-flush ' id='cam1Times' style='overflow:scroll'>
+                  
                 </ul>
                 <div class= 'card-body '>
                   <a href= '# ' class= 'card-link '>Controll</a>
@@ -150,31 +150,27 @@ var newGrid = `
               <div class= 'card ' >
                 <video
                 id="video2"
-    class="video-js"
-    controls
-    preload="auto"
-    width="320"
-    height="200"
-    poster="MY_VIDEO_POSTER.jpg"
-    data-setup="{}"
-  >
-    <source src="/liveStream/cam2/index.m3u8" type="application/x-mpegURL" />
-    <p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a
-      web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank"
-        >supports HTML5 video</a
-      >
-    </p>
-  </video>
+                class="video-js"
+                controls
+                preload="auto"
+                width="320"
+                height="200"
+                poster="MY_VIDEO_POSTER.jpg"
+                data-setup="{}"
+              >
+                <source src="/liveStream/cam2/index.m3u8" type="application/x-mpegURL" />
+                <p class="vjs-no-js">
+                  To view this video please enable JavaScript, and consider upgrading to a
+                  web browser that
+                  <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
+              </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 2</h5>
                   
                 </div>
-                <ul class= 'list-group list-group-flush '>
-                  <li class= 'list-group-item '>On Line</li>
-                  <li class= 'list-group-item '>Date Time</li>
-                  <li class= 'list-group-item '>Something Else</li>
+                <ul class= 'list-group list-group-flush ' id='cam2Times' style='overflow:scroll'>
+                  
                 </ul>
                 <div class= 'card-body '>
                   <a href= '# ' class= 'card-link '>Controll</a>
@@ -191,40 +187,40 @@ var newGrid = `
               <div class= 'card ' >
                <video
                 id="video3"
-    class="video-js"
-    controls
-    preload="auto"
-    width="320"
-    height="200"
-    poster="MY_VIDEO_POSTER.jpg"
-    data-setup="{}"
-  >
-    <source src="/liveStream/cam3/index.m3u8" type="application/x-mpegURL" />
-    <p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a
-      web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank"
-        >supports HTML5 video</a
-      >
-    </p>
-  </video>
+                  class="video-js"
+                  controls
+                  preload="auto"
+                  width="320"
+                  height="200"
+                  poster="MY_VIDEO_POSTER.jpg"
+                  data-setup="{}"
+                >
+                  <source src="/liveStream/cam3/index.m3u8" type="application/x-mpegURL" />
+                  <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank"
+                      >supports HTML5 video</a
+                    >
+                  </p>
+                </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 3</h5>
                   
                 </div>
-                <ul class= 'list-group list-group-flush '>
-                  <li class= 'list-group-item '>On Line</li>
-                  <li class= 'list-group-item '>Date Time</li>
-                  <li class= 'list-group-item '>Something Else</li>
+                <ul class= 'list-group list-group-flush ' id='cam3Times' style='overflow:scroll'>
+
                 </ul>
+               
                 <div class= 'card-body '>
                   <a href= '# ' class= 'card-link '>Controll</a>
                   <a href= '# ' class= 'card-link '>Save</a>
                 </div>
-              </div>
+
               </div>
             </div>
           </div>
+        </div>
       </div>
    </div>
    </div>   
@@ -243,14 +239,48 @@ $(function () {
   $('body').on('click', '#modalbtn', function () {
     $('#myModal').modal('show');
   });
+
+  $('body').on('click', '.videoTimePlay', function (e) {
+    var li = this.id
+    var loc = document.getElementById(li).getAttribute('data-location');
+    console.log(loc)
+
+    var locationArray = loc.split('/');
+
+    var videourlLocation =
+      'http://192.168.196.164:3000/' + locationArray[5] + '/cam1/' + locationArray[7];
+    var videourlLocation2 =
+      'http://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
+    var videourlLocation3 =
+      'http://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
+    var video = videojs("video");
+    var video2 = videojs("video2");
+    var video3 = videojs("video3");
+    video.src({
+      type: 'video/mp4',
+      src: videourlLocation
+    });
+    video2.src({
+      type: 'video/mp4',
+      src: videourlLocation2
+    });
+    video3.src({
+      type: 'video/mp4',
+      src: videourlLocation3
+    });
+    video.play()
+    video2.play()
+    video3.play()
+  })
+
   $('body').on('click', '#liveStreamStart', function () {
-dreamHost.emit('startStreaming')
+    dreamHost.emit('startStreaming')
     var video = document.getElementById('video');
     var video2 = document.getElementById('video2');
     var video3 = document.getElementById('video3');
-  var videoSrc = '/liveStream/cam1/index.m3u8';
-  var videoSrc2 = '/liveStream/cam2/index.m3u8';
-  var videoSrc3 = '/liveStream/cam3/index.m3u8';
+    var videoSrc = '/liveStream/cam1/index.m3u8';
+    var videoSrc2 = '/liveStream/cam2/index.m3u8';
+    var videoSrc3 = '/liveStream/cam3/index.m3u8';
 
     video.src = videoSrc;
     video2.src = videoSrc2;
@@ -258,30 +288,10 @@ dreamHost.emit('startStreaming')
     video.play()
     video2.play()
     video3.play()
-  
+
 
   });
 
-  var myLatLng = {
-    lat: 38.926415,
-    lng: -77.704038,
-  };
-  var myLatLng2 = {
-    lat: 38.92987,
-    lng: -77.708098,
-  };
-  myLatlng2 = new google.maps.LatLng(38.92987, -77.708098);
-  myLatlng = new google.maps.LatLng(38.926415, -77.704038);
-  var myLatLng3 = {
-    lat: 38.926415,
-    lng: -77.712076,
-  };
-  myLatlng3 = new google.maps.LatLng(38.85216, -77.702076);
-  var myLatLng4 = {
-    lat: 38.926415,
-    lng: -77.732076,
-  };
-  myLatlng4 = new google.maps.LatLng(38.85216, -77.732076);
   map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: 38.926908833333336,
@@ -289,8 +299,9 @@ dreamHost.emit('startStreaming')
     },
     zoom: 14,
   });
+
   infoWindow = new google.maps.InfoWindow(); // Try HTML5 geolocation.
-  var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+
 
   function createMarker(pos, t, v, i, type, numCams) {
     console.log(pos, t, v, i, type, numCams);
@@ -307,7 +318,7 @@ dreamHost.emit('startStreaming')
       console.log(marker);
       currentCamIP = marker.videoURL;
       $('.videoFeeds').html('');
-      $('li').each(function (index) {
+      $('.wc-calendar__days-list li').each(function (index) {
         $(this).css('background', 'white');
       });
       var cameraVideoURL = 'http://192.168.196.128:3001/cameras/videoDatesbyNode/' + marker.customInfo;
@@ -320,7 +331,7 @@ dreamHost.emit('startStreaming')
 
           //$(searchparam).css('background', 'lightblue');
 
-          $('li').each(function (index) {
+          $('.wc-calendar__days-list li').each(function (index) {
             if ($(this).attr('data-date') === dateCalendar) {
               $(this).css('background', 'lightblue');
             }
@@ -443,20 +454,7 @@ dreamHost.emit('startStreaming')
     for (var i = 0; i < data.length; i++) {
       var checkedinTime = moment(data[i].lastCheckIn).format('MM-DD hh:mm');
 
-      $('#cameraListItems').append(
-        "<a href='#' class='list-group-item list-group-item-action' aria-current='true' id='" +
-          data[i].nodeName +
-          "'>" +
-          "<div class='d-flex w-100 justify-content-between'>" +
-          "<h5 class='mb-1'>" +
-          data[i].nodeName +
-          '</h5>' +
-          "<small class='text-muted'>" +
-          checkedinTime +
-          '</small>' +
-          '</div>' +
-          '</a'
-      );
+      $('#cameraListItems').append("<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + "</li>");
 
       $('#filterCameras').on('keyup', function () {
         var value = $(this).val().toLowerCase();
@@ -464,57 +462,64 @@ dreamHost.emit('startStreaming')
         $('#cameraListItems li').filter(function () {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       });
 
       $('.list-group-item').on('click', function () {
         //$('#myModal').modal('show');
 
-        var ctx = document.getElementById('myChart');
 
-        var myChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [
-              {
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)',
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)',
-                ],
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                  },
-                },
-              ],
-            },
-          },
-        });
-        console.log(this.id);
-        ///////
         $.getJSON('http://192.168.196.128:3001/cameras/getCameraInfo/' + this.id, function (data) {
           console.log(data);
+          nodeName = data[0].nodeName
+          var checkinTime = moment(data[0].lastCheckIn)
+          var now = moment()
+          var difference = now.diff(checkinTime, 'seconds')
+          $('#camNameLI').html("Name: " + data[0].nodeName)
+          $('#camStatLI').html("Checked in: " + difference + " seconds ago")
+          $.getJSON('http://192.168.196.128:3001/cameras/oldestVideo/' + data[0].nodeName, function (data) {
+            var dateTimeClean = moment(data[0].DateTime).format("MM-DD hh:mm")
+            $('#oldestVidLI').html("Oldest VId: " + dateTimeClean)
+          });
+
+
+          $('.videoFeeds').html('');
+          $('.wc-calendar__days-list li').each(function (index) {
+            $(this).css('background', 'white');
+          });
+          var cameraVideoURL = 'http://192.168.196.128:3001/cameras/videoDatesbyNode/' + nodeName;
+
+          $.getJSON(cameraVideoURL, function (data) {
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+              var dateCalendar = moment(data[i].DateTime).format('M/DD/YYYY');
+              console.log(moment(data[i].DateTime).format('M/DD/YYYY hh:mm'));
+
+              //$(searchparam).css('background', 'lightblue');
+
+              $('.wc-calendar__days-list li').each(function (index) {
+                if ($(this).attr('data-date') === dateCalendar) {
+                  $(this).css('background', 'lightblue');
+                }
+              });
+            }
+          });
         });
       });
     }
@@ -571,7 +576,11 @@ dreamHost.emit('startStreaming')
      * @param {string} activeDateClass - represents custom class for selected date
      * @param {Date} initialDate - represents initially selected calendar date
      */
-    constructor({ container = '', activeDateClass = '', initialDate = new Date() } = {}) {
+    constructor({
+      container = '',
+      activeDateClass = '',
+      initialDate = new Date()
+    } = {}) {
       this.$container = container ? document.querySelector(container) : null;
       this.activeDateClass = activeDateClass;
 
@@ -765,8 +774,8 @@ dreamHost.emit('startStreaming')
         this.selectedDate = new Date($target.dataset.date);
         console.log(this.selectedDate);
         var selectedDate = moment(this.selectedDate).format('YYYY-MM-DD');
-        var getIPString = 'http://192.168.196.128:3001/cameras/getIP/' + nodeID;
-        var getURLString = 'http://192.168.196.128:3001/cameras/videosByDay/' + selectedDate + '/' + nodeID;
+        var getIPString = 'http://192.168.196.128:3001/cameras/getIP/' + nodeName;
+        var getURLString = 'http://192.168.196.128:3001/cameras/videosByDay/' + selectedDate + '/' + nodeName;
         var dailyVidsItemsLIcam1 = '';
         var dailyVidsItemsLIcam2 = '';
         var dailyVidsItemsLIcam3 = '';
@@ -786,11 +795,11 @@ dreamHost.emit('startStreaming')
           if (data.cam1.length > 0) {
             $('#videoListGrid').append(
               "<div class='col-sm'>" +
-                "<div id='videoPlayer1'></div>" +
-                '<h3>Camera 1</h3>' +
-                "<ul class='list-group list-group-flush' id='ulCam1'>" +
-                '</ul>' +
-                '</div>'
+              "<div id='videoPlayer1'></div>" +
+              '<h3>Camera 1</h3>' +
+              "<ul class='list-group list-group-flush' id='ulCam1'>" +
+              '</ul>' +
+              '</div>'
             );
 
             for (var i = 0; i < data.cam1.length; i++) {
@@ -800,14 +809,15 @@ dreamHost.emit('startStreaming')
                 var cleanedEndtimeFilter = moment(data.cam1[numItems].DateTime).format('HHmm');
 
                 var cleanedtime = moment(data.cam1[i].DateTime).format('HH:mm');
+                var cleanedDate = moment(data.cam1[i].DateTime).format('MM/DD/YYYY');
                 var locationString = data.cam1[i].fileLocation;
                 var locationArray = locationString.split('/');
 
                 var videourlLocation =
                   'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
                 videoSource.push(videourlLocation);
-                $('#videoDates').append(
-                  "<li class='list-group-item' id='" + cleanedtime + "'>" + cleanedtime + '</li>'
+                $('#cam1Times').append(
+                  "<li class='list-group-item videoTimePlay' id='" + cleanedtime + "' data-location='" + locationString + "'>" + cleanedDate + "   @  " + cleanedtime + '</li>'
                 );
                 //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
               } catch (error) {
@@ -816,49 +826,50 @@ dreamHost.emit('startStreaming')
             }
           }
 
-          if (data.cam2.length > 0) {
-            $('#videoListGrid').append(
-              "<div class='col-sm'>" +
-                "<div id='videoPlayer2'></div>" +
-                '<h3>Camera 2</h3>' +
-                "<ul class='list-group list-group-flush' id='ulCam2'>" +
-                '</ul>' +
-                '</div>'
-            );
-            for (var i = 0; i < data.cam2.length; i++) {
-              try {
-                var cleanedtime = moment(data.cam2[i].DateTime).format('HH:mm');
-                $('#videoDates').append("<li class='list-group-item'>" + cleanedtime + '</li>');
-              } catch (error) {
-                console.log(error);
-              }
+
+
+
+          for (var i = 0; i < data.cam2.length; i++) {
+            try {
+
+
+              var cleanedtime = moment(data.cam2[i].DateTime).format('HH:mm');
+              var cleanedDate = moment(data.cam2[i].DateTime).format('MM/DD/YYYY');
+              var locationString = data.cam2[i].fileLocation;
+              var locationArray = locationString.split('/');
+
+              var videourlLocation =
+                'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
+              videoSource.push(videourlLocation);
+              $('#cam2Times').append(
+                "<li class='list-group-item videoTimePlay' id='" + cleanedtime + "' data-location='" + locationString + "'>" + cleanedDate + "   @   " + cleanedtime + '</li>'
+              );
+              //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
+            } catch (error) {
+              console.log(error);
             }
           }
-          if (data.cam3.length > 0) {
-            $('#videoListGrid').append(
-              "<div class='col-sm'>" +
-                "<div id='videoPlayer3'></div>" +
-                '<h3>Camera 3</h3>' +
-                "<ul class='list-group list-group-flush' id='ulCam3'>" +
-                '</ul>' +
-                '</div>'
-            );
-            for (var i = 0; i < data.cam3.length; i++) {
-              try {
-                var cleanedtime = moment(data.cam3[i].DateTime).format('HH:mm');
-                $('#ulCam3').append("<li class='list-group-item'>" + cleanedtime + '</li>');
-              } catch (error) {
-                console.log(error);
-              }
+          for (var i = 0; i < data.cam3.length; i++) {
+            try {
+              var cleanedtime = moment(data.cam3[i].DateTime).format('HH:mm');
+              var cleanedDate = moment(data.cam3[i].DateTime).format('MM/DD/YYYY');
+              var locationString = data.cam3[i].fileLocation;
+              var locationArray = locationString.split('/');
+              var videourlLocation =
+                'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
+              videoSource.push(videourlLocation);
+              $('#cam3Times').append(
+                "<li class='list-group-item videoTimePlay' id='" + cleanedtime + "' data-location='" + locationString + "'>" + cleanedDate + "   @   " + cleanedtime + '</li>'
+              );
+              //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
+            } catch (error) {
+              console.log(error);
             }
           }
 
           $('#ulCam1').html(dailyVidsItemsLIcam1);
-
           var i = 0; // define i
-
           var videoCount = videoSource.length;
-
           function videoPlay(videoNum) {
             document.getElementById('myVideo').setAttribute('src', videoSource[videoNum]);
             document.getElementById('myVideo').load();

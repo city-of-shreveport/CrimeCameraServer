@@ -9,17 +9,18 @@ router.get('/haha', async (req, res) => {
 });
 // Get all posts
 
-router.get('/oldestVideo', async (req, res) => {
-  var days = [];
-  vids.find({}).exec(function (err, docs) {
-    for (var i = 0; i < docs.length; i++) {
-      var day = moment(docs[i].dateTime).format('MM-DD-YYYY');
-      var weekDay = moment(docs[i].dateTime).format('Do');
-      days.push(weekDay);
-    }
+router.get('/oldestVideo/:nodeName', async (req, res) => {
 
-    res.send(days);
-  });
+  var node = req.params.nodeName
+  vids.find({ node: node }).sort({ _id: -1 }).limit(1).exec(function(err, docs){
+      res.send(docs);
+
+
+
+
+
+  })
+  
 });
 router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
   const nodeName = req.params.nodeName;
