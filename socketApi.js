@@ -160,9 +160,7 @@ cameraNodes.on('connection', (socket) => {
     console.log('yup');
 
     streamingChildProc = spawn('ffmpeg', [
-      '-hide_banner',
-      '-loglevel',
-      'panic',
+
       '-fflags',
       'nobuffer',
       '-rtsp_transport',
@@ -200,9 +198,7 @@ cameraNodes.on('connection', (socket) => {
       '/home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts',
     ]);
     streamingChildProc2 = spawn('ffmpeg', [
-      '-hide_banner',
-      '-loglevel',
-      'panic',
+
       '-fflags',
       'nobuffer',
       '-rtsp_transport',
@@ -240,9 +236,7 @@ cameraNodes.on('connection', (socket) => {
       '/home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts',
     ]);
     streamingChildProc3 = spawn('ffmpeg', [
-      '-hide_banner',
-      '-loglevel',
-      'panic',
+
       '-fflags',
       'nobuffer',
       '-rtsp_transport',
