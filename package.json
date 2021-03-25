@@ -17,9 +17,13 @@
     "morgan": "~1.9.1",
     "node-rtsp-stream": "0.0.9",
     "node-scp": "0.0.11",
+    "npm": "^7.7.4",
     "pug": "2.0.0-beta11",
     "request": "^2.88.2",
     "scp2": "^0.5.0",
     "socket.io": "^2.3.4"
+  },
+  "devDependencies": {
+    "prettier": "2.2.1"
   }
 }
