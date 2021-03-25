@@ -1,4 +1,4 @@
-var nodeName
+var nodeName;
 
 var socket = io();
 var dreamHost = io('http://192.168.196.128:3001/cameras');
@@ -241,40 +241,37 @@ $(function () {
   });
 
   $('body').on('click', '.videoTimePlay', function (e) {
-    var li = this.id
+    var li = this.id;
     var loc = document.getElementById(li).getAttribute('data-location');
-    console.log(loc)
+    console.log(loc);
 
     var locationArray = loc.split('/');
 
-    var videourlLocation =
-      'http://192.168.196.164:3000/' + locationArray[5] + '/cam1/' + locationArray[7];
-    var videourlLocation2 =
-      'http://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
-    var videourlLocation3 =
-      'http://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
-    var video = videojs("video");
-    var video2 = videojs("video2");
-    var video3 = videojs("video3");
+    var videourlLocation = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam1/' + locationArray[7];
+    var videourlLocation2 = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
+    var videourlLocation3 = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
+    var video = videojs('video');
+    var video2 = videojs('video2');
+    var video3 = videojs('video3');
     video.src({
       type: 'video/mp4',
-      src: videourlLocation
+      src: videourlLocation,
     });
     video2.src({
       type: 'video/mp4',
-      src: videourlLocation2
+      src: videourlLocation2,
     });
     video3.src({
       type: 'video/mp4',
-      src: videourlLocation3
+      src: videourlLocation3,
     });
-    video.play()
-    video2.play()
-    video3.play()
-  })
+    video.play();
+    video2.play();
+    video3.play();
+  });
 
   $('body').on('click', '#liveStreamStart', function () {
-    dreamHost.emit('startStreaming')
+    dreamHost.emit('startStreaming');
     var video = document.getElementById('video');
     var video2 = document.getElementById('video2');
     var video3 = document.getElementById('video3');
@@ -285,11 +282,9 @@ $(function () {
     video.src = videoSrc;
     video2.src = videoSrc2;
     video3.src = videoSrc3;
-    video.play()
-    video2.play()
-    video3.play()
-
-
+    video.play();
+    video2.play();
+    video3.play();
   });
 
   map = new google.maps.Map(document.getElementById('map'), {
@@ -301,7 +296,6 @@ $(function () {
   });
 
   infoWindow = new google.maps.InfoWindow(); // Try HTML5 geolocation.
-
 
   function createMarker(pos, t, v, i, type, numCams) {
     console.log(pos, t, v, i, type, numCams);
@@ -454,7 +448,9 @@ $(function () {
     for (var i = 0; i < data.length; i++) {
       var checkedinTime = moment(data[i].lastCheckIn).format('MM-DD hh:mm');
 
-      $('#cameraListItems').append("<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + "</li>");
+      $('#cameraListItems').append(
+        "<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + '</li>'
+      );
 
       $('#filterCameras').on('keyup', function () {
         var value = $(this).val().toLowerCase();
@@ -462,42 +458,23 @@ $(function () {
         $('#cameraListItems li').filter(function () {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       });
 
       $('.list-group-item').on('click', function () {
         //$('#myModal').modal('show');
 
-
         $.getJSON('http://192.168.196.128:3001/cameras/getCameraInfo/' + this.id, function (data) {
           console.log(data);
-          nodeName = data[0].nodeName
-          var checkinTime = moment(data[0].lastCheckIn)
-          var now = moment()
-          var difference = now.diff(checkinTime, 'seconds')
-          $('#camNameLI').html("Name: " + data[0].nodeName)
-          $('#camStatLI').html("Checked in: " + difference + " seconds ago")
+          nodeName = data[0].nodeName;
+          var checkinTime = moment(data[0].lastCheckIn);
+          var now = moment();
+          var difference = now.diff(checkinTime, 'seconds');
+          $('#camNameLI').html('Name: ' + data[0].nodeName);
+          $('#camStatLI').html('Checked in: ' + difference + ' seconds ago');
           $.getJSON('http://192.168.196.128:3001/cameras/oldestVideo/' + data[0].nodeName, function (data) {
-            var dateTimeClean = moment(data[0].DateTime).format("MM-DD hh:mm")
-            $('#oldestVidLI').html("Oldest VId: " + dateTimeClean)
+            var dateTimeClean = moment(data[0].DateTime).format('MM-DD hh:mm');
+            $('#oldestVidLI').html('Oldest VId: ' + dateTimeClean);
           });
-
 
           $('.videoFeeds').html('');
           $('.wc-calendar__days-list li').each(function (index) {
@@ -576,11 +553,7 @@ $(function () {
      * @param {string} activeDateClass - represents custom class for selected date
      * @param {Date} initialDate - represents initially selected calendar date
      */
-    constructor({
-      container = '',
-      activeDateClass = '',
-      initialDate = new Date()
-    } = {}) {
+    constructor({ container = '', activeDateClass = '', initialDate = new Date() } = {}) {
       this.$container = container ? document.querySelector(container) : null;
       this.activeDateClass = activeDateClass;
 
@@ -795,11 +768,11 @@ $(function () {
           if (data.cam1.length > 0) {
             $('#videoListGrid').append(
               "<div class='col-sm'>" +
-              "<div id='videoPlayer1'></div>" +
-              '<h3>Camera 1</h3>' +
-              "<ul class='list-group list-group-flush' id='ulCam1'>" +
-              '</ul>' +
-              '</div>'
+                "<div id='videoPlayer1'></div>" +
+                '<h3>Camera 1</h3>' +
+                "<ul class='list-group list-group-flush' id='ulCam1'>" +
+                '</ul>' +
+                '</div>'
             );
 
             for (var i = 0; i < data.cam1.length; i++) {
@@ -817,7 +790,15 @@ $(function () {
                   'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
                 videoSource.push(videourlLocation);
                 $('#cam1Times').append(
-                  "<li class='list-group-item videoTimePlay' id='" + cleanedtime + "' data-location='" + locationString + "'>" + cleanedDate + "   @  " + cleanedtime + '</li>'
+                  "<li class='list-group-item videoTimePlay' id='" +
+                    cleanedtime +
+                    "' data-location='" +
+                    locationString +
+                    "'>" +
+                    cleanedDate +
+                    '   @  ' +
+                    cleanedtime +
+                    '</li>'
                 );
                 //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
               } catch (error) {
@@ -826,13 +807,8 @@ $(function () {
             }
           }
 
-
-
-
           for (var i = 0; i < data.cam2.length; i++) {
             try {
-
-
               var cleanedtime = moment(data.cam2[i].DateTime).format('HH:mm');
               var cleanedDate = moment(data.cam2[i].DateTime).format('MM/DD/YYYY');
               var locationString = data.cam2[i].fileLocation;
@@ -842,7 +818,15 @@ $(function () {
                 'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
               videoSource.push(videourlLocation);
               $('#cam2Times').append(
-                "<li class='list-group-item videoTimePlay' id='" + cleanedtime + "' data-location='" + locationString + "'>" + cleanedDate + "   @   " + cleanedtime + '</li>'
+                "<li class='list-group-item videoTimePlay' id='" +
+                  cleanedtime +
+                  "' data-location='" +
+                  locationString +
+                  "'>" +
+                  cleanedDate +
+                  '   @   ' +
+                  cleanedtime +
+                  '</li>'
               );
               //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
             } catch (error) {
@@ -859,7 +843,15 @@ $(function () {
                 'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
               videoSource.push(videourlLocation);
               $('#cam3Times').append(
-                "<li class='list-group-item videoTimePlay' id='" + cleanedtime + "' data-location='" + locationString + "'>" + cleanedDate + "   @   " + cleanedtime + '</li>'
+                "<li class='list-group-item videoTimePlay' id='" +
+                  cleanedtime +
+                  "' data-location='" +
+                  locationString +
+                  "'>" +
+                  cleanedDate +
+                  '   @   ' +
+                  cleanedtime +
+                  '</li>'
               );
               //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
             } catch (error) {

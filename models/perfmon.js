@@ -14,9 +14,11 @@ const schema = mongoose.Schema({
   },
   mem: { total: Number, free: Number, used: Number, available: Number },
   cpuTemperature: { main: Number },
-  fsSize: [{
-      type: Map, of: mongoose.Schema.Types.Mixed 
-    }
+  fsSize: [
+    {
+      type: Map,
+      of: mongoose.Schema.Types.Mixed,
+    },
   ],
 });
 

@@ -13,7 +13,6 @@ var spawn = require('child_process').spawn,
   streamingChildProc2 = null,
   streamingChildProc3 = null;
 
-
 var videoswithData = [];
 
 function checkLastCheckIn() {
@@ -157,7 +156,6 @@ cameraNodes.on('connection', (socket) => {
     console.log('yup');
 
     streamingChildProc = spawn('ffmpeg', [
-
       '-fflags',
       'nobuffer',
       '-rtsp_transport',
@@ -195,7 +193,6 @@ cameraNodes.on('connection', (socket) => {
       '/home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts',
     ]);
     streamingChildProc2 = spawn('ffmpeg', [
-
       '-fflags',
       'nobuffer',
       '-rtsp_transport',
@@ -233,7 +230,6 @@ cameraNodes.on('connection', (socket) => {
       '/home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts',
     ]);
     streamingChildProc3 = spawn('ffmpeg', [
-
       '-fflags',
       'nobuffer',
       '-rtsp_transport',
