@@ -13,10 +13,7 @@ var spawn = require('child_process').spawn,
   streamingChildProc2 = null,
   streamingChildProc3 = null;
 
-mongoose.connect('mongodb://localhost/cameras', function (err) {
-  if (err) throw err;
-  console.log('Successfully connected');
-});
+
 var videoswithData = [];
 
 function checkLastCheckIn() {
