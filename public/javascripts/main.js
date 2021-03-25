@@ -126,9 +126,7 @@ var newGrid = `
     <p class="vjs-no-js">
       To view this video please enable JavaScript, and consider upgrading to a
       web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank"
-        >supports HTML5 video</a
-      >
+      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</>
     </p>
   </video>
                 <div class= 'card-body '>
@@ -249,31 +247,20 @@ $(function () {
   });
   $('body').on('click', '#liveStreamStart', function () {
 dreamHost.emit('startStreaming')
-//var video = document.getElementById('video');
+    var video = document.getElementById('video');
     var video2 = document.getElementById('video2');
     var video3 = document.getElementById('video3');
-  //var videoSrc = '/liveStream/cam1/index.m3u8';
+  var videoSrc = '/liveStream/cam1/index.m3u8';
   var videoSrc2 = '/liveStream/cam2/index.m3u8';
   var videoSrc3 = '/liveStream/cam3/index.m3u8';
-  if (Hls.isSupported()) {
-    //var hls = new Hls();
-    var hls2 = new Hls();
-    var hls3 = new Hls();
-    //hls.loadSource(videoSrc);
-    //hls.attachMedia(video);
-    hls2.loadSource(videoSrc2);
-    hls2.attachMedia(video2);
-    hls3.loadSource(videoSrc3);
-    hls3.attachMedia(video3);
-  }
-  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    //video.src = videoSrc;
+
+    video.src = videoSrc;
     video2.src = videoSrc2;
     video3.src = videoSrc3;
     video.play()
     video2.play()
     video3.play()
-  }
+  
 
   });
 
