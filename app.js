@@ -8,12 +8,18 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var cameras = require('./routes/cameras');
 var perfmon = require('./routes/perfmon');
-var management = require('./routes/management');
 var app = express();
+
+// establish connection to database
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/cameras', function (err) {
+  if (err) throw err;
+  console.log('Successfully connected');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,7 +31,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/cameras', cameras);
 app.use('/perfmon', perfmon);
-app.use('/management', management);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

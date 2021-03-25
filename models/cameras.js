@@ -15,11 +15,13 @@ const schema = mongoose.Schema({
       },
     ],
 
-    diskLayout: [{
-      type: Map, of: mongoose.Schema.Types.Mixed 
-    }
-  ],
-  
+    diskLayout: [
+      {
+        type: Map,
+        of: mongoose.Schema.Types.Mixed,
+      },
+    ],
+
     cpu: { type: Map, of: mongoose.Schema.Types.Mixed },
     osInfo: { type: Map, of: mongoose.Schema.Types.Mixed },
   },
