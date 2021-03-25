@@ -8,11 +8,6 @@ const schema = mongoose.Schema({
     currentLoadUser: Number,
     currentLoadSystem: Number,
   },
-      fsSize: [{
-        type: Map,
-        of: mongoose.Schema.Types.Mixed,
-      }],
-    
   cpus: {
     type: Map,
     of: String,
