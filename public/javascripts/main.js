@@ -112,8 +112,25 @@ var newGrid = `
               <div class= 'col  mx-n3 my-n3'>
                 
               <div class= 'card ' >
-                <video controls='controls' autoplay width='100%' height='100%' id='video' >
-                </video> 
+              <video
+                id="video"
+    class="video-js"
+    controls
+    preload="auto"
+    width="320"
+    height="200"
+    poster="MY_VIDEO_POSTER.jpg"
+    data-setup="{}"
+  >
+    <source src="/liveStream/cam1/index.m3u8" type="application/x-mpegURL" />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank"
+        >supports HTML5 video</a
+      >
+    </p>
+  </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 1</h5>
                   
@@ -133,8 +150,25 @@ var newGrid = `
               </div>
               <div class= 'col mx-n3 my-n3'>
               <div class= 'card ' >
-                <video controls='controls' autoplay width='100%' height='100%' id='video2' >
-                </video>
+                <video
+                id="video2"
+    class="video-js"
+    controls
+    preload="auto"
+    width="320"
+    height="200"
+    poster="MY_VIDEO_POSTER.jpg"
+    data-setup="{}"
+  >
+    <source src="/liveStream/cam2/index.m3u8" type="application/x-mpegURL" />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank"
+        >supports HTML5 video</a
+      >
+    </p>
+  </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 2</h5>
                   
@@ -157,8 +191,25 @@ var newGrid = `
               <div class= 'col  mx-n3 my-n3'>
                 
               <div class= 'card ' >
-               <video controls='controls' autoplay width='100%' height='100%' id='video3' >
-                </video>
+               <video
+                id="video3"
+    class="video-js"
+    controls
+    preload="auto"
+    width="320"
+    height="200"
+    poster="MY_VIDEO_POSTER.jpg"
+    data-setup="{}"
+  >
+    <source src="/liveStream/cam3/index.m3u8" type="application/x-mpegURL" />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank"
+        >supports HTML5 video</a
+      >
+    </p>
+  </video>
                 <div class= 'card-body '>
                   <h5 class= 'card-title '>Camera 3</h5>
                   
@@ -198,27 +249,30 @@ $(function () {
   });
   $('body').on('click', '#liveStreamStart', function () {
 dreamHost.emit('startStreaming')
-var video = document.getElementById('video');
+//var video = document.getElementById('video');
     var video2 = document.getElementById('video2');
     var video3 = document.getElementById('video3');
-  var videoSrc = '/liveStream/cam1/index.m3u8';
-  var videoSrc2 = '/liveStream/cam2/index2.m3u8';
-  var videoSrc3 = '/liveStream/cam3/index3.m3u8';
+  //var videoSrc = '/liveStream/cam1/index.m3u8';
+  var videoSrc2 = '/liveStream/cam2/index.m3u8';
+  var videoSrc3 = '/liveStream/cam3/index.m3u8';
   if (Hls.isSupported()) {
-    var hls = new Hls();
+    //var hls = new Hls();
     var hls2 = new Hls();
     var hls3 = new Hls();
-    hls.loadSource(videoSrc);
-    hls.attachMedia(video);
+    //hls.loadSource(videoSrc);
+    //hls.attachMedia(video);
     hls2.loadSource(videoSrc2);
     hls2.attachMedia(video2);
     hls3.loadSource(videoSrc3);
     hls3.attachMedia(video3);
   }
   else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc;
+    //video.src = videoSrc;
     video2.src = videoSrc2;
     video3.src = videoSrc3;
+    video.play()
+    video2.play()
+    video3.play()
   }
 
   });

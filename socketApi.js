@@ -175,6 +175,11 @@ socket.on('startStreaming', function (data) {
 
 
 streamingChildProc = spawn("ffmpeg", [
+
+
+
+
+   "-hide_banner","-loglevel", "panic",
   "-fflags", "nobuffer" ,
  "-rtsp_transport", "tcp", 
  "-i", "rtsp://admin:UUnv9njxg123@192.168.196.164:554/cam/realmonitor?channel=1&subtype=0", 
@@ -186,17 +191,18 @@ streamingChildProc = spawn("ffmpeg", [
  "-hls_flags", "delete_segments+append_list", 
  "-f", "segment",
  "-segment_list_flags", "live",
- "-segment_time", "10",
- "-segment_list_size", "3",
+ "-segment_time", "1",
+ "-segment_list_size", "10",
  "-segment_format", "mpegts",
  "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8",
  "-segment_list_type", "m3u8",
- "-segment_list_entry_prefix", "",
- "-segment_wrap", "100",
- "public/liveStream/cam1/%d.ts"
+ "-segment_list_entry_prefix", "/liveStream/cam1/",
+ "-segment_wrap", "10",
+ "/home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts"
 
 ]);
 streamingChildProc2 = spawn("ffmpeg", [
+   "-hide_banner","-loglevel", "panic",
   "-fflags", "nobuffer" ,
  "-rtsp_transport", "tcp", 
  "-i", "rtsp://admin:UUnv9njxg123@192.168.196.164:555/cam/realmonitor?channel=1&subtype=0", 
@@ -208,17 +214,18 @@ streamingChildProc2 = spawn("ffmpeg", [
  "-hls_flags", "delete_segments+append_list", 
  "-f", "segment",
  "-segment_list_flags", "live",
- "-segment_time", "10",
- "-segment_list_size", "3",
+ "-segment_time", "1",
+ "-segment_list_size", "10",
  "-segment_format", "mpegts",
- "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam2/index2.m3u8",
+ "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8",
  "-segment_list_type", "m3u8",
- "-segment_list_entry_prefix", "",
- "-segment_wrap", "100",
- "public/liveStream/cam2/2%d.ts"
+ "-segment_list_entry_prefix", "/liveStream/cam2/",
+ "-segment_wrap", "10",
+ "/home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts"
 
 ]);
 streamingChildProc3 = spawn("ffmpeg", [
+   "-hide_banner","-loglevel", "panic",
   "-fflags", "nobuffer" ,
  "-rtsp_transport", "tcp", 
  "-i", "rtsp://admin:UUnv9njxg123@192.168.196.164:556/cam/realmonitor?channel=1&subtype=0", 
@@ -230,14 +237,14 @@ streamingChildProc3 = spawn("ffmpeg", [
  "-hls_flags", "delete_segments+append_list", 
  "-f", "segment",
  "-segment_list_flags", "live",
- "-segment_time", "10",
- "-segment_list_size", "3",
+ "-segment_time", "1",
+ "-segment_list_size", "10",
  "-segment_format", "mpegts",
- "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam3/index3.m3u8",
+ "-segment_list", "/home/admin/crimeCameraBackend/public/liveStream/cam3/index.m3u8",
  "-segment_list_type", "m3u8",
- "-segment_list_entry_prefix", "",
- "-segment_wrap", "100",
- "public/liveStream/cam3/3%d.ts"
+ "-segment_list_entry_prefix", "/liveStream/cam3/",
+ "-segment_wrap", "10",
+ "/home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts"
 
 ]);
 streamingChildProc.stdout.on('data', (data) => {
