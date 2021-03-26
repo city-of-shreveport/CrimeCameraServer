@@ -34,15 +34,10 @@ a {
   height: 480px;
 }
 
-video {
+.vjs-tech {
   width: 100%;
 }
-.list-group{
 
-  max-height: 200px;
-
-
-}
 .wc-calendar {
   background-color: $white;
 }
@@ -218,10 +213,4 @@ video {
   overflow: scroll;
 }
 
-#myModal {
-  width: 1100px;
-}
 
-.modal-content {
-  width: 1100px;
-}

@@ -12,6 +12,7 @@ var nodeID = '';
 var currentCamIP;
 
 var newGrid = `
+
  <div class= 'row '>
   <div class= 'col-sm-5 '>
     <div class= 'card '>
@@ -35,7 +36,7 @@ var newGrid = `
                 <li class= 'list-group-item ' id='oldestVidLI'>Oldest Video Date</li>
                 <li class= 'list-group-item ' id='camStatLI'>Status</li>
                 <li class= 'list-group-item ' id='driveSpaceLI'>Drive Space</li>
-                <li class= 'list-group-item ' id='liveStreamStart'>Start Streaming</li>
+                <li class= 'list-group-item ' id='Streaming'>Start Streaming</li>
               </ul>
 
             </div>
@@ -60,13 +61,13 @@ var newGrid = `
 
 <br>
 
-<div class= 'row '>
 
-  <div class= 'col-sm-5 '>
+
+
     <div class= 'card '>
       <div class= 'card-body '>
         <div class= 'row '>
-          <div class= 'col-sm-6  mx-n3'>
+          <div class= 'col-sm-3  '>
             <div class= 'card '>
               <div class= 'card-body '>
                 <div class='card-header actionHeader'>Calendar</div> 
@@ -74,44 +75,13 @@ var newGrid = `
               </div>
             </div>
           </div>
-          <div class= 'col-sm-6  mx-n0'>
-            <div class='card ' style='max-width: 100%;'> 
-              <div class='card-header actionHeader'>Videos by Time</div> 
-              <div class='card-body text-dark cardVIdeosDate'>  
-                <form> 
-                  <div class='mb-2'> 
-                  <p>Filter</p>
-                    <select class='form-select ' aria-label='Default select example'> 
-                      <option selected>Start Time</option> 
-                      <option value='1'>One</option> 
-                      <option value='2'>Two</option> 
-                      <option value='3'>Three</option> 
-                    </select> 
-                    <select class='form-select ' aria-label='Default select example'> 
-                      <option selected>End Time</option> 
-                      <option value='1'>One</option> 
-                      <option value='2'>Two</option> 
-                      <option value='3'>Three</option> 
-                    </select> 
-                  </div> 
-                </form> 
-                <ul class='list-group list-group-flush' id='videoDates'> 
-                </ul> 
-              </div> 
-            </div> 
-          </div>
-          </div>
-      </div>
-    </div>
-  </div>
-  <div class= 'col-sm-7 '>
-    <div class= 'card '>
+          <div class= 'col-sm-9'>
+                <div class= 'card '>
     <div class='card-header actionHeader'>Video Player</div> 
       <div class= 'card-body '>
-      <button type="button" class="btn btn-primary" id='playVideos'>Primary</button>
           <div class= 'container '>
-            <div class= 'row '>
-              <div class= 'col  mx-n3 my-n3'>
+            <div class= 'row row-cols-1 row-cols-md-3 g-4'>
+              <div class= 'col  '>
                 
               <div class= 'card ' >
               <video
@@ -146,7 +116,7 @@ var newGrid = `
 
 
               </div>
-              <div class= 'col mx-n3 my-n3'>
+              <div class= 'col '>
               <div class= 'card ' >
                 <video
                 id="video2"
@@ -182,7 +152,7 @@ var newGrid = `
 
 
               </div>
-              <div class= 'col  mx-n3 my-n3'>
+              <div class= 'col  '>
                 
               <div class= 'card ' >
                <video
@@ -223,8 +193,15 @@ var newGrid = `
         </div>
       </div>
    </div>
-   </div>   
-</div>
+   </div> 
+            </div> 
+          </div>
+          </div>
+      </div>
+
+    </div>
+
+
 `;
 
 const myLatLng = {
@@ -235,10 +212,8 @@ myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
   $('#mainDIV').html(newGrid);
-  var myModal = document.getElementById('myModal');
-  $('body').on('click', '#modalbtn', function () {
-    $('#myModal').modal('show');
-  });
+  var myModal = document.getElementById('exampleModal');
+
 
   $('body').on('click', '.videoTimePlay', function (e) {
     var li = this.id;
@@ -270,8 +245,11 @@ $(function () {
     video3.play();
   });
 
-  $('body').on('click', '#liveStreamStart', function () {
-    dreamHost.emit('startStreaming');
+  $('body').on('click', '#Streaming', function () {
+    //$(document.getElementById('')).modal('show');
+    $('#staticBackdrop').modal('show')
+console.log(":")
+   /* dreamHost.emit('startStreaming');
     var video = document.getElementById('video');
     var video2 = document.getElementById('video2');
     var video3 = document.getElementById('video3');
@@ -285,6 +263,7 @@ $(function () {
     video.play();
     video2.play();
     video3.play();
+    */
   });
 
   map = new google.maps.Map(document.getElementById('map'), {
@@ -447,7 +426,7 @@ $(function () {
 
     for (var i = 0; i < data.length; i++) {
       var checkedinTime = moment(data[i].lastCheckIn).format('MM-DD hh:mm');
-
+ nodeName = data[0].nodeName;
       $('#cameraListItems').append(
         "<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + '</li>'
       );
@@ -460,12 +439,12 @@ $(function () {
         });
       });
 
-      $('.list-group-item').on('click', function () {
+      $('#cameraListItems .list-group-item').on('click', function () {
         //$('#myModal').modal('show');
 
-        $.getJSON('http://192.168.196.128:3001/cameras/getCameraInfo/' + this.id, function (data) {
+        $.getJSON('http://192.168.196.128:3001/cameras/getCameraInfo/' + nodeName, function (data) {
           console.log(data);
-          nodeName = data[0].nodeName;
+         
           var checkinTime = moment(data[0].lastCheckIn);
           var now = moment();
           var difference = now.diff(checkinTime, 'seconds');
@@ -512,31 +491,6 @@ $(function () {
       );
     }
   });
-
-  /*  marker.addListener("click", () => {
-        map.setZoom(16);
-        map.setCenter(marker.getPosition());
-        $('#liveFeeds').html("<img id='liveVideo' style='height:400px;width:640px' src='http://192.168.196.89:8081/'></img>")
-        cameraNode1.emit("getVideos","ja")
-        cameraNode1.on('videoFiles', function(data){
-        
-          var string = data.format.filename.split("/")
-          var fileName = string[6]
-          var date = fileName.split(".")
-          var cleanDate = date[0].split("_")
-          var timeFormat = cleanDate[1].replaceAll("-",":")
-          var dateFormatting = cleanDate[0].split("-")
-          //console.log(dateFormatting[1])
-          
-          var newDaterFormat = dateFormatting[0] +"-"+dateFormatting[1]+"-"+dateFormatting[2]+" "+timeFormat
-          videoFiles.push({"fileLocation": data.format.filename, "dateUTC": moment(newDaterFormat).format("X")})
-          //var dateforMoment = moment(newDaterFormat).format("X")
-          
-          
-          
-    });
-  })
-  */
 
   cameraNode1.on('videoFileDataDone', function (data) {
     videoFiles.sort(function (a, b) {
@@ -763,8 +717,9 @@ $(function () {
         });
 
         $.getJSON(getURLString, function (data) {
-          console.log(data);
-          $('#videoListGrid').html('');
+          $('#cam1Times').html('')
+$('#cam2Times').html('')
+$('#cam3Times').html('')
           if (data.cam1.length > 0) {
             $('#videoListGrid').append(
               "<div class='col-sm'>" +
@@ -867,7 +822,7 @@ $(function () {
             document.getElementById('myVideo').load();
             document.getElementById('myVideo').play();
           }
-          document.getElementById('myVideo').addEventListener('ended', myHandler, false);
+          //document.getElementById('myVideo').addEventListener('ended', myHandler, false);
           //videoPlay(0); // play the video
 
           function myHandler() {
