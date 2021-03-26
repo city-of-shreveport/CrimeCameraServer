@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const schema = mongoose.Schema({
   node: String,
   nodeID: String,

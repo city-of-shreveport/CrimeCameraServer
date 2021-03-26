@@ -6,7 +6,7 @@ var moment = require('moment');
 var cameraNodes = io.of('/cameras');
 const vids = require('./models/videos');
 const cams = require('./models/cameras');
-const perfmon = require('./models/perfmon');
+const perfmons = require('./models/perfmons');
 const mongoose = require('mongoose');
 var spawn = require('child_process').spawn,
   streamingChildProc = null,
@@ -90,7 +90,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('perfmonStats', function (data) {
     //console.log(data)
-    const perf = new perfmon(data);
+    const perf = new perfmons(data);
     perf.save();
   });
   socket.on('systemOnline', function (data) {

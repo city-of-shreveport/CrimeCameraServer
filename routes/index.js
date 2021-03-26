@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const cameras = require('../models/cameras');
+const Cameras = require('../models/cameras');
+const Perfmons = require('../models/perfmons');
 
 router.get('/', function (req, res) {
   res.render('index', {
@@ -9,13 +10,14 @@ router.get('/', function (req, res) {
 });
 
 router.get('/management', async (req, res) => {
-  cameraData = await cameras.find({ nodeName: 'CrimeCamera003' }, function (err, docs) {
-    if (err) {
-      console.log(err);
-    } else {
-      return docs;
-    }
-  });
+  let cameras = await Cameras.find({});
+  var cameraData = [];
+
+  for (var camera of cameras) {
+    lastPerfmon = await Perfmons.find({ camera: camera.nodeName }).sort({ upDated: -1 }).limit(1);
+    camera.lastPerfmon = lastPerfmon[0];
+    cameraData.push(camera);
+  }
 
   res.render('management', {
     title: 'Management',

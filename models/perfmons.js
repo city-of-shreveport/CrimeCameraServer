@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const schema = mongoose.Schema({
   camera: String,
   upDated: { type: Date, default: Date.now },
@@ -22,4 +23,4 @@ const schema = mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model('PerfMon', schema);
+module.exports = mongoose.model('PerfMons', schema);

@@ -1,5 +1,5 @@
 const express = require('express');
-const perfmon = require('../models/perfmon');
+const perfmons = require('../models/perfmons');
 
 const router = express.Router();
 var moment = require('moment-timezone');
@@ -11,7 +11,7 @@ router.get('/haha', async (req, res) => {
 
 router.get('/getPerfDataNode/:node', async (req, res) => {
   const nodeName = req.params.node;
-  perfmon
+  perfmons
     .find({ camera: nodeName })
     .sort([['DateTime', 1]])
     .exec(function (err, docs) {
@@ -24,7 +24,7 @@ router.get('/getPerfDataNode/:node', async (req, res) => {
 });
 
 router.post('/adddata/:node', async (req, res) => {
-  const perf = new perfmon(req);
+  const perf = new perfmons(req);
   perf.camera = req.body.node;
 
   await perf.save();

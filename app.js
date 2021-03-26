@@ -1,21 +1,21 @@
+// establish connection to database
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/cameras', function (err) {
+  if (err) throw err;
+  console.log('Successfully connected');
+});
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-//just useless text
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var cameras = require('./routes/cameras');
-var perfmon = require('./routes/perfmon');
+var perfmons = require('./routes/perfmons');
 var app = express();
-
-// establish connection to database
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/cameras', function (err) {
-  if (err) throw err;
-  console.log('Successfully connected');
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,11 +26,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/cameras', cameras);
-app.use('/perfmon', perfmon);
+app.use('/perfmons', perfmons);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -68,21 +67,5 @@ function getStreams() {
     }
   );
 }
-//request.post(
-//  'http://192.168.196.75:8080/?json=true',
-//{ json: { machineID: "fMUVxYdG1X3hWb7GNkTd", mail: "talk2dug@gmail.com", pass: "UUnv9njxg123", function: "dash"} },
-//    function (error, response, d) {
-//       if (!error && response.statusCode == 200) {
-//           console.log(d.$user);
-//            user = d.$user
-//            getStreams()
-
-//      }
-//     if(error){
-//     console.log(error)
-
-// }
-//  }
-//);
 
 module.exports = app;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const schema = mongoose.Schema({
   nodeName: String,
   id: String,
@@ -14,14 +15,12 @@ const schema = mongoose.Schema({
         of: mongoose.Schema.Types.Mixed,
       },
     ],
-
     diskLayout: [
       {
         type: Map,
         of: mongoose.Schema.Types.Mixed,
       },
     ],
-
     cpu: { type: Map, of: mongoose.Schema.Types.Mixed },
     osInfo: { type: Map, of: mongoose.Schema.Types.Mixed },
   },
