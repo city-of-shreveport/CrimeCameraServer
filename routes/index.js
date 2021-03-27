@@ -104,6 +104,7 @@ router.get('/management/:nodeName', async (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 
 
 
@@ -202,4 +203,6 @@ router.get('/camright:id.m4s', (req, res) => {
 
 
 
+=======
+>>>>>>> c2706b3964a5f765c4e38afa8e2c5ecb087bd08b
 module.exports = router;
