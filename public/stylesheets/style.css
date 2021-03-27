@@ -34,6 +34,19 @@ a {
   height: 480px;
 }
 
+.modal{
+  background-color: white;
+
+
+
+}
+.modal-dialog {
+  background-color: whitesmoke;
+  min-width: 75%;
+
+
+}
+
 .vjs-tech {
   width: 100%;
 }

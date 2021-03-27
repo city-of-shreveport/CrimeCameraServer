@@ -82,8 +82,8 @@ router.get('/videosByDay/:date/:node', async (req, res) => {
     .find({
       node: node,
       DateTime: {
-        $gte: new Date(date + 'T00:01:00.000Z'),
-        $lte: new Date(date + 'T23:55:00.000Z'),
+        $gte: new Date(date + 'T04:01:00.000Z'),
+        $lte: new Date(date + 'T19:55:00.000Z'),
       },
     })
     .sort([['DateTime', 1]])

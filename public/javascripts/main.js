@@ -12,8 +12,7 @@ var nodeID = '';
 var currentCamIP;
 
 var newGrid = `
-
- <div class= 'row '>
+<div class= 'row '>
   <div class= 'col-sm-5 '>
     <div class= 'card '>
       <div class= 'card-body '>
@@ -38,14 +37,12 @@ var newGrid = `
                 <li class= 'list-group-item ' id='driveSpaceLI'>Drive Space</li>
                 <li class= 'list-group-item ' id='Streaming'>Start Streaming</li>
               </ul>
-
             </div>
           </div> 
         </div>
       </div>
     </div>
   </div>
-
   <div class= 'col-sm-7 '>
     <div class= 'card '>
       <div class= 'card-body '>
@@ -54,154 +51,98 @@ var newGrid = `
       </div>
     </div>
   </div>
-
-
 </div>
-
-
 <br>
-
-
-
-
-    <div class= 'card '>
-      <div class= 'card-body '>
-        <div class= 'row '>
-          <div class= 'col-sm-3  '>
-            <div class= 'card '>
-              <div class= 'card-body '>
-                <div class='card-header actionHeader'>Calendar</div> 
-                <div class='calendar'></div> 
-              </div>
-            </div>
-          </div>
-          <div class= 'col-sm-9'>
-                <div class= 'card '>
-    <div class='card-header actionHeader'>Video Player</div> 
-      <div class= 'card-body '>
-          <div class= 'container '>
-            <div class= 'row row-cols-1 row-cols-md-3 g-4'>
-              <div class= 'col  '>
-                
-              <div class= 'card ' >
-              <video
-                id="video"
-                class="video-js"
-                controls
-                preload="auto"
-                width="320"
-                height="200"
-                
-                data-setup="{}"
-                >
-                <source src="/liveStream/cam1/index.m3u8" type="application/x-mpegURL" />
-                <p class="vjs-no-js">
-                  To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that
-                      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                  </p>
-                </video>
-                <div class= 'card-body '>
-                  <h5 class= 'card-title '>Camera 1</h5>
-                  
-                </div>
-                <ul class= 'list-group list-group-flush ' id='cam1Times' style='overflow:scroll'>
-                  
-                </ul>
-                <div class= 'card-body '>
-                  <a href= '# ' class= 'card-link '>Controll</a>
-                  <a href= '# ' class= 'card-link '>Save</a>
-                </div>
-              </div>
-
-
-              </div>
-              <div class= 'col '>
-              <div class= 'card ' >
-                <video
-                id="video2"
-                class="video-js"
-                controls
-                preload="auto"
-                width="320"
-                height="200"
-                poster="MY_VIDEO_POSTER.jpg"
-                data-setup="{}"
-              >
-                <source src="/liveStream/cam2/index.m3u8" type="application/x-mpegURL" />
-                <p class="vjs-no-js">
-                  To view this video please enable JavaScript, and consider upgrading to a
-                  web browser that
-                  <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                </p>
-              </video>
-                <div class= 'card-body '>
-                  <h5 class= 'card-title '>Camera 2</h5>
-                  
-                </div>
-                <ul class= 'list-group list-group-flush ' id='cam2Times' style='overflow:scroll'>
-                  
-                </ul>
-                <div class= 'card-body '>
-                  <a href= '# ' class= 'card-link '>Controll</a>
-                  <a href= '# ' class= 'card-link '>Save</a>
-                </div>
-              </div>
-              
-
-
-
-              </div>
-              <div class= 'col  '>
-                
-              <div class= 'card ' >
-               <video
-                id="video3"
-                  class="video-js"
-                  controls
-                  preload="auto"
-                  width="320"
-                  height="200"
-                  poster="MY_VIDEO_POSTER.jpg"
-                  data-setup="{}"
-                >
-                  <source src="/liveStream/cam3/index.m3u8" type="application/x-mpegURL" />
-                  <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that
-                    <a href="https://videojs.com/html5-video-support/" target="_blank"
-                      >supports HTML5 video</a
-                    >
-                  </p>
-                </video>
-                <div class= 'card-body '>
-                  <h5 class= 'card-title '>Camera 3</h5>
-                  
-                </div>
-                <ul class= 'list-group list-group-flush ' id='cam3Times' style='overflow:scroll'>
-
-                </ul>
-               
-                <div class= 'card-body '>
-                  <a href= '# ' class= 'card-link '>Controll</a>
-                  <a href= '# ' class= 'card-link '>Save</a>
-                </div>
-
-              </div>
-            </div>
+<div class= 'card '>
+  <div class= 'card-body '>
+    <div class= 'row '>
+      <div class= 'col-sm-3  '>
+        <div class= 'card '>
+          <div class= 'card-body '>
+            <div class='card-header actionHeader'>Calendar</div> 
+            <div class='calendar'></div> 
           </div>
         </div>
       </div>
-   </div>
-   </div> 
+      <div class= 'col-sm-9'>
+            <div class= 'card '>
+              <div class='card-header actionHeader'>Video Player</div> 
+                <div class= 'card-body '>
+                    <div class= 'container '>
+                      <div class= 'row row-cols-1 row-cols-md-3 g-4'>
+                        <div class='col'>            
+                          <div class='card'>
+                          <div id='video'>
+                           <video width='400' height='auto'  controls autoplay>
+                        <source src='' type='video/mp4'>
+ 
+                            "Your browser does not support the video tag.
+                          </video>
+                          </div>
+                          <div class= 'card-body '>
+                            <h5 class= 'card-title '>Camera 1</h5>    
+                          </div>
+                          <ul class= 'list-group list-group-flush ' id='cam1Times' style='overflow:scroll'>
+                              
+                          </ul>
+                          <div class= 'card-body '>
+                            <a href= '# ' class= 'card-link '>Controll</a>
+                            <a href= '# ' class= 'card-link '>Save</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class= 'col '>
+                        <div class= 'card ' >
+                        <div id='video2'>
+                          <video width='400' height='auto'  controls autoplay>
+                        <source src='' type='video/mp4'>
+ 
+                            "Your browser does not support the video tag.
+                          </video>
+                          </div>
+                          <div class= 'card-body '>
+                            <h5 class= 'card-title '>Camera 2</h5>
+                          </div>
+                          <ul class= 'list-group list-group-flush ' id='cam2Times' style='overflow:scroll'>             
+                          </ul>
+                          <div class= 'card-body '>
+                            <a href= '# ' class= 'card-link '>Controll</a>
+                            <a href= '# ' class= 'card-link '>Save</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class= 'col  '>
+                        <div class= 'card ' >
+                          <div id='video3'>
+                          <video width='400' height='auto'  controls autoplay>
+                        <source src='' type='video/mp4'>
+ 
+                            "Your browser does not support the video tag.
+                          </video>
+                          
+                          
+                          </div>
+                          <div class= 'card-body '>
+                            <h5 class= 'card-title '>Camera 3</h5>        
+                          </div>
+                          <ul class= 'list-group list-group-flush ' id='cam3Times' style='overflow:scroll'>
+                          </ul>        
+                          <div class= 'card-body '>
+                            <a href= '# ' class= 'card-link '>Controll</a>
+                            <a href= '# ' class= 'card-link '>Save</a>
+                          </div>>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div> 
-          </div>
-          </div>
+        </div> 
       </div>
-
     </div>
-
-
+  </div>
+</div>
 `;
 
 const myLatLng = {
@@ -225,45 +166,74 @@ $(function () {
     var videourlLocation = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam1/' + locationArray[7];
     var videourlLocation2 = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
     var videourlLocation3 = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
-    var video = videojs('video');
-    var video2 = videojs('video2');
-    var video3 = videojs('video3');
-    video.src({
-      type: 'video/mp4',
-      src: videourlLocation,
-    });
-    video2.src({
-      type: 'video/mp4',
-      src: videourlLocation2,
-    });
-    video3.src({
-      type: 'video/mp4',
-      src: videourlLocation3,
-    });
-    video.play();
-    video2.play();
-    video3.play();
+
+    $('#video').html("<video width='400' height='auto'  controls autoplay>"+
+                        "<source src="+videourlLocation+" type='video/mp4'>"+
+ 
+                            "Your browser does not support the video tag."+
+                          "</video>")
+    $('#video2').html("<video width='400' height='auto'  controls autoplay>"+
+                        "<source src="+videourlLocation2+" type='video/mp4'>"+
+ 
+                            "Your browser does not support the video tag."+
+                          "</video>")
+    $('#video3').html("<video width='400' height='auto'  controls autoplay>"+
+                        "<source src="+videourlLocation3+" type='video/mp4'>"+
+ 
+                            "Your browser does not support the video tag."+
+                          "</video>")
+    
+
   });
 
   $('body').on('click', '#Streaming', function () {
-    //$(document.getElementById('')).modal('show');
-    $('#staticBackdrop').modal('show')
-console.log(":")
-   /* dreamHost.emit('startStreaming');
-    var video = document.getElementById('video');
-    var video2 = document.getElementById('video2');
-    var video3 = document.getElementById('video3');
-    var videoSrc = '/liveStream/cam1/index.m3u8';
-    var videoSrc2 = '/liveStream/cam2/index.m3u8';
-    var videoSrc3 = '/liveStream/cam3/index.m3u8';
+  var video = document.getElementById('vid1');
+  var videoSrc = 'http://192.168.196.128:3001/cammid.m3u8';
 
+  var video2 = document.getElementById('vid2');
+  var videoSrc2 = 'http://192.168.196.128:3001/camleft.m3u8';
+
+  var video3 = document.getElementById('vid3');
+  var videoSrc3 = 'http://192.168.196.128:3001/camright.m3u8';
+  if (Hls.isSupported()) {
+      var hls = new Hls();
+    hls.loadSource(videoSrc);
+    hls.attachMedia(video);
+  
+    var hls2 = new Hls();
+    hls2.loadSource(videoSrc2);
+    hls2.attachMedia(video2);
+
+    var hls3 = new Hls();
+    hls3.loadSource(videoSrc3);
+    hls3.attachMedia(video3);
+  }
+  // hls.js is not supported on platforms that do not have Media Source
+  // Extensions (MSE) enabled.
+  //
+  // When the browser has built-in HLS support (check using `canPlayType`),
+  // we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video
+  // element through the `src` property. This is using the built-in support
+  // of the plain video element, without using hls.js.
+  //
+  // Note: it would be more normal to wait on the 'canplay' event below however
+  // on Safari (where you are most likely to find built-in HLS support) the
+  // video.src URL must be on the user-driven white-list before a 'canplay'
+  // event will be emitted; the last video event that can be reliably
+  // listened-for when the URL is not on the white-list is 'loadedmetadata'.
+  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = videoSrc;
     video2.src = videoSrc2;
     video3.src = videoSrc3;
-    video.play();
-    video2.play();
-    video3.play();
-    */
+  }
+  //hls.on(Hls.Events.MANIFEST_PARSED,playVideo);
+  //hls2.on(Hls.Events.MANIFEST_PARSED,playVideo);
+  //hls3.on(Hls.Events.MANIFEST_PARSED,playVideo);
+    $('#staticBackdrop').modal('show')
+console.log(":")
+   
+
+    
   });
 
   map = new google.maps.Map(document.getElementById('map'), {
@@ -464,8 +434,8 @@ console.log(":")
           $.getJSON(cameraVideoURL, function (data) {
             console.log(data);
             for (var i = 0; i < data.length; i++) {
-              var dateCalendar = moment(data[i].DateTime).format('M/DD/YYYY');
-              console.log(moment(data[i].DateTime).format('M/DD/YYYY hh:mm'));
+              var dateCalendar = moment(data[i].DateTime).tz("America/New_York").format('M/DD/YYYY');
+              console.log(moment(data[i].DateTime).tz("America/New_York").format('M/DD/YYYY hh:mm'));
 
               //$(searchparam).css('background', 'lightblue');
 
@@ -736,14 +706,21 @@ $('#cam3Times').html('')
                 var cleanedtimeStartFilter = moment(data.cam1[0].DateTime).format('HHmm');
                 var cleanedEndtimeFilter = moment(data.cam1[numItems].DateTime).format('HHmm');
 
-                var cleanedtime = moment(data.cam1[i].DateTime).format('HH:mm');
-                var cleanedDate = moment(data.cam1[i].DateTime).format('MM/DD/YYYY');
+                var cleanedtime = moment(data.cam1[i].DateTime).tz("America/New_York").format('HH:mm');
+                var cleanedDate = moment(data.cam1[i].DateTime).tz("America/New_York").format('MM/DD/YYYY');
                 var locationString = data.cam1[i].fileLocation;
                 var locationArray = locationString.split('/');
 
                 var videourlLocation =
                   'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
                 videoSource.push(videourlLocation);
+
+                var videoDateTimeRAW = locationArray[7]
+                var videoDateTimeRawSplit = videoDateTimeRAW.split(".")
+                var videoTimeDate = videoDateTimeRawSplit[0]
+                var videoTimeRaw = videoTimeDate.split("_")
+                var videoTime = videoTimeRaw[1]
+                 var formatedTime = videoTime.replace("-", ":");
                 $('#cam1Times').append(
                   "<li class='list-group-item videoTimePlay' id='" +
                     cleanedtime +
@@ -752,7 +729,7 @@ $('#cam3Times').html('')
                     "'>" +
                     cleanedDate +
                     '   @  ' +
-                    cleanedtime +
+                    formatedTime +
                     '</li>'
                 );
                 //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
@@ -764,11 +741,16 @@ $('#cam3Times').html('')
 
           for (var i = 0; i < data.cam2.length; i++) {
             try {
-              var cleanedtime = moment(data.cam2[i].DateTime).format('HH:mm');
-              var cleanedDate = moment(data.cam2[i].DateTime).format('MM/DD/YYYY');
+              var cleanedtime = moment(data.cam2[i].DateTime).tz("America/New_York").format('HH:mm');
+              var cleanedDate = moment(data.cam2[i].DateTime).tz("America/New_York").format('MM/DD/YYYY');
               var locationString = data.cam2[i].fileLocation;
               var locationArray = locationString.split('/');
-
+ var videoDateTimeRAW = locationArray[7]
+                var videoDateTimeRawSplit = videoDateTimeRAW.split(".")
+                var videoTimeDate = videoDateTimeRawSplit[0]
+                var videoTimeRaw = videoTimeDate.split("_")
+                var videoTime = videoTimeRaw[1]
+                 var formatedTime = videoTime.replace("-", ":");
               var videourlLocation =
                 'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
               videoSource.push(videourlLocation);
@@ -780,7 +762,7 @@ $('#cam3Times').html('')
                   "'>" +
                   cleanedDate +
                   '   @   ' +
-                  cleanedtime +
+                  formatedTime +
                   '</li>'
               );
               //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
@@ -790,10 +772,17 @@ $('#cam3Times').html('')
           }
           for (var i = 0; i < data.cam3.length; i++) {
             try {
-              var cleanedtime = moment(data.cam3[i].DateTime).format('HH:mm');
-              var cleanedDate = moment(data.cam3[i].DateTime).format('MM/DD/YYYY');
+              var cleanedtime = moment(data.cam3[i].DateTime).tz("America/New_York").format('HH:mm');
+              var cleanedDate = moment(data.cam3[i].DateTime).tz("America/New_York").format('MM/DD/YYYY');
               var locationString = data.cam3[i].fileLocation;
               var locationArray = locationString.split('/');
+
+              var videoDateTimeRAW = locationArray[7]
+                var videoDateTimeRawSplit = videoDateTimeRAW.split(".")
+                var videoTimeDate = videoDateTimeRawSplit[0]
+                var videoTimeRaw = videoTimeDate.split("_")
+                var videoTime = videoTimeRaw[1]
+                 var formatedTime = videoTime.replace("-", ":");
               var videourlLocation =
                 'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
               videoSource.push(videourlLocation);
@@ -805,7 +794,7 @@ $('#cam3Times').html('')
                   "'>" +
                   cleanedDate +
                   '   @   ' +
-                  cleanedtime +
+                  formatedTime +
                   '</li>'
               );
               //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
