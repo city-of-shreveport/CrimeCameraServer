@@ -8,6 +8,7 @@ const vids = require('./models/videos');
 const cams = require('./models/cameras');
 const perfmons = require('./models/perfmons');
 const mongoose = require('mongoose');
+const { Console } = require('console');
 var spawn = require('child_process').spawn,
   streamingChildProc = null,
   streamingChildProc2 = null,
@@ -58,12 +59,16 @@ cameraNodes.on('connection', (socket) => {
   });
 
   socket.on('videoFilesCam1', function (data) {
-    //console.log("videoFilesCam1:  " + data)
-    for (var i = 0; i < data.length; i++) {
-      //console.log(data[i])
+    console.log("videoFilesCam1:  " + data)
+    var fileNmaeURL
+    for(var i = 0; i< data.length; i++){
+      console.log(data[i])
+      fileNmaeURL = data[i]
+      try {
+        
         vids.exists(
           {
-          fileLocation: data[i].metadata.format.filename,
+          fileLocation: fileNmaeURL,
           },
           function (err, doc) {
             if (err) {
@@ -71,21 +76,27 @@ cameraNodes.on('connection', (socket) => {
             //("Result :", doc) // true
 
               if (doc == false) {
-                socket.emit('getVideoInfoCam1', data[i]);
+                socket.emit('getVideoInfoCam1', fileNmaeURL);
               }
             }
           }
         )
       
+      } catch (error) {
+        console.log(error)
+      
+    }
     }
   });
   socket.on('videoFilesCam2', function (data) {
     //console.log("videoFilesCam2:  " + data)
-    for (var i = 0; i < data.length; i++) {
+  
       //console.log(data[i])
+      try {
+        
       vids.exists(
           {
-          fileLocation: data[i].metadata.format.filename,
+          fileLocation: data,
           },
           function (err, doc) {
             if (err) {
@@ -93,21 +104,26 @@ cameraNodes.on('connection', (socket) => {
             //("Result :", doc) // true
 
               if (doc == false) {
-                socket.emit('getVideoInfoCam2', data[i]);
+                socket.emit('getVideoInfoCam2', data);
               }
             }
           }
         )
-    }
+        
+      } catch (error) {
+        console.log(error)
+      }
+    
   });
   socket.on('videoFilesCam3', function (data) {
     //console.log("videoFilesCam3:  " + data)
-    for (var i = 0; i < data.length; i++) {
+    
       //console.log(data[i])
-
+try {
+  
       vids.exists(
           {
-          fileLocation: data[i].metadata.format.filename,
+          fileLocation: data,
           },
           function (err, doc) {
             if (err) {
@@ -115,11 +131,15 @@ cameraNodes.on('connection', (socket) => {
             //("Result :", doc) // true
 
               if (doc == false) {
-                socket.emit('getVideoInfoCam3', data[i]);
+                socket.emit('getVideoInfoCam3', data);
               }
             }
           }
         )
+        
+} catch (error) {console.log(error)
+  
+
     }
   });
   socket.on('videoFile', function (data) {
@@ -349,21 +369,11 @@ cameraNodes.on('connection', (socket) => {
   });
 
   socket.on('videoInfo', function (data) {
-    //console.log(data.nodeinfo)
-
+    console.log(data)
     try {
-      vids.exists(
-        {
-          fileLocation: data.metadata.format.filename,
-        },
-        function (err, doc) {
-          if (err) {
-          } else {
-            //("Result :", doc) // true
-
-            if (doc == false) {
-              try {
-                //console.log(data)
+      
+    
+                console.log(data.length)
                 var camera = data.cam;
                 var node = data.nodeinfo.name;
                 var nodeID = data.nodeinfo.id;
@@ -400,18 +410,15 @@ cameraNodes.on('connection', (socket) => {
                   DateTime: dateTimeString,
                 });
                 vid.save();
-              } catch (err) {
-                //console.log(err)
-              }
-              //console.log(err)
-            }
-          }
-        }
-      );
-    } catch (err) {
-      //console.log(err)
+              
+    } catch (error) {
+      console.log(error)
     }
-  });
+              //console.log(err)
+              })
+          
+        
+
 });
 
 socketApi.sendNotification = function () {

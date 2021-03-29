@@ -226,9 +226,17 @@ $(function () {
     video2.src = videoSrc2;
     video3.src = videoSrc3;
   }
-  //hls.on(Hls.Events.MANIFEST_PARSED,playVideo);
-  //hls2.on(Hls.Events.MANIFEST_PARSED,playVideo);
-  //hls3.on(Hls.Events.MANIFEST_PARSED,playVideo);
+video.muted = 'muted';
+video.autoplay = 'autoplay';
+video.playsinline = 'true';
+
+video2.muted = 'muted';
+video2.autoplay = 'autoplay';
+video2.playsinline = 'true';
+
+video3.muted = 'muted';
+video3.autoplay = 'autoplay';
+video3.playsinline = 'true';
     $('#staticBackdrop').modal('show')
 console.log(":")
    

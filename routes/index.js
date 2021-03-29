@@ -20,7 +20,6 @@ const ffmpeg = spawn(
     'tcp', '-i', 'rtsp://admin:UUnv9njxg123@192.168.196.164:555/cam/realmonitor?channel=1&subtype=0', 
     '-an', '-c:v', 'copy', '-f', 'mp4', '-movflags', 
     '+frag_keyframe+empty_moov+default_base_moof', 
-    '-metadata', 'title="ip 216.4.116.29"', 
     '-reset_timestamps', '1', 'pipe:1'],
     {stdio: ['ignore', 'pipe', 'inherit']}
 );
@@ -36,7 +35,6 @@ const ffmpeg2 = spawn(
     'tcp', '-i', 'rtsp://admin:UUnv9njxg123@192.168.196.164:554/cam/realmonitor?channel=1&subtype=0', 
     '-an', '-c:v', 'copy', '-f', 'mp4', '-movflags', 
     '+frag_keyframe+empty_moov+default_base_moof', 
-    '-metadata', 'title="ip 216.4.116.29"', 
     '-reset_timestamps', '1', 'pipe:1'],
     {stdio: ['ignore', 'pipe', 'inherit']}
 );
@@ -53,7 +51,6 @@ const ffmpeg3 = spawn(
     'tcp', '-i', 'rtsp://admin:UUnv9njxg123@192.168.196.164:556/cam/realmonitor?channel=1&subtype=0', 
     '-an', '-c:v', 'copy', '-f', 'mp4', '-movflags', 
     '+frag_keyframe+empty_moov+default_base_moof', 
-    '-metadata', 'title="ip 216.4.116.29"', 
     '-reset_timestamps', '1', 'pipe:1'],
     {stdio: ['ignore', 'pipe', 'inherit']}
 );
@@ -104,7 +101,6 @@ router.get('/management/:nodeName', async (req, res) => {
   });
 });
 
-<<<<<<< HEAD
 
 
 
@@ -203,6 +199,4 @@ router.get('/camright:id.m4s', (req, res) => {
 
 
 
-=======
->>>>>>> c2706b3964a5f765c4e38afa8e2c5ecb087bd08b
 module.exports = router;
