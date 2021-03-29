@@ -58,17 +58,42 @@ cameraNodes.on('connection', (socket) => {
     console.log('CameraAction');
   });
 
-  socket.on('videoFilesCam1', function (data) {
-    console.log("videoFilesCam1:  " + data)
+  socket.on('videoFilesCam1', function (data1) {
+    console.log(data1)
     var fileNmaeURL
-    for(var i = 0; i< data.length; i++){
-      console.log(data[i])
-      fileNmaeURL = data[i]
+   var fileLocationDB = '/home/pi/CrimeCamera/public/videos/cam1/' + data1
+      
+ 
+    
+       
+        vids.exists(
+          {
+          fileLocation: fileLocationDB,
+          },
+          function (err, doc) {
+            if (err) { console.log(err)
+            } else {
+            //("Result :", doc) // true
+
+              if (doc == false) {
+                socket.emit('getVideoInfoCam1', data1);
+              }
+            }
+          }
+        )
+      
+    
+  });
+  socket.on('videoFilesCam2', function (data2) {
+   var fileNmaeURL
+    var fileLocationDB = '/home/pi/CrimeCamera/public/videos/cam2/' + data2
+      //console.log(data[i])
+  
       try {
         
         vids.exists(
           {
-          fileLocation: fileNmaeURL,
+          fileLocation: fileLocationDB,
           },
           function (err, doc) {
             if (err) {
@@ -76,27 +101,28 @@ cameraNodes.on('connection', (socket) => {
             //("Result :", doc) // true
 
               if (doc == false) {
-                socket.emit('getVideoInfoCam1', fileNmaeURL);
+                socket.emit('getVideoInfoCam2', data2);
               }
             }
           }
         )
       
       } catch (error) {
-        console.log(error)
+        //console.log(error)
       
-    }
+    
     }
   });
-  socket.on('videoFilesCam2', function (data) {
-    //console.log("videoFilesCam2:  " + data)
-  
+  socket.on('videoFilesCam3', function (data3) {
+  var fileNmaeURL
+
       //console.log(data[i])
+    var fileLocationDB = '/home/pi/CrimeCamera/public/videos/cam3/' + data3
       try {
         
-      vids.exists(
+        vids.exists(
           {
-          fileLocation: data,
+          fileLocation: fileLocationDB,
           },
           function (err, doc) {
             if (err) {
@@ -104,66 +130,19 @@ cameraNodes.on('connection', (socket) => {
             //("Result :", doc) // true
 
               if (doc == false) {
-                socket.emit('getVideoInfoCam2', data);
+                socket.emit('getVideoInfoCam3', data3);
               }
             }
           }
         )
-        
-      } catch (error) {
-        console.log(error)
-      }
-    
-  });
-  socket.on('videoFilesCam3', function (data) {
-    //console.log("videoFilesCam3:  " + data)
-    
-      //console.log(data[i])
-try {
-  
-      vids.exists(
-          {
-          fileLocation: data,
-          },
-          function (err, doc) {
-            if (err) {
-            } else {
-            //("Result :", doc) // true
-
-              if (doc == false) {
-                socket.emit('getVideoInfoCam3', data);
-              }
-            }
-          }
-        )
-        
-} catch (error) {console.log(error)
-  
-
-    }
-  });
-  socket.on('videoFile', function (data) {
-    //console.log("videoFile:  " + data)
-    for (var i = 0; i < data.length; i++) {
-      // console.log(data[i])
       
-      vids.exists(
-          {
-          fileLocation: data[i].metadata.format.filename,
-          },
-          function (err, doc) {
-            if (err) {
-            } else {
-            //("Result :", doc) // true
-
-              if (doc == false) {
-                socket.emit('getVideoInfo', data[i]);
-              }
-            }
-          }
-        )
+      } catch (error) {
+        //console.log(error)
+      
     }
+    
   });
+
 
   socket.on('perfmonStats', function (data) {
     //console.log(data)
@@ -369,11 +348,11 @@ try {
   });
 
   socket.on('videoInfo', function (data) {
-    console.log(data)
+
     try {
       
     
-                console.log(data.length)
+             
                 var camera = data.cam;
                 var node = data.nodeinfo.name;
                 var nodeID = data.nodeinfo.id;
@@ -412,7 +391,7 @@ try {
                 vid.save();
               
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
               //console.log(err)
               })
