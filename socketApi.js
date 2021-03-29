@@ -52,39 +52,96 @@ function checkLastCheckIn() {
   );
 }
 cameraNodes.on('connection', (socket) => {
-  console.log('newconnection');
-  socket.emit('hi');
+  socket.on('Cameraaction', function (action) {
+    socket.broadcast.emit('Cameraaction', action);
+    console.log('CameraAction');
+  });
+
   socket.on('videoFilesCam1', function (data) {
     //console.log("videoFilesCam1:  " + data)
     for (var i = 0; i < data.length; i++) {
       //console.log(data[i])
-      socket.emit('getVideoInfoCam1', data[i]);
-    }
-  });
+        vids.exists(
+          {
+          fileLocation: data[i].metadata.format.filename,
+          },
+          function (err, doc) {
+            if (err) {
+            } else {
+            //("Result :", doc) // true
 
-  socket.on('Cameraaction', function (action) {
-    socket.broadcast.emit('Cameraaction', action);
-    console.log('CameraAction');
+              if (doc == false) {
+                socket.emit('getVideoInfoCam1', data[i]);
+              }
+            }
+          }
+        )
+      
+    }
   });
   socket.on('videoFilesCam2', function (data) {
     //console.log("videoFilesCam2:  " + data)
     for (var i = 0; i < data.length; i++) {
       //console.log(data[i])
-      socket.emit('getVideoInfoCam2', data[i]);
+      vids.exists(
+          {
+          fileLocation: data[i].metadata.format.filename,
+          },
+          function (err, doc) {
+            if (err) {
+            } else {
+            //("Result :", doc) // true
+
+              if (doc == false) {
+                socket.emit('getVideoInfoCam2', data[i]);
+              }
+            }
+          }
+        )
     }
   });
   socket.on('videoFilesCam3', function (data) {
     //console.log("videoFilesCam3:  " + data)
     for (var i = 0; i < data.length; i++) {
       //console.log(data[i])
-      socket.emit('getVideoInfoCam3', data[i]);
+
+      vids.exists(
+          {
+          fileLocation: data[i].metadata.format.filename,
+          },
+          function (err, doc) {
+            if (err) {
+            } else {
+            //("Result :", doc) // true
+
+              if (doc == false) {
+                socket.emit('getVideoInfoCam3', data[i]);
+              }
+            }
+          }
+        )
     }
   });
   socket.on('videoFile', function (data) {
     //console.log("videoFile:  " + data)
     for (var i = 0; i < data.length; i++) {
       // console.log(data[i])
-      socket.emit('getVideoInfo', data[i]);
+      
+      vids.exists(
+          {
+          fileLocation: data[i].metadata.format.filename,
+          },
+          function (err, doc) {
+            if (err) {
+            } else {
+            //("Result :", doc) // true
+
+              if (doc == false) {
+                socket.emit('getVideoInfo', data[i]);
+              }
+            }
+          }
+        )
     }
   });
 
@@ -93,6 +150,8 @@ cameraNodes.on('connection', (socket) => {
     const perf = new perfmons(data);
     perf.save();
   });
+
+
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
 
@@ -146,6 +205,9 @@ cameraNodes.on('connection', (socket) => {
 
     socket.emit('getVideos');
   });
+
+
+
   socket.on('stopStreaming', function (d) {
     streamingChildProc.kill('SIGINT');
     streamingChildProc2.kill('SIGINT');
