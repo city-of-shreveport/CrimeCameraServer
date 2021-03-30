@@ -163,9 +163,9 @@ $(function () {
 
     var locationArray = loc.split('/');
 
-    var videourlLocation = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam1/' + locationArray[7];
-    var videourlLocation2 = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
-    var videourlLocation3 = 'http://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
+    var videourlLocation = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam1/' + locationArray[7];
+    var videourlLocation2 = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
+    var videourlLocation3 = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
 
     $('#video').html("<video width='400' height='auto'  controls autoplay>"+
                         "<source src="+videourlLocation+" type='video/mp4'>"+
