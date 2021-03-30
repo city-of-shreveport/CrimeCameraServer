@@ -16,6 +16,7 @@
     "moment-timezone": "^0.5.33",
     "mongoose": "^5.11.13",
     "morgan": "~1.9.1",
+    "mp4frag": "^0.3.0",
     "node-rtsp-stream": "0.0.9",
     "node-scp": "0.0.11",
     "npm": "^7.7.4",
