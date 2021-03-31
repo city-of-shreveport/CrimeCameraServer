@@ -22,159 +22,48 @@
   </head>
 
   <body>
-    <div style="width: 25vw; display: inline-block">
-      <h2 style="text-align: center">Camera Information</h2>
-      <pre class="prettyprint lang-json" style="max-height: 90vh"><%= JSON.stringify(camera, null, 4) %></pre>
+    <div style="width: 25vw; height: 90vh; display: inline-block">
+      <a href="/management" style="display: inline-block; width: 100px; text-align: center">Back</a>
+      <h2 style="display: inline-block; text-align: center"><%= camera.nodeName %></h2>
+      <pre class="prettyprint lang-json" style="height: 90vh"><%= JSON.stringify(camera, null, 4) %></pre>
     </div>
 
-    <div class="content" style="width: 70vw; display: inline-block">
-      <canvas id="chart-0" style="width: 70vw; height: 90vh"></canvas>
+    <div class="content" style="width: 70vw; height: 90vh; display: inline-block">
+      <canvas id="statsChart" style="width: 70vw; height: 90vh"></canvas>
     </div>
 
     <script>
-      var presets = window.chartColors;
-      var utils = Samples.utils;
-      var inputs = {
-        min: 20,
-        max: 80,
-        count: 8,
-        decimals: 2,
-        continuity: 1,
-      };
+      var ctx = document.getElementById('statsChart').getContext('2d');
 
-      function generateData() {
-        return utils.numbers(inputs);
-      }
-
-      function generateLabels() {
-        return utils.months({ count: inputs.count });
-      }
-
-      utils.srand(42);
-
-      var data = {
-        labels: generateLabels(),
-        datasets: [
-          {
-            backgroundColor: utils.transparentize(presets.red),
-            borderColor: presets.red,
-            data: generateData(),
-            hidden: true,
-            label: 'D0',
-          },
-          {
-            backgroundColor: utils.transparentize(presets.orange),
-            borderColor: presets.orange,
-            data: generateData(),
-            label: 'D1',
-            fill: '-1',
-          },
-          {
-            backgroundColor: utils.transparentize(presets.yellow),
-            borderColor: presets.yellow,
-            data: generateData(),
-            hidden: true,
-            label: 'D2',
-            fill: 1,
-          },
-          {
-            backgroundColor: utils.transparentize(presets.green),
-            borderColor: presets.green,
-            data: generateData(),
-            label: 'D3',
-            fill: '-1',
-          },
-          {
-            backgroundColor: utils.transparentize(presets.blue),
-            borderColor: presets.blue,
-            data: generateData(),
-            label: 'D4',
-            fill: '-1',
-          },
-          {
-            backgroundColor: utils.transparentize(presets.grey),
-            borderColor: presets.grey,
-            data: generateData(),
-            label: 'D5',
-            fill: '+2',
-          },
-          {
-            backgroundColor: utils.transparentize(presets.purple),
-            borderColor: presets.purple,
-            data: generateData(),
-            label: 'D6',
-            fill: false,
-          },
-          {
-            backgroundColor: utils.transparentize(presets.red),
-            borderColor: presets.red,
-            data: generateData(),
-            label: 'D7',
-            fill: 8,
-          },
-          {
-            backgroundColor: utils.transparentize(presets.orange),
-            borderColor: presets.orange,
-            data: generateData(),
-            hidden: true,
-            label: 'D8',
-            fill: 'end',
-          },
-        ],
-      };
-
-      var options = {
-        maintainAspectRatio: false,
-        spanGaps: false,
-        elements: {
-          line: {
-            tension: 0.000001,
-          },
-        },
-        scales: {
-          yAxes: [
+      var statsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: <%- JSON.stringify(cameraPerfmons.map((perfmon) => perfmon.x )) %>,
+          datasets: [
             {
-              stacked: true,
+              label: 'CPU Usage',
+              data: <%- JSON.stringify(cameraPerfmons) %>,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+              ],
+              borderWidth: 1,
             },
           ],
-        },
-        plugins: {
-          filler: {
-            propagate: false,
-          },
-          'samples-filler-analyser': {
-            target: 'chart-analyser',
-          },
-        },
-      };
-
-      var chart = new Chart('chart-0', {
-        type: 'line',
-        data: data,
-        options: options,
+        }
       });
-
-      // eslint-disable-next-line no-unused-vars
-      function togglePropagate(btn) {
-        var value = btn.classList.toggle('btn-on');
-        chart.options.plugins.filler.propagate = value;
-        chart.update();
-      }
-
-      // eslint-disable-next-line no-unused-vars
-      function toggleSmooth(btn) {
-        var value = btn.classList.toggle('btn-on');
-        chart.options.elements.line.tension = value ? 0.4 : 0.000001;
-        chart.update();
-      }
-
-      // eslint-disable-next-line no-unused-vars
-      function randomize() {
-        chart.data.datasets.forEach(function (dataset) {
-          dataset.data = generateData();
-        });
-        chart.update();
-      }
     </script>
 
     <script

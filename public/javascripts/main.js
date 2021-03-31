@@ -18,7 +18,7 @@ var newGrid = `
       <div class= 'card-body '>
         <div class= 'row '>
           <div class= 'col-sm-6 '>
-            <div class='card border-dark mb-4' style='max-width: 100%;'> 
+            <div class='card border-dark mb-4' style='max-width: 100%;'>               
               <div class='card-header actionHeader'>Cameras</div> 
               <div class='card-body text-dark'>  
                 <input class='form-control' id='filterCameras' type='text' placeholder='Search..'></input> 
@@ -26,6 +26,7 @@ var newGrid = `
                 </ul> 
               </div> 
             </div>
+            <a href="/management" style="display: inline-block; text-align: center">Manage Cameras</a>
           </div> 
           <div class= 'col-sm-6 '>
             <div class= 'card ' >
@@ -155,7 +156,6 @@ $(function () {
   $('#mainDIV').html(newGrid);
   var myModal = document.getElementById('exampleModal');
 
-
   $('body').on('click', '.videoTimePlay', function (e) {
     var li = this.id;
     var loc = document.getElementById(li).getAttribute('data-location');
@@ -167,81 +167,85 @@ $(function () {
     var videourlLocation2 = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
     var videourlLocation3 = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
 
-    $('#video').html("<video width='400' height='auto'  controls autoplay>"+
-                        "<source src="+videourlLocation+" type='video/mp4'>"+
- 
-                            "Your browser does not support the video tag."+
-                          "</video>")
-    $('#video2').html("<video width='400' height='auto'  controls autoplay>"+
-                        "<source src="+videourlLocation2+" type='video/mp4'>"+
- 
-                            "Your browser does not support the video tag."+
-                          "</video>")
-    $('#video3').html("<video width='400' height='auto'  controls autoplay>"+
-                        "<source src="+videourlLocation3+" type='video/mp4'>"+
- 
-                            "Your browser does not support the video tag."+
-                          "</video>")
-    
-
+    $('#video').html(
+      "<video width='400' height='auto'  controls autoplay>" +
+        '<source src=' +
+        videourlLocation +
+        " type='video/mp4'>" +
+        'Your browser does not support the video tag.' +
+        '</video>'
+    );
+    $('#video2').html(
+      "<video width='400' height='auto'  controls autoplay>" +
+        '<source src=' +
+        videourlLocation2 +
+        " type='video/mp4'>" +
+        'Your browser does not support the video tag.' +
+        '</video>'
+    );
+    $('#video3').html(
+      "<video width='400' height='auto'  controls autoplay>" +
+        '<source src=' +
+        videourlLocation3 +
+        " type='video/mp4'>" +
+        'Your browser does not support the video tag.' +
+        '</video>'
+    );
   });
 
   $('body').on('click', '#Streaming', function () {
-  var video = document.getElementById('vid1');
-  var videoSrc = 'http://192.168.196.128:3001/cammid.m3u8';
+    var video = document.getElementById('vid1');
+    var videoSrc = 'http://192.168.196.128:3001/cammid.m3u8';
 
-  var video2 = document.getElementById('vid2');
-  var videoSrc2 = 'http://192.168.196.128:3001/camleft.m3u8';
+    var video2 = document.getElementById('vid2');
+    var videoSrc2 = 'http://192.168.196.128:3001/camleft.m3u8';
 
-  var video3 = document.getElementById('vid3');
-  var videoSrc3 = 'http://192.168.196.128:3001/camright.m3u8';
-  if (Hls.isSupported()) {
+    var video3 = document.getElementById('vid3');
+    var videoSrc3 = 'http://192.168.196.128:3001/camright.m3u8';
+    if (Hls.isSupported()) {
       var hls = new Hls();
-    hls.loadSource(videoSrc);
-    hls.attachMedia(video);
-  
-    var hls2 = new Hls();
-    hls2.loadSource(videoSrc2);
-    hls2.attachMedia(video2);
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
 
-    var hls3 = new Hls();
-    hls3.loadSource(videoSrc3);
-    hls3.attachMedia(video3);
-  }
-  // hls.js is not supported on platforms that do not have Media Source
-  // Extensions (MSE) enabled.
-  //
-  // When the browser has built-in HLS support (check using `canPlayType`),
-  // we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video
-  // element through the `src` property. This is using the built-in support
-  // of the plain video element, without using hls.js.
-  //
-  // Note: it would be more normal to wait on the 'canplay' event below however
-  // on Safari (where you are most likely to find built-in HLS support) the
-  // video.src URL must be on the user-driven white-list before a 'canplay'
-  // event will be emitted; the last video event that can be reliably
-  // listened-for when the URL is not on the white-list is 'loadedmetadata'.
-  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc;
-    video2.src = videoSrc2;
-    video3.src = videoSrc3;
-  }
-video.muted = 'muted';
-video.autoplay = 'autoplay';
-video.playsinline = 'true';
+      var hls2 = new Hls();
+      hls2.loadSource(videoSrc2);
+      hls2.attachMedia(video2);
 
-video2.muted = 'muted';
-video2.autoplay = 'autoplay';
-video2.playsinline = 'true';
+      var hls3 = new Hls();
+      hls3.loadSource(videoSrc3);
+      hls3.attachMedia(video3);
+    }
+    // hls.js is not supported on platforms that do not have Media Source
+    // Extensions (MSE) enabled.
+    //
+    // When the browser has built-in HLS support (check using `canPlayType`),
+    // we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video
+    // element through the `src` property. This is using the built-in support
+    // of the plain video element, without using hls.js.
+    //
+    // Note: it would be more normal to wait on the 'canplay' event below however
+    // on Safari (where you are most likely to find built-in HLS support) the
+    // video.src URL must be on the user-driven white-list before a 'canplay'
+    // event will be emitted; the last video event that can be reliably
+    // listened-for when the URL is not on the white-list is 'loadedmetadata'.
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = videoSrc;
+      video2.src = videoSrc2;
+      video3.src = videoSrc3;
+    }
+    video.muted = 'muted';
+    video.autoplay = 'autoplay';
+    video.playsinline = 'true';
 
-video3.muted = 'muted';
-video3.autoplay = 'autoplay';
-video3.playsinline = 'true';
-    $('#staticBackdrop').modal('show')
-console.log(":")
-   
+    video2.muted = 'muted';
+    video2.autoplay = 'autoplay';
+    video2.playsinline = 'true';
 
-    
+    video3.muted = 'muted';
+    video3.autoplay = 'autoplay';
+    video3.playsinline = 'true';
+    $('#staticBackdrop').modal('show');
+    console.log(':');
   });
 
   map = new google.maps.Map(document.getElementById('map'), {
@@ -404,7 +408,7 @@ console.log(":")
 
     for (var i = 0; i < data.length; i++) {
       var checkedinTime = moment(data[i].lastCheckIn).format('MM-DD hh:mm');
- nodeName = data[0].nodeName;
+      nodeName = data[0].nodeName;
       $('#cameraListItems').append(
         "<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + '</li>'
       );
@@ -422,7 +426,7 @@ console.log(":")
 
         $.getJSON('http://192.168.196.128:3001/cameras/getCameraInfo/' + nodeName, function (data) {
           console.log(data);
-         
+
           var checkinTime = moment(data[0].lastCheckIn);
           var now = moment();
           var difference = now.diff(checkinTime, 'seconds');
@@ -442,8 +446,8 @@ console.log(":")
           $.getJSON(cameraVideoURL, function (data) {
             console.log(data);
             for (var i = 0; i < data.length; i++) {
-              var dateCalendar = moment(data[i].DateTime).tz("America/New_York").format('M/DD/YYYY');
-              console.log(moment(data[i].DateTime).tz("America/New_York").format('M/DD/YYYY hh:mm'));
+              var dateCalendar = moment(data[i].DateTime).tz('America/New_York').format('M/DD/YYYY');
+              console.log(moment(data[i].DateTime).tz('America/New_York').format('M/DD/YYYY hh:mm'));
 
               //$(searchparam).css('background', 'lightblue');
 
@@ -695,9 +699,9 @@ console.log(":")
         });
 
         $.getJSON(getURLString, function (data) {
-          $('#cam1Times').html('')
-$('#cam2Times').html('')
-$('#cam3Times').html('')
+          $('#cam1Times').html('');
+          $('#cam2Times').html('');
+          $('#cam3Times').html('');
           if (data.cam1.length > 0) {
             $('#videoListGrid').append(
               "<div class='col-sm'>" +
@@ -714,8 +718,8 @@ $('#cam3Times').html('')
                 var cleanedtimeStartFilter = moment(data.cam1[0].DateTime).format('HHmm');
                 var cleanedEndtimeFilter = moment(data.cam1[numItems].DateTime).format('HHmm');
 
-                var cleanedtime = moment(data.cam1[i].DateTime).tz("America/New_York").format('HH:mm');
-                var cleanedDate = moment(data.cam1[i].DateTime).tz("America/New_York").format('MM/DD/YYYY');
+                var cleanedtime = moment(data.cam1[i].DateTime).tz('America/New_York').format('HH:mm');
+                var cleanedDate = moment(data.cam1[i].DateTime).tz('America/New_York').format('MM/DD/YYYY');
                 var locationString = data.cam1[i].fileLocation;
                 var locationArray = locationString.split('/');
 
@@ -723,12 +727,12 @@ $('#cam3Times').html('')
                   'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
                 videoSource.push(videourlLocation);
 
-                var videoDateTimeRAW = locationArray[7]
-                var videoDateTimeRawSplit = videoDateTimeRAW.split(".")
-                var videoTimeDate = videoDateTimeRawSplit[0]
-                var videoTimeRaw = videoTimeDate.split("_")
-                var videoTime = videoTimeRaw[1]
-                 var formatedTime = videoTime.replace("-", ":");
+                var videoDateTimeRAW = locationArray[7];
+                var videoDateTimeRawSplit = videoDateTimeRAW.split('.');
+                var videoTimeDate = videoDateTimeRawSplit[0];
+                var videoTimeRaw = videoTimeDate.split('_');
+                var videoTime = videoTimeRaw[1];
+                var formatedTime = videoTime.replace('-', ':');
                 $('#cam1Times').append(
                   "<li class='list-group-item videoTimePlay' id='" +
                     cleanedtime +
@@ -749,16 +753,16 @@ $('#cam3Times').html('')
 
           for (var i = 0; i < data.cam2.length; i++) {
             try {
-              var cleanedtime = moment(data.cam2[i].DateTime).tz("America/New_York").format('HH:mm');
-              var cleanedDate = moment(data.cam2[i].DateTime).tz("America/New_York").format('MM/DD/YYYY');
+              var cleanedtime = moment(data.cam2[i].DateTime).tz('America/New_York').format('HH:mm');
+              var cleanedDate = moment(data.cam2[i].DateTime).tz('America/New_York').format('MM/DD/YYYY');
               var locationString = data.cam2[i].fileLocation;
               var locationArray = locationString.split('/');
- var videoDateTimeRAW = locationArray[7]
-                var videoDateTimeRawSplit = videoDateTimeRAW.split(".")
-                var videoTimeDate = videoDateTimeRawSplit[0]
-                var videoTimeRaw = videoTimeDate.split("_")
-                var videoTime = videoTimeRaw[1]
-                 var formatedTime = videoTime.replace("-", ":");
+              var videoDateTimeRAW = locationArray[7];
+              var videoDateTimeRawSplit = videoDateTimeRAW.split('.');
+              var videoTimeDate = videoDateTimeRawSplit[0];
+              var videoTimeRaw = videoTimeDate.split('_');
+              var videoTime = videoTimeRaw[1];
+              var formatedTime = videoTime.replace('-', ':');
               var videourlLocation =
                 'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
               videoSource.push(videourlLocation);
@@ -780,17 +784,17 @@ $('#cam3Times').html('')
           }
           for (var i = 0; i < data.cam3.length; i++) {
             try {
-              var cleanedtime = moment(data.cam3[i].DateTime).tz("America/New_York").format('HH:mm');
-              var cleanedDate = moment(data.cam3[i].DateTime).tz("America/New_York").format('MM/DD/YYYY');
+              var cleanedtime = moment(data.cam3[i].DateTime).tz('America/New_York').format('HH:mm');
+              var cleanedDate = moment(data.cam3[i].DateTime).tz('America/New_York').format('MM/DD/YYYY');
               var locationString = data.cam3[i].fileLocation;
               var locationArray = locationString.split('/');
 
-              var videoDateTimeRAW = locationArray[7]
-                var videoDateTimeRawSplit = videoDateTimeRAW.split(".")
-                var videoTimeDate = videoDateTimeRawSplit[0]
-                var videoTimeRaw = videoTimeDate.split("_")
-                var videoTime = videoTimeRaw[1]
-                 var formatedTime = videoTime.replace("-", ":");
+              var videoDateTimeRAW = locationArray[7];
+              var videoDateTimeRawSplit = videoDateTimeRAW.split('.');
+              var videoTimeDate = videoDateTimeRawSplit[0];
+              var videoTimeRaw = videoTimeDate.split('_');
+              var videoTime = videoTimeRaw[1];
+              var formatedTime = videoTime.replace('-', ':');
               var videourlLocation =
                 'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
               videoSource.push(videourlLocation);

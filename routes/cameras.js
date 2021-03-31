@@ -10,17 +10,14 @@ router.get('/haha', async (req, res) => {
 // Get all posts
 
 router.get('/oldestVideo/:nodeName', async (req, res) => {
-
-  var node = req.params.nodeName
-  vids.find({ node: node }).sort({ _id: -1 }).limit(1).exec(function(err, docs){
+  var node = req.params.nodeName;
+  vids
+    .find({ node: node })
+    .sort({ _id: -1 })
+    .limit(1)
+    .exec(function (err, docs) {
       res.send(docs);
-
-
-
-
-
-  })
-  
+    });
 });
 router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
   const nodeName = req.params.nodeName;
