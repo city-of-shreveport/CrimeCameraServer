@@ -26,7 +26,6 @@ var newGrid = `
                 </ul> 
               </div> 
             </div>
-            <a href="/management" style="display: inline-block; text-align: center">Manage Cameras</a>
           </div> 
           <div class= 'col-sm-6 '>
             <div class= 'card ' >
@@ -191,11 +190,8 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
-<<<<<<< HEAD
-dreamHost.emit('startStreaming', nodeName);
+    dreamHost.emit('startStreaming', nodeName);
 
-=======
->>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
     var video = document.getElementById('vid1');
     var videoSrc = 'http://192.168.196.128:3001/cammid.m3u8';
 
@@ -475,7 +471,6 @@ dreamHost.emit('startStreaming', nodeName);
       );
     }
   });
-
 
   ///////////// Calendar Stuff
   class Calendar {

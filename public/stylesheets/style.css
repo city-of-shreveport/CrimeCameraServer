@@ -34,17 +34,12 @@ a {
   height: 480px;
 }
 
-.modal{
+.modal {
   background-color: white;
-
-
-
 }
 .modal-dialog {
   background-color: whitesmoke;
   min-width: 75%;
-
-
 }
 
 .vjs-tech {
@@ -225,5 +220,3 @@ a {
   max-height: 200px;
   overflow: scroll;
 }
-
-

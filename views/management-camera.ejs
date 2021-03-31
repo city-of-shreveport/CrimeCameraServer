@@ -17,8 +17,6 @@
       integrity="sha256-t9UJPrESBeG2ojKTIcFLPGF7nHi2vEc7f5A2KpH/UBU="
       crossorigin="anonymous"
     ></script>
-    <script src="/javascripts/utils.js"></script>
-    <script src="/javascripts/analyser.js"></script>
   </head>
 
   <body>
@@ -38,11 +36,11 @@
       var statsChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: <%- JSON.stringify(cameraPerfmons.map((perfmon) => perfmon.x )) %>,
+          labels: <%- JSON.stringify(perfmonDates) %>,
           datasets: [
             {
-              label: 'CPU Usage',
-              data: <%- JSON.stringify(cameraPerfmons) %>,
+              label: 'CPU avgLoad',
+              data: <%- JSON.stringify(avgLoad) %>,
               backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -66,6 +64,8 @@
       });
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment-timezone-with-data-10-year-range.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
