@@ -9,6 +9,7 @@ const Mp4Frag = require('mp4frag');
 const mp4frag = new Mp4Frag({ hlsPlaylistSize: 3, hlsPlaylistBase: 'camleft' });
 const mp4frag2 = new Mp4Frag({ hlsPlaylistSize: 3, hlsPlaylistBase: 'cammid' });
 const mp4frag3 = new Mp4Frag({ hlsPlaylistSize: 3, hlsPlaylistBase: 'camright' });
+<<<<<<< HEAD
 
 function formatArguments(template) {
   return template
@@ -34,6 +35,14 @@ const ffmpeg = spawn(
     -movflags +frag_keyframe+empty_moov+default_base_moof
     -reset_timestamps 1 pipe:1
   `),
+=======
+
+const ffmpeg = spawn(
+  'ffmpeg',
+  `-hide_banner -loglevel error -probesize 64 -analyzeduration 100000 -reorder_queue_size 5 -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@192.168.196.164:555/cam/realmonitor?channel=1&subtype=0 -an -c:v copy -f mp4 -movflags +frag_keyframe+empty_moov+default_base_moof -reset_timestamps 1 pipe:1`.split(
+    ' '
+  ),
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
   { stdio: ['ignore', 'pipe', 'inherit'] }
 );
 
@@ -41,6 +50,7 @@ ffmpeg.stdio[1].pipe(mp4frag);
 
 const ffmpeg2 = spawn(
   'ffmpeg',
+<<<<<<< HEAD
   formatArguments(`
     -hide_banner
     -loglevel error
@@ -55,6 +65,11 @@ const ffmpeg2 = spawn(
     -movflags +frag_keyframe+empty_moov+default_base_moof
     -reset_timestamps 1 pipe:1
   `),
+=======
+  `-hide_banner -loglevel error -probesize 64 -analyzeduration 100000 -reorder_queue_size 5 -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@192.168.196.164:554/cam/realmonitor?channel=1&subtype=0 -an -c:v copy -f mp4 -movflags +frag_keyframe+empty_moov+default_base_moof -reset_timestamps 1 pipe:1`.split(
+    ' '
+  ),
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
   { stdio: ['ignore', 'pipe', 'inherit'] }
 );
 //THIS IS S ATEST 
@@ -62,6 +77,7 @@ ffmpeg2.stdio[1].pipe(mp4frag2);
 
 const ffmpeg3 = spawn(
   'ffmpeg',
+<<<<<<< HEAD
   formatArguments(`
     -hide_banner
     -loglevel error
@@ -76,6 +92,11 @@ const ffmpeg3 = spawn(
     -movflags +frag_keyframe+empty_moov+default_base_moof
     -reset_timestamps 1 pipe:1
   `),
+=======
+  `-hide_banner -loglevel error -probesize 64 -analyzeduration 100000 -reorder_queue_size 5 -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@192.168.196.164:556/cam/realmonitor?channel=1&subtype=0 -an -c:v copy -f mp4 -movflags +frag_keyframe+empty_moov+default_base_moof -reset_timestamps 1 pipe:1`.split(
+    ' '
+  ),
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
   { stdio: ['ignore', 'pipe', 'inherit'] }
 );
 
@@ -116,6 +137,7 @@ router.get('/management/:nodeName', async (req, res) => {
     .sort({ upDated: -1 })
     .limit(30);
 
+<<<<<<< HEAD
   avgLoad = cameraPerfmons.map((perfmon) => {
     return { x: perfmon.upDated, y: perfmon.currentLoad.avgLoad };
   });
@@ -128,6 +150,12 @@ router.get('/management/:nodeName', async (req, res) => {
     return { x: perfmon.upDated, y: perfmon.currentLoad.currentLoadUser };
   });
 
+=======
+  cameraPerfmons = cameraPerfmons.map((perfmon) => {
+    return { x: perfmon.upDated, y: perfmon.currentLoad.currentLoad };
+  });
+
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
   res.render('management-camera', {
     title: 'Camera Information',
     camera: camera[0],

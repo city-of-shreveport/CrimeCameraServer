@@ -30,7 +30,7 @@
           <b>mem.used:</b> <%= camera.lastPerfmon.mem.used %><br />
           <b>mem.available:</b> <%= camera.lastPerfmon.mem.available %><br />
         </p>
-        <a href="#" class="card-link">More Info Coming Soon!</a>
+        <a href="/management/<%= camera.nodeName %>" class="card-link">More Info</a>
       </div>
     </div>
     <% }) %>

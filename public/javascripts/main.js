@@ -191,8 +191,11 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
+<<<<<<< HEAD
 dreamHost.emit('startStreaming', nodeName);
 
+=======
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
     var video = document.getElementById('vid1');
     var videoSrc = 'http://192.168.196.128:3001/cammid.m3u8';
 

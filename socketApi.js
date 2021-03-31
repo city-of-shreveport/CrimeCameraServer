@@ -173,7 +173,11 @@ cameraNodes.on('connection', (socket) => {
     socket.emit('getVideos');
   });
 
+<<<<<<< HEAD
   function stopStreaming(){
+=======
+  socket.on('stopStreaming', function (d) {
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
     streamingChildProc.kill('SIGINT');
     streamingChildProc2.kill('SIGINT');
     streamingChildProc3.kill('SIGINT');
@@ -187,6 +191,7 @@ cameraNodes.on('connection', (socket) => {
     stopStreaming()
   });
 
+<<<<<<< HEAD
 
 function startStreaming(){
   //GET IP FOR ACTIVE CAMERA  activeCamera
@@ -194,20 +199,38 @@ function startStreaming(){
 streamingChildProc = spawn(
       'ffmpeg',
       `-hide_banner -loglevel error -fflags nobuffer -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@${activeCamera}:554/cam/realmonitor?channel=1&subtype=1 -vsync 0 -copyts -vcodec copy -movflags frag_keyframe+empty_moov -an -hls_flags delete_segments+append_list -f segment -segment_list_flags live -segment_time 1 -segment_list_size 10 -segment_format mpegts -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8 -segment_list_type m3u8 -segment_list_entry_prefix /liveStream/cam1/ -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts`.split(
+=======
+  socket.on('startStreaming', function (data) {
+    var nodenodeIP = data;
+    console.log('yup');
+
+    streamingChildProc = spawn(
+      'ffmpeg',
+      `-hide_banner -loglevel error -fflags nobuffer -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@192.168.196.164:554/cam/realmonitor?channel=1&subtype=0 -vsync 0 -copyts -vcodec copy -movflags frag_keyframe+empty_moov -an -hls_flags delete_segments+append_list -f segment -segment_list_flags live -segment_time 1 -segment_list_size 10 -segment_format mpegts -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8 -segment_list_type m3u8 -segment_list_entry_prefix /liveStream/cam1/ -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts`.split(
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
         ' '
       )
     );
 
     streamingChildProc2 = spawn(
       'ffmpeg',
+<<<<<<< HEAD
       `-hide_banner -loglevel error -fflags nobuffer -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@${activeCamera}:555/cam/realmonitor?channel=1&subtype=1 -vsync 0 -copyts -vcodec copy -movflags frag_keyframe+empty_moov -an -hls_flags delete_segments+append_list -f segment -segment_list_flags live -segment_time 1 -segment_list_size 10 -segment_format mpegts -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8 -segment_list_type m3u8 -segment_list_entry_prefix /liveStream/cam2/ -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts`.split(
+=======
+      `-hide_banner -loglevel error -fflags nobuffer -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@192.168.196.164:555/cam/realmonitor?channel=1&subtype=0 -vsync 0 -copyts -vcodec copy -movflags frag_keyframe+empty_moov -an -hls_flags delete_segments+append_list -f segment -segment_list_flags live -segment_time 1 -segment_list_size 10 -segment_format mpegts -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8 -segment_list_type m3u8 -segment_list_entry_prefix /liveStream/cam2/ -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts`.split(
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
         ' '
       )
     );
 
     streamingChildProc3 = spawn(
+<<<<<<< HEAD
       'ffmpeg', 
       `-hide_banner -loglevel error -fflags nobuffer -rtsp_transport tcp  -i rtsp://admin:UUnv9njxg123@${activeCamera}:556/cam/realmonitor?channel=1&subtype=1 -vsync 0 -copyts -vcodec copy -movflags frag_keyframe+empty_moov -an -hls_flags delete_segments+append_list -f segment -segment_list_flags live -segment_time 1 -segment_list_size 10 -segment_format mpegts -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3/index.m3u8 -segment_list_type m3u8 -segment_list_entry_prefix /liveStream/cam3/ -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts`.split(
+=======
+      'ffmpeg',
+      `-hide_banner -loglevel error -fflags nobuffer -rtsp_transport tcp -i rtsp://admin:UUnv9njxg123@192.168.196.164:556/cam/realmonitor?channel=1&subtype=0 -vsync 0 -copyts -vcodec copy -movflags frag_keyframe+empty_moov -an -hls_flags delete_segments+append_list -f segment -segment_list_flags live -segment_time 1 -segment_list_size 10 -segment_format mpegts -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3/index.m3u8 -segment_list_type m3u8 -segment_list_entry_prefix /liveStream/cam3/ -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts`.split(
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
         ' '
       )
     );
@@ -236,6 +259,7 @@ streamingChildProc = spawn(
       console.log(`stderr: ${data}`);
     });
 
+<<<<<<< HEAD
 
   
 }
@@ -253,6 +277,8 @@ var activeCamera
 
 
 
+=======
+>>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
   socket.on('videoInfo', function (data) {
     try {
       var camera = data.cam;

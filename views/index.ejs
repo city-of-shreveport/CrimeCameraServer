@@ -4,7 +4,6 @@
   <head>
     <title><%= title %></title>
 
-    
     <link rel="stylesheet" href="/stylesheets/datepicker.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" />
     <link rel="stylesheet" href="https://vjs.zencdn.net/7.11.4/video-js.css" />
@@ -16,52 +15,35 @@
     />
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
-
   <body>
-
-    
-
-
-<!-- Modal -->
-  <div class="modal " id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <video
-        controls
-
-        width="400"
-                id="vid1"
-        >
-                </video>
-        <video
-        controls
-        width="400"
-                id="vid2"
-        >
-                </video>
-        <video
-        controls
-        width="400"
-                id="vid3"
-        >
-                </video>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+    <div
+      class="modal"
+      id="staticBackdrop"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="false"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <video controls width="400" id="vid1"></video>
+            <video controls width="400" id="vid2"></video>
+            <video controls width="400" id="vid3"></video>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Understood</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-
-
-<div id="mainDIV"></div>
+    <div id="mainDIV"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
     <script src="https://momentjs.com/downloads/moment-timezone-with-data-10-year-range.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -70,11 +52,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxgBe1BLPLfPIPwK0ucb6-SeqkZdckChI"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/jsmpeg.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="/javascripts/main.js"></script>
-  
   </body>
 </html>
