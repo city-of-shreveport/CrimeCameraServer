@@ -36,7 +36,7 @@ Router.get('/:nodeName', async (req, res) => {
   cameraPerfmons = cameraPerfmons.reverse();
 
   perfmonDates = cameraPerfmons.map((perfmon) => {
-    return Moment(perfmon.upDated).format('h:mm:ss a');
+    return Moment(perfmon.upDated).tz('America/Chicago').format('h:mm:ss a');
   });
 
   avgLoad = cameraPerfmons.map((perfmon) => {
