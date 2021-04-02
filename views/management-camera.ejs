@@ -17,8 +17,6 @@
       integrity="sha256-t9UJPrESBeG2ojKTIcFLPGF7nHi2vEc7f5A2KpH/UBU="
       crossorigin="anonymous"
     ></script>
-    <script src="/javascripts/utils.js"></script>
-    <script src="/javascripts/analyser.js"></script>
   </head>
 
   <body>
@@ -38,26 +36,74 @@
       var statsChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: <%- JSON.stringify(cameraPerfmons.map((perfmon) => perfmon.x )) %>,
+          labels: <%- JSON.stringify(perfmonDates) %>,
           datasets: [
             {
-              label: 'CPU Usage',
-              data: <%- JSON.stringify(cameraPerfmons) %>,
+              label: 'avgLoad',
+              data: <%- JSON.stringify(avgLoad) %>,
               backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
                 'rgba(153, 102, 255, 0.2)',
+              ],
+              borderColor: [
+                'rgba(153, 102, 255, 0.2)',
+              ],
+              borderWidth: 1,
+              hidden: true,
+            },
+            {
+              label: 'currentLoadUser',
+              data: <%- JSON.stringify(currentLoadUser) %>,
+              backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+              ],
+              borderColor: [
+                'rgba(255, 206, 86, 0.2)',
+              ],
+              borderWidth: 1,
+              hidden: true,
+            },
+            {
+              label: 'currentLoad',
+              data: <%- JSON.stringify(currentLoad) %>,
+              backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+              ],
+              borderColor: [
+                'rgba(75, 192, 192, 0.2)',
+              ],
+              borderWidth: 1,
+            },
+            {
+              label: 'cpuTemperature',
+              data: <%- JSON.stringify(cpuTemperature) %>,
+              backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+              ],
+              borderColor: [
+                'rgba(54, 162, 235, 0.2)',
+              ],
+              borderWidth: 1,
+              hidden: true,
+            },
+            {
+              label: 'memUsage',
+              data: <%- JSON.stringify(memUsage) %>,
+              backgroundColor: [
                 'rgba(255, 159, 64, 0.2)',
               ],
               borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 0.2)',
+              ],
+              borderWidth: 1,
+            },
+            {
+              label: 'diskUsage',
+              data: <%- JSON.stringify(diskUsage) %>,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 0.2)',
               ],
               borderWidth: 1,
             },
