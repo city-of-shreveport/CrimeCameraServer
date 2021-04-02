@@ -26,7 +26,7 @@ router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
       console.log(err);
     } else {
       for (i = 0; i < docs.length; i++) {
-        console.log(moment(docs[i].DateTime).tz('America/New_York').format('M/D/YYYY HH:mm'));
+        console.log(moment(docs[i].DateTime).format('M/D/YYYY HH:mm'));
       }
       res.send(docs);
     }

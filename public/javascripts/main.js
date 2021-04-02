@@ -26,7 +26,6 @@ var newGrid = `
                 </ul> 
               </div> 
             </div>
-            <a href="/management" style="display: inline-block; text-align: center">Manage Cameras</a>
           </div> 
           <div class= 'col-sm-6 '>
             <div class= 'card ' >
@@ -191,11 +190,8 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
-<<<<<<< HEAD
-dreamHost.emit('startStreaming', nodeName);
+    dreamHost.emit('startStreaming', nodeName);
 
-=======
->>>>>>> 8c2a47c015a8f31b24fecf907f244ab54d82b2ec
     var video = document.getElementById('vid1');
     var videoSrc = 'http://192.168.196.128:3001/cammid.m3u8';
 
@@ -283,8 +279,8 @@ dreamHost.emit('startStreaming', nodeName);
       $.getJSON(cameraVideoURL, function (data) {
         console.log(data);
         for (var i = 0; i < data.length; i++) {
-          var dateCalendar = moment(data[i].DateTime).format('M/DD/YYYY');
-          console.log(moment(data[i].DateTime).format('M/DD/YYYY hh:mm'));
+          var dateCalendar = moment(data[i].DateTime).format('M/D/YYYY');
+          console.log(moment(data[i].DateTime).format('M/D/YYYY hh:mm'));
 
           //$(searchparam).css('background', 'lightblue');
 
@@ -410,7 +406,7 @@ dreamHost.emit('startStreaming', nodeName);
 
     for (var i = 0; i < data.length; i++) {
       var checkedinTime = moment(data[i].lastCheckIn).format('MM-DD hh:mm');
-      nodeName = data[0].nodeName;
+      
       $('#cameraListItems').append(
         "<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + '</li>'
       );
@@ -425,10 +421,10 @@ dreamHost.emit('startStreaming', nodeName);
 
       $('#cameraListItems .list-group-item').on('click', function () {
         //$('#myModal').modal('show');
-
+        nodeName = this.id;
         $.getJSON('http://192.168.196.128:3001/cameras/getCameraInfo/' + nodeName, function (data) {
           console.log(data);
-
+          
           var checkinTime = moment(data[0].lastCheckIn);
           var now = moment();
           var difference = now.diff(checkinTime, 'seconds');
@@ -448,8 +444,8 @@ dreamHost.emit('startStreaming', nodeName);
           $.getJSON(cameraVideoURL, function (data) {
             console.log(data);
             for (var i = 0; i < data.length; i++) {
-              var dateCalendar = moment(data[i].DateTime).tz('America/New_York').format('M/DD/YYYY');
-              console.log(moment(data[i].DateTime).tz('America/New_York').format('M/DD/YYYY hh:mm'));
+              var dateCalendar = moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY');
+              console.log(moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY hh:mm'));
 
               //$(searchparam).css('background', 'lightblue');
 
@@ -475,7 +471,6 @@ dreamHost.emit('startStreaming', nodeName);
       );
     }
   });
-
 
   ///////////// Calendar Stuff
   class Calendar {
