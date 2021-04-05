@@ -248,60 +248,9 @@ exec
     streamingChildProc5.kill('SIGINT');
     streamingChildProc6.kill('SIGINT');
 
-                                    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.ts', function (error, stdout, stderr) {
-                                                if (error) {console.log(error)
-                                                }
-                                                if (!error) {
-                                                }
 
 
 
-                                              })
-                                            exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.ts', function (error, stdout, stderr) {
-                                                if (error) {console.log(error)
-                                                }
-                                                if (!error) {
-                                                }
-
-
-
-                                                })
-                                                exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.ts', function (error, stdout, stderr) {
-                                                if (error) {console.log(error)
-                                                }
-                                                if (!error) {
-                                                }
-
-
-
-                                                  })
-                                                  exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam4/*.ts', function (error, stdout, stderr) {
-                                                if (error) {console.log(error)
-                                                }
-                                                if (!error) {
-                                                }
-
-
-
-                                                    })
-                                                    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam5/*.ts', function (error, stdout, stderr) {
-                                                if (error) {console.log(error)
-                                                }
-                                                if (!error) {
-                                                }
-
-
-
-                                                })
-                                                exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam6/*.ts', function (error, stdout, stderr) {
-                                                if (error) {console.log(error)
-                                                }
-                                                if (!error) {
-                                                }
-
-
-
-  })
 }
   socket.on('stopStreaming', function (d) {
     stopStreaming();
@@ -335,12 +284,12 @@ exec
         -f segment
         -segment_list_flags live
         -segment_time 1
-        -segment_list_size 10
+        -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam1/
-        -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts
       `)
     );
 
@@ -361,12 +310,12 @@ exec
         -f segment
         -segment_list_flags live
         -segment_time 1
-        -segment_list_size 10
+        -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam2/
-        -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts
       `)
     );
 
@@ -387,12 +336,12 @@ exec
         -f segment
         -segment_list_flags live
         -segment_time 1
-        -segment_list_size 10
+        -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam3/
-        -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts
       `)
     );
 streamingChildProc4 = spawn(
@@ -412,12 +361,12 @@ streamingChildProc4 = spawn(
         -f segment
         -segment_list_flags live
         -segment_time 1
-        -segment_list_size 10
+        -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam4/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam4/
-        -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam4/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam4/%d.ts
       `)
     );
 
@@ -438,12 +387,12 @@ streamingChildProc4 = spawn(
         -f segment
         -segment_list_flags live
         -segment_time 1
-        -segment_list_size 10
+        -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam5/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam5/
-        -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam5/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam5/%d.ts
       `)
     );
     streamingChildProc6 = spawn(
@@ -463,12 +412,12 @@ streamingChildProc4 = spawn(
         -f segment
         -segment_list_flags live
         -segment_time 1
-        -segment_list_size 10
+        -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam6/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam6/
-        -segment_wrap 10 /home/admin/crimeCameraBackend/public/liveStream/cam6/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam6/%d.ts
       `)
     );
     streamingChildProc.stdout.on('data', (data) => {
