@@ -10,7 +10,7 @@ var marker3;
 let infoWindow;
 var nodeID = '';
 var currentCamIP;
-
+var ip;
 var newGrid = `
 <div class= 'row '>
   <div class= 'col-sm-5 '>
@@ -112,11 +112,11 @@ var newGrid = `
                       <div class= 'col  '>
                         <div class= 'card ' >
                           <div id='video3'>
-                          <video width='380' height='auto'  controls autoplay>
-                        <source src='' type='video/mp4'>
- 
-                            "Your browser does not support the video tag.
-                          </video>
+                            <video width='380' height='auto'  controls autoplay>
+                              <source src='' type='video/mp4'>
+  
+                              "Your browser does not support the video tag.
+                            </video>
                           
                           
                           </div>
@@ -136,6 +136,93 @@ var newGrid = `
               </div>
             </div> 
         </div> 
+
+
+
+
+      <div class= 'col-sm-9'>
+            <div class= 'card '>
+              <div class='card-header actionHeader'>Video Player</div> 
+                <div class= 'card-body '>
+                    <div class= 'container '>
+                      <div class= 'row row-cols-1 row-cols-md-3 g-4'>
+                        <div class='col'>            
+                          <div class='card'>
+                          <div id='video4'>
+                           <video width='380' height='auto'  controls autoplay>
+                        <source src='' type='video/mp4'>
+ 
+                            "Your browser does not support the video tag.
+                          </video>
+                          </div>
+                          <div class= 'card-body '>
+                            <h5 class= 'card-title '>Camera 1</h5>    
+                          </div>
+                          <ul class= 'list-group list-group-flush ' id='cam1Times' style='overflow:scroll; height:300px'>
+                              
+                          </ul>
+                          <div class= 'card-body '>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class= 'col '>
+                        <div class= 'card ' >
+                        <div id='video5'>
+                          <video width='380' height='auto'  controls autoplay>
+                        <source src='' type='video/mp4'>
+ 
+                            "Your browser does not support the video tag.
+                          </video>
+                          </div>
+                          <div class= 'card-body '>
+                            <h5 class= 'card-title '>Camera 2</h5>
+                          </div>
+                          <ul class= 'list-group list-group-flush ' id='cam2Times' style='overflow:scroll; height:300px'>             
+                          </ul>
+                          <div class= 'card-body '>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class= 'col  '>
+                        <div class= 'card ' >
+                          <div id='video6'>
+                            <video width='380' height='auto'  controls autoplay>
+                              <source src='' type='video/mp4'>
+  
+                              "Your browser does not support the video tag.
+                            </video>
+                          
+                          
+                          </div>
+                          <div class= 'card-body '>
+                            <h5 class= 'card-title '>Camera 3</h5>        
+                          </div>
+                          <ul class= 'list-group list-group-flush ' id='cam3Times' style='overflow:scroll; height:300px'>
+                          </ul>        
+                          <div class= 'card-body '>
+
+                          </div>>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+        </div> 
+
+
+
+
+
+
+
+
+
+
+
       </div>
     </div>
   </div>
@@ -149,6 +236,12 @@ const myLatLng = {
 myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
+  
+  $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
+        
+        dreamHost.emit('stopStreaming', ip);
+        console.log("Modal CVLosed")
+      });
   $('#mainDIV').html(newGrid);
   var myModal = document.getElementById('exampleModal');
 
@@ -159,10 +252,12 @@ $(function () {
 
     var locationArray = loc.split('/');
 
-    var videourlLocation = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam1/' + locationArray[7];
-    var videourlLocation2 = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam2/' + locationArray[7];
-    var videourlLocation3 = 'https://192.168.196.164:3000/' + locationArray[5] + '/cam3/' + locationArray[7];
-
+    var videourlLocation = 'https://'+ip+':3000/' + locationArray[5] + '/cam1/' + locationArray[7];
+    var videourlLocation2 = 'https://'+ip+':3000/' + locationArray[5] + '/cam2/' + locationArray[7];
+    var videourlLocation3 = 'https://'+ip+':3000/' + locationArray[5] + '/cam3/' + locationArray[7];
+    var videourlLocation4 = 'https://'+ip+':3000/' + locationArray[5] + '/cam4/' + locationArray[7];
+    var videourlLocation5 = 'https://'+ip+':3000/' + locationArray[5] + '/cam5/' + locationArray[7];
+    var videourlLocation6 = 'https://'+ip+':3000/' + locationArray[5] + '/cam6/' + locationArray[7];
     $('#video').html(
       "<video width='400' height='auto'  controls autoplay>" +
         '<source src=' +
@@ -187,19 +282,53 @@ $(function () {
         'Your browser does not support the video tag.' +
         '</video>'
     );
+        $('#video4').html(
+      "<video width='400' height='auto'  controls autoplay>" +
+        '<source src=' +
+        videourlLocation4 +
+        " type='video/mp4'>" +
+        'Your browser does not support the video tag.' +
+        '</video>'
+    );
+        $('#video5').html(
+      "<video width='400' height='auto'  controls autoplay>" +
+        '<source src=' +
+        videourlLocation5 +
+        " type='video/mp4'>" +
+        'Your browser does not support the video tag.' +
+        '</video>'
+    );
+        $('#video6').html(
+      "<video width='400' height='auto'  controls autoplay>" +
+        '<source src=' +
+        videourlLocation6 +
+        " type='video/mp4'>" +
+        'Your browser does not support the video tag.' +
+        '</video>'
+    );
   });
 
   $('body').on('click', '#Streaming', function () {
-    dreamHost.emit('startStreaming', nodeName);
+    
 
     var video = document.getElementById('vid1');
-    var videoSrc = 'http://192.168.196.128:3001/cammid.m3u8';
+    var videoSrc = 'http://192.168.196.128:3001/liveStream/cam1/index.m3u8';
 
     var video2 = document.getElementById('vid2');
-    var videoSrc2 = 'http://192.168.196.128:3001/camleft.m3u8';
+    var videoSrc2 = 'http://192.168.196.128:3001/liveStream/cam2/index.m3u8';
 
     var video3 = document.getElementById('vid3');
-    var videoSrc3 = 'http://192.168.196.128:3001/camright.m3u8';
+    var videoSrc3 = 'http://192.168.196.128:3001/liveStream/cam3/index.m3u8';
+    var video4 = document.getElementById('vid4');
+    var videoSrc4 = 'http://192.168.196.128:3001/liveStream/cam4/index.m3u8';
+        var video5 = document.getElementById('vid5');
+    var videoSrc5 = 'http://192.168.196.128:3001/liveStream/cam5/index.m3u8';
+        var video6 = document.getElementById('vid6');
+    var videoSrc6 = 'http://192.168.196.128:3001/liveStream/cam6/index.m3u8';
+
+
+
+
     if (Hls.isSupported()) {
       var hls = new Hls();
       hls.loadSource(videoSrc);
@@ -212,6 +341,23 @@ $(function () {
       var hls3 = new Hls();
       hls3.loadSource(videoSrc3);
       hls3.attachMedia(video3);
+
+
+      var hls4 = new Hls();
+      hls4.loadSource(videoSrc4);
+      hls4.attachMedia(video4);
+
+      var hls5 = new Hls();
+      hls5.loadSource(videoSrc5);
+      hls5.attachMedia(video5);
+
+      var hls6 = new Hls();
+      hls6.loadSource(videoSrc6);
+      hls6.attachMedia(video6);
+
+
+
+
     }
     // hls.js is not supported on platforms that do not have Media Source
     // Extensions (MSE) enabled.
@@ -230,6 +376,11 @@ $(function () {
       video.src = videoSrc;
       video2.src = videoSrc2;
       video3.src = videoSrc3;
+    video4.src = videoSrc4;
+      video5.src = videoSrc5;
+      video6.src = videoSrc6;
+    
+    
     }
     video.muted = 'muted';
     video.autoplay = 'autoplay';
@@ -242,6 +393,23 @@ $(function () {
     video3.muted = 'muted';
     video3.autoplay = 'autoplay';
     video3.playsinline = 'true';
+
+
+
+    video4.muted = 'muted';
+    video4.autoplay = 'autoplay';
+    video4.playsinline = 'true';
+
+    video5.muted = 'muted';
+    video5.autoplay = 'autoplay';
+    video5.playsinline = 'true';
+
+    video6.muted = 'muted';
+    video6.autoplay = 'autoplay';
+    video6.playsinline = 'true';
+
+
+
     $('#staticBackdrop').modal('show');
     console.log(':');
   });
@@ -269,7 +437,8 @@ $(function () {
     });
     google.maps.event.addListener(marker, 'click', function () {
       console.log(marker);
-      currentCamIP = marker.videoURL;
+      ip = marker.videoURL;
+      dreamHost.emit('startStreaming', ip);
       $('.videoFeeds').html('');
       $('.wc-calendar__days-list li').each(function (index) {
         $(this).css('background', 'white');
@@ -425,6 +594,24 @@ $(function () {
         $.getJSON('http://192.168.196.128:3001/cameras/getCameraInfo/' + nodeName, function (data) {
           console.log(data);
           
+          var getIPString = 'http://192.168.196.128:3001/cameras/getIP/' + nodeName;
+        $.getJSON(getIPString, function (data) {
+          ip = data[0].ip;
+          console.log(data);
+        
+            dreamHost.emit('startStreaming', ip);
+
+
+
+
+
+
+
+
+
+
+
+          
           var checkinTime = moment(data[0].lastCheckIn);
           var now = moment();
           var difference = now.diff(checkinTime, 'seconds');
@@ -455,6 +642,7 @@ $(function () {
                 }
               });
             }
+          });
           });
         });
       });
@@ -680,10 +868,11 @@ $(function () {
         var dailyVidsItemsLIcam2 = '';
         var dailyVidsItemsLIcam3 = '';
         var videoSource = [];
-        var ip;
+        
         $.getJSON(getIPString, function (data) {
           ip = data[0].ip;
           console.log(data);
+          dreamHost.emit('startStreaming', ip);
         });
         $(document).on('input', '#customRange3', function () {
           $('#customRange3_value').html($(this).val());
@@ -805,6 +994,141 @@ $(function () {
               console.log(error);
             }
           }
+
+          for (var i = 0; i < data.cam4.length; i++) {
+            try {
+              var cleanedtime = moment(data.cam4[i].DateTime).tz('America/New_York').format('HH:mm');
+              var cleanedDate = moment(data.cam4[i].DateTime).tz('America/New_York').format('MM/DD/YYYY');
+              var locationString = data.cam4[i].fileLocation;
+              var locationArray = locationString.split('/');
+
+              var videoDateTimeRAW = locationArray[7];
+              var videoDateTimeRawSplit = videoDateTimeRAW.split('.');
+              var videoTimeDate = videoDateTimeRawSplit[0];
+              var videoTimeRaw = videoTimeDate.split('_');
+              var videoTime = videoTimeRaw[1];
+              var formatedTime = videoTime.replace('-', ':');
+              var videourlLocation =
+                'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
+              videoSource.push(videourlLocation);
+              $('#cam4Times').append(
+                "<li class='list-group-item videoTimePlay' id='" +
+                  cleanedtime +
+                  "' data-location='" +
+                  locationString +
+                  "'>" +
+                  cleanedDate +
+                  '   @   ' +
+                  formatedTime +
+                  '</li>'
+              );
+              //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+
+
+
+for (var i = 0; i < data.cam5.length; i++) {
+            try {
+              var cleanedtime = moment(data.cam5[i].DateTime).tz('America/New_York').format('HH:mm');
+              var cleanedDate = moment(data.cam5[i].DateTime).tz('America/New_York').format('MM/DD/YYYY');
+              var locationString = data.cam5[i].fileLocation;
+              var locationArray = locationString.split('/');
+
+              var videoDateTimeRAW = locationArray[7];
+              var videoDateTimeRawSplit = videoDateTimeRAW.split('.');
+              var videoTimeDate = videoDateTimeRawSplit[0];
+              var videoTimeRaw = videoTimeDate.split('_');
+              var videoTime = videoTimeRaw[1];
+              var formatedTime = videoTime.replace('-', ':');
+              var videourlLocation =
+                'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
+              videoSource.push(videourlLocation);
+              $('#cam5Times').append(
+                "<li class='list-group-item videoTimePlay' id='" +
+                  cleanedtime +
+                  "' data-location='" +
+                  locationString +
+                  "'>" +
+                  cleanedDate +
+                  '   @   ' +
+                  formatedTime +
+                  '</li>'
+              );
+              //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+
+
+
+
+
+for (var i = 0; i < data.cam6.length; i++) {
+            try {
+              var cleanedtime = moment(data.cam6[i].DateTime).tz('America/New_York').format('HH:mm');
+              var cleanedDate = moment(data.cam6[i].DateTime).tz('America/New_York').format('MM/DD/YYYY');
+              var locationString = data.cam6[i].fileLocation;
+              var locationArray = locationString.split('/');
+
+              var videoDateTimeRAW = locationArray[7];
+              var videoDateTimeRawSplit = videoDateTimeRAW.split('.');
+              var videoTimeDate = videoDateTimeRawSplit[0];
+              var videoTimeRaw = videoTimeDate.split('_');
+              var videoTime = videoTimeRaw[1];
+              var formatedTime = videoTime.replace('-', ':');
+              var videourlLocation =
+                'http://' + ip + ':3000/' + locationArray[5] + '/' + locationArray[6] + '/' + locationArray[7];
+              videoSource.push(videourlLocation);
+              $('#cam6Times').append(
+                "<li class='list-group-item videoTimePlay' id='" +
+                  cleanedtime +
+                  "' data-location='" +
+                  locationString +
+                  "'>" +
+                  cleanedDate +
+                  '   @   ' +
+                  formatedTime +
+                  '</li>'
+              );
+              //dailyVidsItemsLIcam1 += "<li class='list-group-item'>"+cleanedtime+"</li>"
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           $('#ulCam1').html(dailyVidsItemsLIcam1);
           var i = 0; // define i
