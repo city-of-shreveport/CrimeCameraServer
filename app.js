@@ -1,11 +1,4 @@
-// establish connection to database
-const mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost/cameras', function (err) {
-  if (err) throw err;
-  console.log('Successfully connected');
-});
-
+// basic requires
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -18,10 +11,40 @@ var perfmons = require('./routes/perfmons');
 var managementRouter = require('./routes/management');
 var app = express();
 
+// require .env variables
+require('dotenv').config();
+
+// establish connection to database
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/cameras', function (err) {
+  if (err) throw err;
+  console.log('Successfully connected');
+});
+
+// configure auth0
+const { auth } = require('express-openid-connect');
+
+const auth_config = {
+  authRequired: true,
+  auth0Logout: true,
+  baseURL: process.env.AUTH0_BASEURL,
+  issuerBaseURL: process.env.AUTH0_ISSUERBASEURL,
+  clientID: process.env.AUTH0_CLIENTID,
+  secret: process.env.AUTH0_SECRET,
+};
+
+// auth router attaches /login, /logout, and /callback routes to the baseurl
+app.use(auth(auth_config));
+
+// req.isAuthenticated is provided from the auth router
+app.get('/authenticated', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -59,6 +82,7 @@ function getStreams() {
       if (!error && response.statusCode == 200) {
         var jsonObj = JSON.parse(d);
         console.log(jsonObj.videos);
+
         for (i = 0; i < jsonObj.videos.length; i++) {
           console.log(jsonObj.videos[i].filename);
         }
