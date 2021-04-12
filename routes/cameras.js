@@ -26,7 +26,7 @@ router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
       console.log(err);
     } else {
       for (i = 0; i < docs.length; i++) {
-        console.log(moment(docs[i].DateTime).format('M/D/YYYY HH:mm'));
+     
       }
       res.send(docs);
     }
@@ -109,7 +109,7 @@ router.get('/videosByDay/:date/:node', async (req, res) => {
 router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
   const startDate = req.params.startDate;
   const nodeID = req.params.nodeID;
-  console.log(startDate);
+
 
   var splitFileString = startDate.split('_');
   var fileData = splitFileString[0];
@@ -133,9 +133,7 @@ router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
   var time = moment.duration('00:04:00');
   var dateTimeString2Cleaned = dateTimeString2.subtract(time).toISOString();
 
-  console.log(endDate);
-  console.log(dateTimeString);
-  console.log(dateTimeString2Cleaned);
+
   vids.find(
     {
       nodeID: nodeID,
@@ -174,7 +172,7 @@ router.get('/currentcameraList', async (req, res) => {
     } else {
       var documents = [];
       for (i = 0; i < docs.length; i++) {
-        console.log(docs[i].lastCheckIn);
+     
         let hours = moment().diff(moment(docs[i].lastCheckIn), 'hours', true);
         hours = hours.toFixed(2);
         if (hours < 0.3) {
