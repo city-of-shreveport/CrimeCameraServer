@@ -143,9 +143,6 @@ Router.get('/:nodeName/config', async (req, res) => {
 });
 
 Router.get('/:nodeName/config/update', async (req, res) => {
-  console.log(req.params.nodeName);
-  console.log(req.query.config);
-
   await CameraConfigurations.findOneAndUpdate(
     {
       cameraName: req.params.nodeName,
