@@ -271,10 +271,7 @@ console.log(videourlLocation3)
     var videoSrc3 = 'https://crime-cameras.shreveport-it.org/liveStream/cam3/index.m3u8';
 
 
-
-
-
-    if (Hls.isSupported()) {
+if (Hls.isSupported()) {
       var hls = new Hls();
       hls.loadSource(videoSrc);
       hls.attachMedia(video);
