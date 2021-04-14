@@ -1,6 +1,7 @@
 const Express = require('express');
 const Router = Express.Router();
 const Moment = require('moment');
+const CameraConfigurations = require('../models/cameraconfigurations');
 const Cameras = require('../models/cameras');
 const Perfmons = require('../models/perfmons');
 
@@ -40,27 +41,69 @@ Router.get('/:nodeName', async (req, res) => {
   });
 
   avgLoad = cameraPerfmons.map((perfmon) => {
-    return { x: perfmon.upDated, y: perfmon.currentLoad.avgLoad };
+    return {
+      x: tryValue(function () {
+        return perfmon.upDated;
+      }),
+      y: tryValue(function () {
+        return perfmon.currentLoad.avgLoad;
+      }),
+    };
   });
 
   currentLoad = cameraPerfmons.map((perfmon) => {
-    return { x: perfmon.upDated, y: perfmon.currentLoad.currentLoad };
+    return {
+      x: tryValue(function () {
+        return perfmon.upDated;
+      }),
+      y: tryValue(function () {
+        return perfmon.currentLoad.currentLoad;
+      }),
+    };
   });
 
   currentLoadUser = cameraPerfmons.map((perfmon) => {
-    return { x: perfmon.upDated, y: perfmon.currentLoad.currentLoadUser };
+    return {
+      x: tryValue(function () {
+        return perfmon.upDated;
+      }),
+      y: tryValue(function () {
+        perfmon.currentLoad.currentLoadUser;
+      }),
+    };
   });
 
   cpuTemperature = cameraPerfmons.map((perfmon) => {
-    return { x: perfmon.upDated, y: perfmon.cpuTemperature.main };
+    return {
+      x: tryValue(function () {
+        return perfmon.upDated;
+      }),
+      y: tryValue(function () {
+        return perfmon.cpuTemperature.main;
+      }),
+    };
   });
 
   memUsage = cameraPerfmons.map((perfmon) => {
-    return { x: perfmon.upDated, y: (perfmon.mem.used / perfmon.mem.total / 8) * 100 };
+    return {
+      x: tryValue(function () {
+        return perfmon.upDated;
+      }),
+      y: tryValue(function () {
+        return (perfmon.mem.used / perfmon.mem.total / 8) * 100;
+      }),
+    };
   });
 
   diskUsage = cameraPerfmons.map((perfmon) => {
-    return { x: perfmon.upDated, y: (perfmon.fsSize[2].get('used') / perfmon.fsSize[2].get('size') / 8) * 100 };
+    return {
+      x: tryValue(function () {
+        return perfmon.upDated;
+      }),
+      y: tryValue(function () {
+        return (perfmon.fsSize[2].get('used') / perfmon.fsSize[2].get('size') / 8) * 100;
+      }),
+    };
   });
 
   res.render('management-camera', {
@@ -75,5 +118,36 @@ Router.get('/:nodeName', async (req, res) => {
     diskUsage: diskUsage,
   });
 });
+
+Router.get('/config/:nodeName', async (req, res) => {
+  let camera = await Cameras.findOne({ nodeName: req.params.nodeName });
+  var cameraConfig;
+
+  try {
+    models = await CameraConfigurations.findOne({ cameraName: req.params.nodeName });
+    cameraConfig = models.cameraConfiguration;
+  } catch {
+    new CameraConfigurations({
+      cameraName: camera.nodeName,
+      cameraConfiguration: '{}',
+    }).save();
+
+    cameraConfig = '{}';
+  }
+
+  res.render('management-camera-config', {
+    title: 'Camera Config',
+    cameraName: camera.nodeName,
+    cameraConfig: cameraConfig,
+  });
+});
+
+function tryValue(tryFunction) {
+  try {
+    return tryFunction();
+  } catch {
+    return null;
+  }
+}
 
 module.exports = Router;
