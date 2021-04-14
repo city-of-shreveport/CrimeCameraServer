@@ -4,10 +4,13 @@
   <%- include('partials/head') %>
 
   <body>
-    <div style="width: 50vw; height: 90vh; display: inline-block">
-      <a href="/management" style="display: inline-block; width: 100px; text-align: center">Back</a>
-      <h2 style="display: inline-block; text-align: center">Configuration for <%= cameraName %></h2>
-      <pre class="prettyprint lang-json" style="height: 90vh"><%= cameraConfig %></pre>
+    <div style="width: 90%; max-width: 1000px; margin: auto; margin-top: 10vh">
+      <form action="/management/<%= cameraName %>/config/update">
+        <label for="config">Configuration for <%= cameraName %>:</label><br />
+        <textarea type="textarea" id="config" name="config" rows="30" cols="120"><%= cameraConfig %></textarea><br />
+
+        <input type="submit" value="Save" />
+      </form>
     </div>
 
     <%- include('partials/scripts') %>

@@ -9,14 +9,15 @@ const cams = require('./models/cameras');
 const perfmons = require('./models/perfmons');
 const mongoose = require('mongoose');
 const { Console } = require('console');
-
+const {JSDOM} = require("jsdom");
+const { data } = require('jquery');
+const {window} = new JSDOM("");
+const $ = require("jquery")(window);
 var spawn = require('child_process').spawn,
   streamingChildProc = null,
   streamingChildProc2 = null,
   streamingChildProc3 = null;
-  streamingChildProc4 = null,
-  streamingChildProc5 = null,
-  streamingChildProc6 = null;
+
 var videoswithData = [];
 
 function checkLastCheckIn() {
@@ -53,6 +54,7 @@ function checkLastCheckIn() {
 }
 
 cameraNodes.on('connection', (socket) => {
+  console.log("Someone connected");
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
     console.log('CameraAction');
@@ -60,7 +62,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam1', function (data1) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/pi/crimeCamera/public/videos/cam1/' + data1;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam1/' + data1;
 
     vids.exists(
       {
@@ -68,7 +70,7 @@ cameraNodes.on('connection', (socket) => {
       },
       function (err, doc) {
         if (err) {
-        
+          console.log(err);
         } else {
           if (doc == false) {
             socket.emit('getVideoInfoCam1', data1);
@@ -80,7 +82,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam2', function (data2) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/pi/crimeCamera/public/videos/cam2/' + data2;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam2/' + data2;
 
     try {
       vids.exists(
@@ -101,7 +103,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam3', function (data3) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/pi/crimeCamera/public/videos/cam3/' + data3;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam3/' + data3;
 
     try {
       vids.exists(
@@ -109,7 +111,7 @@ cameraNodes.on('connection', (socket) => {
           fileLocation: fileLocationDB,
         },
         function (err, doc) {
-          if (err) { console.log(err)
+          if (err) {
           } else {
             if (doc == false) {
               socket.emit('getVideoInfoCam3', data3);
@@ -183,18 +185,66 @@ cameraNodes.on('connection', (socket) => {
 const {
 exec
 } = require("child_process");
+
+
+function executeCommand(command) {
+    exec(command, (error, stdout, stderr) => {
+        if (error) { console.log(error)
+            return;
+        }
+        if (stderr) {
+            return;
+        }
+          if (stdout) {console.log(stdout)
+            return;
+        }
+    });
+}
+
+
   function stopStreaming() {
-    streamingChildProc.kill('SIGINT');
-    streamingChildProc2.kill('SIGINT');
-    streamingChildProc3.kill('SIGINT');
+ 
+    streamingChildProc.kill();
+    streamingChildProc2.kill();
+    streamingChildProc3.kill();
+
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.ts', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.m3u8', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
 
 
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.ts', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.m3u8', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
 
-
+      exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.ts', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.m3u8', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
 
 }
   socket.on('stopStreaming', function (d) {
-    //stopStreaming();
+    stopStreaming();
   });
 
   function formatArguments(template) {
@@ -212,10 +262,10 @@ exec
       'ffmpeg',
       formatArguments(`
         -hide_banner
-        
+        -loglevel error
         -fflags nobuffer
         -rtsp_transport tcp
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=0
+        -i rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=1
         -vsync 0
         -copyts
         -vcodec copy
@@ -227,9 +277,9 @@ exec
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8
         -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/cam2/
+        -segment_list_entry_prefix /liveStream/cam1/
         -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts
       `)
     );
@@ -238,10 +288,10 @@ exec
       'ffmpeg',
       formatArguments(`
         -hide_banner
-        
+        -loglevel error
         -fflags nobuffer
         -rtsp_transport tcp
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=0
+        -i rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=1
         -vsync 0
         -copyts
         -vcodec copy
@@ -264,10 +314,10 @@ exec
       'ffmpeg',
       formatArguments(`
         -hide_banner
-        
+        -loglevel error
         -fflags nobuffer
-        -rtsp_transport tcp
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=0
+        -rtsp_transport tcp 
+        -i rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=1
         -vsync 0
         -copyts
         -vcodec copy
@@ -279,16 +329,16 @@ exec
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3/index.m3u8
         -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/cam2/
+        -segment_list_entry_prefix /liveStream/cam3/
         -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts
-
       `)
     );
 
 
-  
+
+
     streamingChildProc.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
@@ -314,12 +364,18 @@ exec
     });
 
 
+
+
+
+
+
+
   }
   var activeCamera;
 
   socket.on('startStreaming', function (data) {
     activeCamera = data;
-    //startStreaming(data);
+    startStreaming(data);
   });
 
   socket.on('videoInfo', function (data) {
@@ -372,4 +428,74 @@ function intervalFunc() {
 }
 
 setInterval(intervalFunc, 15000);
+const sleep = (time) => {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
+
+function checkVidInDB(camera,fileLocation,node, data){
+  
+    vids.exists(
+        {
+          camera: camera,
+          node: node,
+          fileLocation: fileLocation,
+        },
+        function (err, doc) {
+          if (err) {console.log(err)
+          } else { 
+            if (!doc) {
+              const vid = new vids({
+                camera: data.camera,
+                node: data.node,
+                nodeID: data.nodeID,
+                fileLocation: data.fileLocation,
+                location: {
+                  lat: data.location.lat ,
+                  lng: data.location.lng,
+                },
+                start_pts: data.start_pts,
+                start_time: data.start_time,
+                duration: data.duration,
+                bit_rate: data.bit_rate,
+                height: data.height,
+                width: data.width,
+                size: data.size,
+                DateTime: data.DateTime,
+              });
+              vid.save();
+                      
+                 
+              }
+          }
+        }
+      );
+}
+
+const updateDBwithVid = async (returnedDocs) => {
+
+
+         
+      checkVidInDB(returnedDocs.camera,returnedDocs.fileLocation,returnedDocs.node, returnedDocs)
+      await sleep(100)
+     
+
+}
+function getVideoUpdateFromCam(){
+  var returnedDocs
+  const fetch = require('node-fetch');
+  fetch('http://192.168.196.164:3000/allVideos')
+    .then(response => response.json())
+    .then(data =>    
+     {
+       for(i=0;i<data.length;i++){
+          updateDBwithVid(data[i])
+
+       }
+        returnedDocs = data     
+}
+ )
+}
+getVideoUpdateFromCam()
+setInterval(getVideoUpdateFromCam, 1800000);
 module.exports = socketApi;

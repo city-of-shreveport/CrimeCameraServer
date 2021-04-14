@@ -119,7 +119,7 @@ Router.get('/:nodeName', async (req, res) => {
   });
 });
 
-Router.get('/config/:nodeName', async (req, res) => {
+Router.get('/:nodeName/config', async (req, res) => {
   let camera = await Cameras.findOne({ nodeName: req.params.nodeName });
   var cameraConfig;
 
@@ -140,6 +140,22 @@ Router.get('/config/:nodeName', async (req, res) => {
     cameraName: camera.nodeName,
     cameraConfig: cameraConfig,
   });
+});
+
+Router.get('/:nodeName/config/update', async (req, res) => {
+  console.log(req.params.nodeName);
+  console.log(req.query.config);
+
+  await CameraConfigurations.findOneAndUpdate(
+    {
+      cameraName: req.params.nodeName,
+    },
+    {
+      cameraConfiguration: req.query.config,
+    }
+  );
+
+  res.redirect('/management');
 });
 
 function tryValue(tryFunction) {

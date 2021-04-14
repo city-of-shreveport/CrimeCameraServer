@@ -90,10 +90,10 @@ router.get('/videosByDay/:date/:node', async (req, res) => {
       } else {
         for (var i = 0; i < docs.length; i++) {
           switch (docs[i].camera) {
-            case 'camera2':
+            case 'cam2':
               documents.cam2.push(docs[i]);
               break;
-            case 'camera3':
+            case 'cam3':
               documents.cam3.push(docs[i]);
               break;
 
