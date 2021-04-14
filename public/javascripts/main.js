@@ -209,10 +209,7 @@ var videoSrc2 = 'https://crime-cameras.shreveport-it.org:8081/3568265ef934fe88e1
     //var videoSrc3 = 'https://crime-cameras.shreveport-it.org/liveStream/cam3/index.m3u8';
 var videoSrc3 = 'https://crime-cameras.shreveport-it.org:8081/3568265ef934fe88e1b7c4463b952ad4/hls/2Ff59RgHhF/a4I9Jk38QD/s.m3u8'
 
-
-
-
-    if (Hls.isSupported()) {
+if (Hls.isSupported()) {
       var hls = new Hls();
       hls.loadSource(videoSrc);
       hls.attachMedia(video);
