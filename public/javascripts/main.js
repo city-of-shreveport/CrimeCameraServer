@@ -126,7 +126,7 @@ var newGrid = `
                           </ul>        
                           <div class= 'card-body '>
 
-                          </div>>
+                          </div>
                         </div>
                       </div>
                     </div>
