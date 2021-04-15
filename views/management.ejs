@@ -20,7 +20,7 @@
           <b>mem.available:</b> <%= camera.lastPerfmon.mem.available %><br />
         </p>
         <a href="/management/<%= camera.nodeName %>" class="card-link">More Info</a>
-        <a href="/management/config/<%= camera.nodeName %>" class="card-link">Configure</a>
+        <a href="/management/<%= camera.nodeName %>/config" class="card-link">Configure</a>
       </div>
     </div>
     <% }) %> <%- include('partials/scripts') %>

@@ -272,8 +272,6 @@ console.log(videourlLocation3)
 
 
 
-
-
     if (Hls.isSupported()) {
       var hls = new Hls();
       hls.loadSource(videoSrc);

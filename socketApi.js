@@ -9,10 +9,10 @@ const cams = require('./models/cameras');
 const perfmons = require('./models/perfmons');
 const mongoose = require('mongoose');
 const { Console } = require('console');
-const {JSDOM} = require("jsdom");
+const { JSDOM } = require('jsdom');
 const { data } = require('jquery');
-const {window} = new JSDOM("");
-const $ = require("jquery")(window);
+const { window } = new JSDOM('');
+const $ = require('jquery')(window);
 var spawn = require('child_process').spawn,
   streamingChildProc = null,
   streamingChildProc2 = null,
@@ -54,7 +54,7 @@ function checkLastCheckIn() {
 }
 
 cameraNodes.on('connection', (socket) => {
-  console.log("Someone connected");
+  console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
     console.log('CameraAction');
@@ -122,12 +122,6 @@ cameraNodes.on('connection', (socket) => {
     } catch (error) {}
   });
 
-
-
-
-
-
-
   socket.on('perfmonStats', function (data) {
     const perf = new perfmons(data);
     perf.save();
@@ -135,7 +129,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
-
+    console.log(data);
     cams.exists(
       {
         nodeName: data.name,
@@ -182,67 +176,80 @@ cameraNodes.on('connection', (socket) => {
 
     socket.emit('getVideos');
   });
-const {
-exec
-} = require("child_process");
+  const { exec } = require('child_process');
 
-
-function executeCommand(command) {
+  function executeCommand(command) {
     exec(command, (error, stdout, stderr) => {
-        if (error) { console.log(error)
-            return;
-        }
-        if (stderr) {
-            return;
-        }
-          if (stdout) {console.log(stdout)
-            return;
-        }
+      if (error) {
+        console.log(error);
+        return;
+      }
+      if (stderr) {
+        return;
+      }
+      if (stdout) {
+        console.log(stdout);
+        return;
+      }
     });
-}
-
+  }
 
   function stopStreaming() {
- 
     streamingChildProc.kill();
     streamingChildProc2.kill();
     streamingChildProc3.kill();
 
-exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.ts', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
-exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.m3u8', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.ts', function (error, stdout, stderr) {
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        console.log('I remnoved them');
+      }
+    });
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.m3u8', function (error, stdout, stderr) {
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        console.log('I remnoved them');
+      }
+    });
 
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.ts', function (error, stdout, stderr) {
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        console.log('I remnoved them');
+      }
+    });
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.m3u8', function (error, stdout, stderr) {
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        console.log('I remnoved them');
+      }
+    });
 
-exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.ts', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
-exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.m3u8', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
-
-      exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.ts', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
-exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.m3u8', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
-
-}
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.ts', function (error, stdout, stderr) {
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        console.log('I remnoved them');
+      }
+    });
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.m3u8', function (error, stdout, stderr) {
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        console.log('I remnoved them');
+      }
+    });
+  }
   socket.on('stopStreaming', function (d) {
     stopStreaming();
   });
@@ -336,9 +343,6 @@ exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.m3u8', function
       `)
     );
 
-
-
-
     streamingChildProc.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
@@ -362,14 +366,6 @@ exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.m3u8', function
     streamingChildProc3.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
-
-
-
-
-
-
-
-
   }
   var activeCamera;
 
@@ -429,73 +425,62 @@ function intervalFunc() {
 
 setInterval(intervalFunc, 15000);
 const sleep = (time) => {
-  return new Promise(resolve => setTimeout(resolve, time))
-}
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
 
-
-function checkVidInDB(camera,fileLocation,node, data){
-  
-    vids.exists(
-        {
-          camera: camera,
-          node: node,
-          fileLocation: fileLocation,
-        },
-        function (err, doc) {
-          if (err) {console.log(err)
-          } else { 
-            if (!doc) {
-              const vid = new vids({
-                camera: data.camera,
-                node: data.node,
-                nodeID: data.nodeID,
-                fileLocation: data.fileLocation,
-                location: {
-                  lat: data.location.lat ,
-                  lng: data.location.lng,
-                },
-                start_pts: data.start_pts,
-                start_time: data.start_time,
-                duration: data.duration,
-                bit_rate: data.bit_rate,
-                height: data.height,
-                width: data.width,
-                size: data.size,
-                DateTime: data.DateTime,
-              });
-              vid.save();
-                      
-                 
-              }
-          }
+function checkVidInDB(camera, fileLocation, node, data) {
+  vids.exists(
+    {
+      camera: camera,
+      node: node,
+      fileLocation: fileLocation,
+    },
+    function (err, doc) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (!doc) {
+          const vid = new vids({
+            camera: data.camera,
+            node: data.node,
+            nodeID: data.nodeID,
+            fileLocation: data.fileLocation,
+            location: {
+              lat: data.location.lat,
+              lng: data.location.lng,
+            },
+            start_pts: data.start_pts,
+            start_time: data.start_time,
+            duration: data.duration,
+            bit_rate: data.bit_rate,
+            height: data.height,
+            width: data.width,
+            size: data.size,
+            DateTime: data.DateTime,
+          });
+          vid.save();
         }
-      );
+      }
+    }
+  );
 }
 
 const updateDBwithVid = async (returnedDocs) => {
-
-
-         
-      checkVidInDB(returnedDocs.camera,returnedDocs.fileLocation,returnedDocs.node, returnedDocs)
-      await sleep(100)
-     
-
-}
-function getVideoUpdateFromCam(){
-  var returnedDocs
+  checkVidInDB(returnedDocs.camera, returnedDocs.fileLocation, returnedDocs.node, returnedDocs);
+  await sleep(100);
+};
+function getVideoUpdateFromCam() {
+  var returnedDocs;
   const fetch = require('node-fetch');
   fetch('http://192.168.196.164:3000/allVideos')
-    .then(response => response.json())
-    .then(data =>    
-     {
-       for(i=0;i<data.length;i++){
-          updateDBwithVid(data[i])
-
-       }
-        returnedDocs = data     
+    .then((response) => response.json())
+    .then((data) => {
+      for (i = 0; i < data.length; i++) {
+        updateDBwithVid(data[i]);
+      }
+      returnedDocs = data;
+    });
 }
- )
-}
-getVideoUpdateFromCam()
+getVideoUpdateFromCam();
 setInterval(getVideoUpdateFromCam, 1800000);
 module.exports = socketApi;
