@@ -62,7 +62,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam1', function (data1) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/pi/CrimeCamera/public/videos/cam1/' + data1;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam1/' + data1;
 
     vids.exists(
       {
@@ -82,7 +82,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam2', function (data2) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/pi/CrimeCamera/public/videos/cam2/' + data2;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam2/' + data2;
 
     try {
       vids.exists(
@@ -103,7 +103,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam3', function (data3) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/pi/CrimeCamera/public/videos/cam3/' + data3;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam3/' + data3;
 
     try {
       vids.exists(
@@ -135,7 +135,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
-    console.log(data)
+
     cams.exists(
       {
         nodeName: data.name,
@@ -208,35 +208,35 @@ function executeCommand(command) {
     streamingChildProc2.kill();
     streamingChildProc3.kill();
 
-exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam1/*.ts', function (error, stdout, stderr) {
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.ts', function (error, stdout, stderr) {
         if (error) { console.log(error)
         }
         if (!error) {console.log("I remnoved them")}
       })
-exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam1/*.m3u8', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
-
-
-exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam2/*.ts', function (error, stdout, stderr) {
-        if (error) { console.log(error)
-        }
-        if (!error) {console.log("I remnoved them")}
-      })
-exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam2/*.m3u8', function (error, stdout, stderr) {
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.m3u8', function (error, stdout, stderr) {
         if (error) { console.log(error)
         }
         if (!error) {console.log("I remnoved them")}
       })
 
-      exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam3/*.ts', function (error, stdout, stderr) {
+
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.ts', function (error, stdout, stderr) {
         if (error) { console.log(error)
         }
         if (!error) {console.log("I remnoved them")}
       })
-exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam3/*.m3u8', function (error, stdout, stderr) {
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.m3u8', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
+
+      exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.ts', function (error, stdout, stderr) {
+        if (error) { console.log(error)
+        }
+        if (!error) {console.log("I remnoved them")}
+      })
+exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.m3u8', function (error, stdout, stderr) {
         if (error) { console.log(error)
         }
         if (!error) {console.log("I remnoved them")}
@@ -277,10 +277,10 @@ exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam3/*.m3u8', function (e
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/pi/CrimeCameraBackEnd/public/liveStream/cam1/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam1/
-        -segment_wrap 5 /home/pi/CrimeCameraBackEnd/public/liveStream/cam1/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts
       `)
     );
 
@@ -303,10 +303,10 @@ exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam3/*.m3u8', function (e
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/pi/CrimeCameraBackEnd/public/liveStream/cam2/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam2/
-        -segment_wrap 5 /home/pi/CrimeCameraBackEnd/public/liveStream/cam2/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts
       `)
     );
 
@@ -329,10 +329,10 @@ exec('rm /home/pi/CrimeCameraBackEnd/public/liveStream/cam3/*.m3u8', function (e
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/pi/CrimeCameraBackEnd/public/liveStream/cam3/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam3/
-        -segment_wrap 5 /home/pi/CrimeCameraBackEnd/public/liveStream/cam3/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts
       `)
     );
 
@@ -443,7 +443,7 @@ function checkVidInDB(camera,fileLocation,node, data){
         },
         function (err, doc) {
           if (err) {console.log(err)
-          } else { console.log(doc)
+          } else { 
             if (!doc) {
               const vid = new vids({
                 camera: data.camera,
@@ -496,6 +496,6 @@ function getVideoUpdateFromCam(){
 }
  )
 }
-
+getVideoUpdateFromCam()
 setInterval(getVideoUpdateFromCam, 1800000);
 module.exports = socketApi;
