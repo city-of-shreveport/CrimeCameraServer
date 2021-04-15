@@ -25,9 +25,7 @@ router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      for (i = 0; i < docs.length; i++) {
-     
-      }
+      for (i = 0; i < docs.length; i++) {}
       res.send(docs);
     }
   });
@@ -110,7 +108,6 @@ router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
   const startDate = req.params.startDate;
   const nodeID = req.params.nodeID;
 
-
   var splitFileString = startDate.split('_');
   var fileData = splitFileString[0];
   var fileTimewithExtention = splitFileString[1];
@@ -132,7 +129,6 @@ router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
   var dateTimeString2 = moment(dateTime2);
   var time = moment.duration('00:04:00');
   var dateTimeString2Cleaned = dateTimeString2.subtract(time).toISOString();
-
 
   vids.find(
     {
@@ -172,7 +168,6 @@ router.get('/currentcameraList', async (req, res) => {
     } else {
       var documents = [];
       for (i = 0; i < docs.length; i++) {
-     
         let hours = moment().diff(moment(docs[i].lastCheckIn), 'hours', true);
         hours = hours.toFixed(2);
         if (hours < 0.3) {

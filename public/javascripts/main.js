@@ -148,11 +148,8 @@ const myLatLng = {
 myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
-  
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
-        
-        
-            var video = document.getElementById('vid1');
+    var video = document.getElementById('vid1');
     var videoSrc = '';
 
     var video2 = document.getElementById('vid2');
@@ -160,7 +157,7 @@ $(function () {
 
     var video3 = document.getElementById('vid3');
     var videoSrc3 = '';
- if (Hls.isSupported()) {
+    if (Hls.isSupported()) {
       var hls = new Hls();
       hls.loadSource(videoSrc);
       hls.attachMedia(video);
@@ -172,12 +169,6 @@ $(function () {
       var hls3 = new Hls();
       hls3.loadSource(videoSrc3);
       hls3.attachMedia(video3);
-
-
-
-
-
-
     }
     // hls.js is not supported on platforms that do not have Media Source
     // Extensions (MSE) enabled.
@@ -196,9 +187,6 @@ $(function () {
       video.src = videoSrc;
       video2.src = videoSrc2;
       video3.src = videoSrc3;
-
-    
-    
     }
     video.muted = 'muted';
     video.autoplay = 'autoplay';
@@ -211,9 +199,9 @@ $(function () {
     video3.muted = 'muted';
     video3.autoplay = 'autoplay';
     video3.playsinline = 'true';
-        console.log("Modal CVLosed")
-        dreamHost.emit('stopStreaming', ip);
-      });
+    console.log('Modal CVLosed');
+    dreamHost.emit('stopStreaming', ip);
+  });
   $('#mainDIV').html(newGrid);
   var myModal = document.getElementById('exampleModal');
 
@@ -224,12 +212,12 @@ $(function () {
 
     var locationArray = loc.split('/');
 
-    var videourlLocation = 'http://'+ip+':3000/' + locationArray[5] + '/cam1/' + locationArray[7];
-    var videourlLocation2 = 'http://'+ip+':3000/' + locationArray[5] + '/cam2/' + locationArray[7];
-    var videourlLocation3 = 'http://'+ip+':3000/' + locationArray[5] + '/cam3/' + locationArray[7];
-console.log(videourlLocation)
-console.log(videourlLocation2)
-console.log(videourlLocation3)
+    var videourlLocation = 'http://' + ip + ':3000/' + locationArray[5] + '/cam1/' + locationArray[7];
+    var videourlLocation2 = 'http://' + ip + ':3000/' + locationArray[5] + '/cam2/' + locationArray[7];
+    var videourlLocation3 = 'http://' + ip + ':3000/' + locationArray[5] + '/cam3/' + locationArray[7];
+    console.log(videourlLocation);
+    console.log(videourlLocation2);
+    console.log(videourlLocation3);
 
     $('#video').html(
       "<video width='400' height='auto'  controls autoplay>" +
@@ -255,12 +243,9 @@ console.log(videourlLocation3)
         'Your browser does not support the video tag.' +
         '</video>'
     );
-    
   });
 
   $('body').on('click', '#Streaming', function () {
-    
-
     var video = document.getElementById('vid1');
     var videoSrc = 'https://crime-cameras.shreveport-it.org/liveStream/cam1/index.m3u8';
 
@@ -270,8 +255,7 @@ console.log(videourlLocation3)
     var video3 = document.getElementById('vid3');
     var videoSrc3 = 'https://crime-cameras.shreveport-it.org/liveStream/cam3/index.m3u8';
 
-
-if (Hls.isSupported()) {
+    if (Hls.isSupported()) {
       var hls = new Hls();
       hls.loadSource(videoSrc);
       hls.attachMedia(video);
@@ -283,12 +267,6 @@ if (Hls.isSupported()) {
       var hls3 = new Hls();
       hls3.loadSource(videoSrc3);
       hls3.attachMedia(video3);
-
-
-
-
-
-
     }
     // hls.js is not supported on platforms that do not have Media Source
     // Extensions (MSE) enabled.
@@ -307,9 +285,6 @@ if (Hls.isSupported()) {
       video.src = videoSrc;
       video2.src = videoSrc2;
       video3.src = videoSrc3;
-
-    
-    
     }
     video.muted = 'muted';
     video.autoplay = 'autoplay';
@@ -322,11 +297,6 @@ if (Hls.isSupported()) {
     video3.muted = 'muted';
     video3.autoplay = 'autoplay';
     video3.playsinline = 'true';
-
-
-
-
-
 
     $('#staticBackdrop').modal('show');
     console.log(':');
@@ -493,7 +463,7 @@ if (Hls.isSupported()) {
 
     for (var i = 0; i < data.length; i++) {
       var checkedinTime = moment(data[i].lastCheckIn).format('MM-DD hh:mm');
-      
+
       $('#cameraListItems').append(
         "<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + '</li>'
       );
@@ -511,56 +481,48 @@ if (Hls.isSupported()) {
         nodeName = this.id;
         $.getJSON('https://crime-cameras.shreveport-it.org/cameras/getCameraInfo/' + nodeName, function (data) {
           console.log(data);
-          
+
           var getIPString = 'https://crime-cameras.shreveport-it.org/cameras/getIP/' + nodeName;
-        $.getJSON(getIPString, function (data) {
-          ip = data[0].ip;
-          console.log(data);
-        
+          $.getJSON(getIPString, function (data) {
+            ip = data[0].ip;
+            console.log(data);
+
             dreamHost.emit('startStreaming', ip);
 
+            var checkinTime = moment(data[0].lastCheckIn);
+            var now = moment();
+            var difference = now.diff(checkinTime, 'seconds');
+            $('#camNameLI').html('Name: ' + data[0].nodeName);
+            $('#camStatLI').html('Checked in: ' + difference + ' seconds ago');
+            $.getJSON(
+              'https://crime-cameras.shreveport-it.org/cameras/oldestVideo/' + data[0].nodeName,
+              function (data) {
+                var dateTimeClean = moment(data[0].DateTime).format('MM-DD hh:mm');
+                $('#oldestVidLI').html('Oldest VId: ' + dateTimeClean);
+              }
+            );
 
+            $('.videoFeeds').html('');
+            $('.wc-calendar__days-list li').each(function (index) {
+              $(this).css('background', 'white');
+            });
+            var cameraVideoURL = 'https://crime-cameras.shreveport-it.org/cameras/videoDatesbyNode/' + nodeName;
 
+            $.getJSON(cameraVideoURL, function (data) {
+              console.log(data);
+              for (var i = 0; i < data.length; i++) {
+                var dateCalendar = moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY');
+                console.log(moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY hh:mm'));
 
+                //$(searchparam).css('background', 'lightblue');
 
-
-
-
-
-
-
-          
-          var checkinTime = moment(data[0].lastCheckIn);
-          var now = moment();
-          var difference = now.diff(checkinTime, 'seconds');
-          $('#camNameLI').html('Name: ' + data[0].nodeName);
-          $('#camStatLI').html('Checked in: ' + difference + ' seconds ago');
-          $.getJSON('https://crime-cameras.shreveport-it.org/cameras/oldestVideo/' + data[0].nodeName, function (data) {
-            var dateTimeClean = moment(data[0].DateTime).format('MM-DD hh:mm');
-            $('#oldestVidLI').html('Oldest VId: ' + dateTimeClean);
-          });
-
-          $('.videoFeeds').html('');
-          $('.wc-calendar__days-list li').each(function (index) {
-            $(this).css('background', 'white');
-          });
-          var cameraVideoURL = 'https://crime-cameras.shreveport-it.org/cameras/videoDatesbyNode/' + nodeName;
-
-          $.getJSON(cameraVideoURL, function (data) {
-            console.log(data);
-            for (var i = 0; i < data.length; i++) {
-              var dateCalendar = moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY');
-              console.log(moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY hh:mm'));
-
-              //$(searchparam).css('background', 'lightblue');
-
-              $('.wc-calendar__days-list li').each(function (index) {
-                if ($(this).attr('data-date') === dateCalendar) {
-                  $(this).css('background', 'lightblue');
-                }
-              });
-            }
-          });
+                $('.wc-calendar__days-list li').each(function (index) {
+                  if ($(this).attr('data-date') === dateCalendar) {
+                    $(this).css('background', 'lightblue');
+                  }
+                });
+              }
+            });
           });
         });
       });
@@ -781,12 +743,13 @@ if (Hls.isSupported()) {
         console.log(this.selectedDate);
         var selectedDate = moment(this.selectedDate).format('YYYY-MM-DD');
         var getIPString = 'https://crime-cameras.shreveport-it.org/cameras/getIP/' + nodeName;
-        var getURLString = 'https://crime-cameras.shreveport-it.org/cameras/videosByDay/' + selectedDate + '/' + nodeName;
+        var getURLString =
+          'https://crime-cameras.shreveport-it.org/cameras/videosByDay/' + selectedDate + '/' + nodeName;
         var dailyVidsItemsLIcam1 = '';
         var dailyVidsItemsLIcam2 = '';
         var dailyVidsItemsLIcam3 = '';
         var videoSource = [];
-        
+
         $.getJSON(getIPString, function (data) {
           ip = data[0].ip;
           console.log(data);

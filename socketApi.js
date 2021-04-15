@@ -310,10 +310,10 @@ cameraNodes.on('connection', (socket) => {
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/pi/CrimeCameraBackEnd/public/liveStream/cam2/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam2/
-        -segment_wrap 5 /home/pi/CrimeCameraBackEnd/public/liveStream/cam2/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts
       `)
     );
 
