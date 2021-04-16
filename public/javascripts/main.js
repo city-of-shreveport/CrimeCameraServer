@@ -149,6 +149,11 @@ myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
+var hls = new HLSServer(server, {
+  path: '/streams',     // Base URI to output HLS streams
+  dir: 'public/liveStream'  // Directory that input files are stored
+})
+
     var video = document.getElementById('vid1');
     var videoSrc = '';
 
@@ -247,13 +252,13 @@ $(function () {
 
   $('body').on('click', '#Streaming', function () {
     var video = document.getElementById('vid1');
-    var videoSrc = 'https://crime-cameras.shreveport-it.org/liveStream/cam1/index.m3u8';
+    var videoSrc = 'https://crime-cameras.shreveport-it.org/liveStream/cam1.m3u8';
 
     var video2 = document.getElementById('vid2');
-    var videoSrc2 = 'https://crime-cameras.shreveport-it.org/liveStream/cam2/index.m3u8';
+    var videoSrc2 = 'https://crime-cameras.shreveport-it.org/liveStream/cam2.m3u8';
 
     var video3 = document.getElementById('vid3');
-    var videoSrc3 = 'https://crime-cameras.shreveport-it.org/liveStream/cam3/index.m3u8';
+    var videoSrc3 = 'https://crime-cameras.shreveport-it.org/liveStream/cam3.m3u8';
 
     if (Hls.isSupported()) {
       var hls = new Hls();

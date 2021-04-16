@@ -199,7 +199,7 @@ cameraNodes.on('connection', (socket) => {
     streamingChildProc2.kill();
     streamingChildProc3.kill();
 
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.ts', function (error, stdout, stderr) {
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/*.ts', function (error, stdout, stderr) {
       if (error) {
         console.log(error);
       }
@@ -207,24 +207,7 @@ cameraNodes.on('connection', (socket) => {
         console.log('I remnoved them');
       }
     });
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam1/*.m3u8', function (error, stdout, stderr) {
-      if (error) {
-        console.log(error);
-      }
-      if (!error) {
-        console.log('I remnoved them');
-      }
-    });
-
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.ts', function (error, stdout, stderr) {
-      if (error) {
-        console.log(error);
-      }
-      if (!error) {
-        console.log('I remnoved them');
-      }
-    });
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam2/*.m3u8', function (error, stdout, stderr) {
+    exec('rm /home/admin/crimeCameraBackend/public/liveStream/*.m3u8', function (error, stdout, stderr) {
       if (error) {
         console.log(error);
       }
@@ -233,22 +216,8 @@ cameraNodes.on('connection', (socket) => {
       }
     });
 
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.ts', function (error, stdout, stderr) {
-      if (error) {
-        console.log(error);
-      }
-      if (!error) {
-        console.log('I remnoved them');
-      }
-    });
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/cam3/*.m3u8', function (error, stdout, stderr) {
-      if (error) {
-        console.log(error);
-      }
-      if (!error) {
-        console.log('I remnoved them');
-      }
-    });
+
+ 
   }
   socket.on('stopStreaming', function (d) {
     stopStreaming();
@@ -284,10 +253,10 @@ cameraNodes.on('connection', (socket) => {
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam1/
-        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam1/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam1%d.ts
       `)
     );
 
@@ -310,10 +279,10 @@ cameraNodes.on('connection', (socket) => {
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam2/
-        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam2/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam2%d.ts
       `)
     );
 
@@ -336,10 +305,10 @@ cameraNodes.on('connection', (socket) => {
         -segment_time 1
         -segment_list_size 5
         -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3/index.m3u8
+        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3.m3u8
         -segment_list_type m3u8
         -segment_list_entry_prefix /liveStream/cam3/
-        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam3/%d.ts
+        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam3%d.ts
       `)
     );
 
