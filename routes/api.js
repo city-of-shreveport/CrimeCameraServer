@@ -10,8 +10,6 @@ Router.get('/get-config', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     cameraConfig = await CameraConfigurations.findOne({ cameraName: req.query.camera });
 
-    console.log(JSON.parse(cameraConfig.cameraConfiguration));
-
     res.json(JSON.parse(cameraConfig.cameraConfiguration));
   } else {
     res.json(unauthrizedMessage());
