@@ -233,11 +233,7 @@ cameraNodes.on('connection', (socket) => {
 
   function startStreaming(cameraIP) {
     //GET IP FOR ACTIVE CAMERA  activeCamera
-    var HLSServer = require('hls-server')
-var hls = new HLSServer(server, {
-  path: '/streams',     // Base URI to output HLS streams
-  dir: 'public/liveStream'  // Directory that input files are stored
-})
+
     streamingChildProc = spawn(
       'ffmpeg',
       formatArguments(`
