@@ -149,10 +149,7 @@ myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
-var hls = new HLSServer(server, {
-  path: '/streams',     // Base URI to output HLS streams
-  dir: 'public/liveStream'  // Directory that input files are stored
-})
+
 
     var video = document.getElementById('vid1');
     var videoSrc = '';
@@ -757,7 +754,7 @@ var hls = new HLSServer(server, {
 
         $.getJSON(getIPString, function (data) {
           ip = data[0].ip;
-          console.log(data);
+          console.log(ip);
           dreamHost.emit('startStreaming', ip);
         });
         $(document).on('input', '#customRange3', function () {

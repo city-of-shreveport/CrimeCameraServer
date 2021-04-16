@@ -233,7 +233,11 @@ cameraNodes.on('connection', (socket) => {
 
   function startStreaming(cameraIP) {
     //GET IP FOR ACTIVE CAMERA  activeCamera
-
+    var HLSServer = require('hls-server')
+var hls = new HLSServer(server, {
+  path: '/streams',     // Base URI to output HLS streams
+  dir: 'public/liveStream'  // Directory that input files are stored
+})
     streamingChildProc = spawn(
       'ffmpeg',
       formatArguments(`
@@ -241,7 +245,7 @@ cameraNodes.on('connection', (socket) => {
         -loglevel error
         -fflags nobuffer
         -rtsp_transport tcp
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=1
+        -i rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=0
         -vsync 0
         -copyts
         -vcodec copy
@@ -250,12 +254,12 @@ cameraNodes.on('connection', (socket) => {
         -hls_flags delete_segments+append_list
         -f segment
         -segment_list_flags live
-        -segment_time 1
+        -segment_time 5
         -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1.m3u8
         -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/cam1/
+        -segment_list_entry_prefix /liveStream/
         -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam1%d.ts
       `)
     );
@@ -267,7 +271,7 @@ cameraNodes.on('connection', (socket) => {
         -loglevel error
         -fflags nobuffer
         -rtsp_transport tcp
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=1
+        -i rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=0
         -vsync 0
         -copyts
         -vcodec copy
@@ -276,12 +280,12 @@ cameraNodes.on('connection', (socket) => {
         -hls_flags delete_segments+append_list
         -f segment
         -segment_list_flags live
-        -segment_time 1
+        -segment_time 5
         -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2.m3u8
         -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/cam2/
+        -segment_list_entry_prefix /liveStream/
         -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam2%d.ts
       `)
     );
@@ -293,7 +297,7 @@ cameraNodes.on('connection', (socket) => {
         -loglevel error
         -fflags nobuffer
         -rtsp_transport tcp 
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=1
+        -i rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=0
         -vsync 0
         -copyts
         -vcodec copy
@@ -302,12 +306,12 @@ cameraNodes.on('connection', (socket) => {
         -hls_flags delete_segments+append_list
         -f segment
         -segment_list_flags live
-        -segment_time 1
+        -segment_time 5
         -segment_list_size 5
         -segment_format mpegts
         -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3.m3u8
         -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/cam3/
+        -segment_list_entry_prefix /liveStream/
         -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam3%d.ts
       `)
     );
