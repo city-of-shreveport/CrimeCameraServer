@@ -1,11 +1,12 @@
 const Express = require('express');
 const Router = Express.Router();
+const { requiresAuth } = require('express-openid-connect');
 const Moment = require('moment');
 const CameraConfigurations = require('../models/cameraconfigurations');
 const Cameras = require('../models/cameras');
 const Perfmons = require('../models/perfmons');
 
-Router.get('/', async (req, res) => {
+Router.get('/', requiresAuth(), async (req, res) => {
   let cameras = await Cameras.find({});
   var cameraData = [];
 
@@ -26,7 +27,7 @@ Router.get('/', async (req, res) => {
   });
 });
 
-Router.get('/:nodeName', async (req, res) => {
+Router.get('/:nodeName', requiresAuth(), async (req, res) => {
   let camera = await Cameras.find({ nodeName: req.params.nodeName });
   let cameraPerfmons = await Perfmons.find({
     camera: req.params.nodeName,
@@ -119,13 +120,13 @@ Router.get('/:nodeName', async (req, res) => {
   });
 });
 
-Router.get('/:nodeName/config', async (req, res) => {
+Router.get('/:nodeName/config', requiresAuth(), async (req, res) => {
   let camera = await Cameras.findOne({ nodeName: req.params.nodeName });
   var cameraConfig;
 
   try {
     models = await CameraConfigurations.findOne({ cameraName: req.params.nodeName });
-    cameraConfig = models.cameraConfiguration;
+    cameraConfig = JSON.parse(models.cameraConfiguration);
   } catch {
     new CameraConfigurations({
       cameraName: camera.nodeName,
@@ -142,13 +143,13 @@ Router.get('/:nodeName/config', async (req, res) => {
   });
 });
 
-Router.get('/:nodeName/config/update', async (req, res) => {
+Router.get('/:nodeName/config/update', requiresAuth(), async (req, res) => {
   await CameraConfigurations.findOneAndUpdate(
     {
       cameraName: req.params.nodeName,
     },
     {
-      cameraConfiguration: req.query.config,
+      cameraConfiguration: JSON.stringify(req.query.config),
     }
   );
 

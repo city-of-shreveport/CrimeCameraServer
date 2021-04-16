@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const { requiresAuth } = require('express-openid-connect');
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
+router.get('/', requiresAuth(), function (req, res, next) {
   res.send('respond with a resource');
 });
 

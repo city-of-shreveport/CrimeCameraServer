@@ -1,15 +1,16 @@
 const express = require('express');
-const vids = require('../models/videos');
-const cams = require('../models/cameras'); // new
 const router = express.Router();
-var moment = require('moment-timezone');
-router.get('/haha', async (req, res) => {
+const { requiresAuth } = require('express-openid-connect');
+const vids = require('../models/videos');
+const cams = require('../models/cameras');
+const moment = require('moment-timezone');
+
+router.get('/haha', requiresAuth(), async (req, res) => {
   console.log('HAHA:');
   res.end('HAHAHA');
 });
-// Get all posts
 
-router.get('/oldestVideo/:nodeName', async (req, res) => {
+router.get('/oldestVideo/:nodeName', requiresAuth(), async (req, res) => {
   var node = req.params.nodeName;
   vids
     .find({ node: node })
@@ -19,7 +20,8 @@ router.get('/oldestVideo/:nodeName', async (req, res) => {
       res.send(docs);
     });
 });
-router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
+
+router.get('/videoDatesbyNode/:nodeName', requiresAuth(), async (req, res) => {
   const nodeName = req.params.nodeName;
   vids.find({ node: nodeName }, { DateTime: true, _id: false }, function (err, docs) {
     if (err) {
@@ -29,10 +31,9 @@ router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
       res.send(docs);
     }
   });
-
-  //
 });
-router.get('/videosByNode/:nodeName', async (req, res) => {
+
+router.get('/videosByNode/:nodeName', requiresAuth(), async (req, res) => {
   const nodeName = req.params.nodeName;
 
   vids.find({ node: nodeName }, function (err, docs) {
@@ -42,10 +43,9 @@ router.get('/videosByNode/:nodeName', async (req, res) => {
       res.send(docs);
     }
   });
+});
 
-  //
-});
-router.get('/getCameraInfo/:node', async (req, res) => {
+router.get('/getCameraInfo/:node', requiresAuth(), async (req, res) => {
   const node = req.params.node;
   cams.find({ nodeName: node }, function (err, docs) {
     if (err) {
@@ -55,7 +55,8 @@ router.get('/getCameraInfo/:node', async (req, res) => {
     }
   });
 });
-router.get('/getIP/:node', async (req, res) => {
+
+router.get('/getIP/:node', requiresAuth(), async (req, res) => {
   const node = req.params.node;
   cams.find({ nodeName: node }, function (err, docs) {
     if (err) {
@@ -65,7 +66,8 @@ router.get('/getIP/:node', async (req, res) => {
     }
   });
 });
-router.get('/videosByDay/:date/:node', async (req, res) => {
+
+router.get('/videosByDay/:date/:node', requiresAuth(), async (req, res) => {
   var documents = {
     cam1: [],
     cam2: [],
@@ -104,10 +106,10 @@ router.get('/videosByDay/:date/:node', async (req, res) => {
       }
     });
 });
-router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
+
+router.get('/videos/:startDate/:endDate/:nodeID', requiresAuth(), async (req, res) => {
   const startDate = req.params.startDate;
   const nodeID = req.params.nodeID;
-
   var splitFileString = startDate.split('_');
   var fileData = splitFileString[0];
   var fileTimewithExtention = splitFileString[1];
@@ -116,7 +118,6 @@ router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
   var fileTimeCelaned = fileTime.split('-');
   var dateTime = fileData + ' ' + fileTimeCelaned[0] + ':' + fileTimeCelaned[1] + ':00';
   var dateTimeString = moment(dateTime).toISOString();
-
   const endDate = req.params.endDate;
   var splitFileString2 = endDate.split('_');
   var fileData2 = splitFileString2[0];
@@ -125,7 +126,6 @@ router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
   var fileTime2 = fileTimesplit2[0];
   var fileTimeCelaned2 = fileTime2.split('-');
   var dateTime2 = fileData2 + ' ' + fileTimeCelaned2[0] + ':' + fileTimeCelaned2[1] + ':00';
-
   var dateTimeString2 = moment(dateTime2);
   var time = moment.duration('00:04:00');
   var dateTimeString2Cleaned = dateTimeString2.subtract(time).toISOString();
@@ -149,19 +149,22 @@ router.get('/videos/:startDate/:endDate/:nodeID', async (req, res) => {
 
   //
 });
+
 const socketConn = require('socket.io-client');
 var camera1 = socketConn('http://192.168.196.113:3000', { autoConnect: true });
 
-router.get('/cameraDirecetionactions/:direction/:speed', async (req, res) => {
+router.get('/cameraDirecetionactions/:direction/:speed', requiresAuth(), async (req, res) => {
   camera1.emit('cameraDirecetionSpeed', req.params.speed);
   camera1.emit('cameraDirecetionActions', req.params.direction);
   res.send('ok');
 });
-router.get('/cameraPresets/:preset', async (req, res) => {
+
+router.get('/cameraPresets/:preset', requiresAuth(), async (req, res) => {
   camera1.emit('cameraPreset', req.params.preset);
   res.send('ok');
 });
-router.get('/currentcameraList', async (req, res) => {
+
+router.get('/currentcameraList', requiresAuth(), async (req, res) => {
   cams.find({}, function (err, docs) {
     if (err) {
       console.log(err);
@@ -178,7 +181,8 @@ router.get('/currentcameraList', async (req, res) => {
     }
   });
 });
-router.get('/cameraList', async (req, res) => {
+
+router.get('/cameraList', requiresAuth(), async (req, res) => {
   cams.find({}, function (err, docs) {
     if (err) {
       console.log(err);
@@ -188,7 +192,7 @@ router.get('/cameraList', async (req, res) => {
   });
 });
 
-router.post('/addVideos', async (req, res) => {
+router.post('/addVideos', requiresAuth(), async (req, res) => {
   const vid = new vids({
     node: req.body.node,
     nodeID: req.body.nodeID,
@@ -206,4 +210,5 @@ router.post('/addVideos', async (req, res) => {
   await vid.save();
   res.send(vid);
 });
+
 module.exports = router;

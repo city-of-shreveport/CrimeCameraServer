@@ -1,15 +1,16 @@
 // basic requires
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var cameras = require('./routes/cameras');
-var perfmons = require('./routes/perfmons');
-var managementRouter = require('./routes/management');
-var app = express();
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const cameras = require('./routes/cameras');
+const perfmons = require('./routes/perfmons');
+const managementRouter = require('./routes/management');
+const apiRouter = require('./routes/api');
+const app = express();
 
 // require .env variables
 require('dotenv').config();
@@ -26,7 +27,7 @@ mongoose.connect('mongodb://localhost/cameras', function (err) {
 const { auth } = require('express-openid-connect');
 
 const auth_config = {
-  authRequired: true,
+  authRequired: false,
   auth0Logout: true,
   baseURL: process.env.AUTH0_BASEURL,
   issuerBaseURL: process.env.AUTH0_ISSUERBASEURL,
@@ -55,6 +56,7 @@ app.use('/users', usersRouter);
 app.use('/cameras', cameras);
 app.use('/perfmons', perfmons);
 app.use('/management', managementRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
