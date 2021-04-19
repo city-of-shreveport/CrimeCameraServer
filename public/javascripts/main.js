@@ -224,7 +224,7 @@ $(function () {
     $('#video').html(
       "<video width='400' height='auto'  controls autoplay>" +
         '<source src=' +
-        videourlLocation +
+         videourlLocation +
         " type='video/mp4'>" +
         'Your browser does not support the video tag.' +
         '</video>'
@@ -232,7 +232,7 @@ $(function () {
     $('#video2').html(
       "<video width='400' height='auto'  controls autoplay>" +
         '<source src=' +
-        videourlLocation2 +
+         videourlLocation2 +
         " type='video/mp4'>" +
         'Your browser does not support the video tag.' +
         '</video>'
@@ -240,7 +240,7 @@ $(function () {
     $('#video3').html(
       "<video width='400' height='auto'  controls autoplay>" +
         '<source src=' +
-        videourlLocation3 +
+         videourlLocation3 + 
         " type='video/mp4'>" +
         'Your browser does not support the video tag.' +
         '</video>'
@@ -248,14 +248,22 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
+    var client = new WebSocket( 'ws://192.168.196.150:8000/crimeCamera003/camera1.flv' );
+
+		var canvas = document.getElementById('videoCanvas');
+		var player = new jsmpeg(client, {canvas:canvas});
+    
+    
+    
+    
     var video = document.getElementById('vid1');
-    var videoSrc = 'https://crime-cameras.shreveport-it.org/liveStream/cam1.m3u8';
+    var videoSrc = '';
 
     var video2 = document.getElementById('vid2');
-    var videoSrc2 = 'https://crime-cameras.shreveport-it.org/liveStream/cam2.m3u8';
+    var videoSrc2 = '';
 
     var video3 = document.getElementById('vid3');
-    var videoSrc3 = 'https://crime-cameras.shreveport-it.org/liveStream/cam3.m3u8';
+    var videoSrc3 = '';
 
     if (Hls.isSupported()) {
       var hls = new Hls();
@@ -488,8 +496,8 @@ $(function () {
           $.getJSON(getIPString, function (data) {
             ip = data[0].ip;
             console.log(data);
-
-            dreamHost.emit('startStreaming', ip);
+            var clientInfo = [ip, nodeName]
+            dreamHost.emit('startStreaming', clientInfo);
 
             var checkinTime = moment(data[0].lastCheckIn);
             var now = moment();
@@ -754,8 +762,8 @@ $(function () {
 
         $.getJSON(getIPString, function (data) {
           ip = data[0].ip;
-          console.log(ip);
-          dreamHost.emit('startStreaming', ip);
+          var camerainfo = [ip, nodeName]
+          dreamHost.emit('startStreaming', camerainfo);
         });
         $(document).on('input', '#customRange3', function () {
           $('#customRange3_value').html($(this).val());
