@@ -11,17 +11,24 @@ const perfmons = require('./routes/perfmons');
 const managementRouter = require('./routes/management');
 const apiRouter = require('./routes/api');
 const app = express();
+const mongoose = require('mongoose');
 
 // require .env variables
 require('dotenv').config();
 
-// establish connection to database
-const mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost/cameras', function (err) {
-  if (err) throw err;
-  console.log('Successfully connected');
-});
+// establish database connection
+console.log('Establishing database connection...');
+mongoose.connect(
+  'mongodb://localhost/cameras',
+  {
+    useFindAndModify: false,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  function (err) {
+    if (err) throw err;
+  }
+);
 
 // configure auth0
 const { auth } = require('express-openid-connect');
@@ -73,8 +80,10 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 var request = require('request');
 var user;
+
 function getStreams() {
   console.log('yup');
   request.get(
