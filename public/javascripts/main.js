@@ -2,6 +2,7 @@ var nodeName;
 
 var socket = io();
 var dreamHost = io('https://crime-cameras.shreveport-it.org/cameras');
+
 let map;
 var marker;
 var marker2;
@@ -149,6 +150,7 @@ myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
+    dreamHost.emit('stopStreaming', nodeName);
     var video = document.getElementById('vid1');
     var videoSrc = '';
 
@@ -200,7 +202,7 @@ $(function () {
     video3.autoplay = 'autoplay';
     video3.playsinline = 'true';
     // console.log('Modal CVLosed');
-    dreamHost.emit('stopStreaming', ip);
+    
   });
   $('#mainDIV').html(newGrid);
   var myModal = document.getElementById('exampleModal');
@@ -246,63 +248,6 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
-<<<<<<< HEAD
-    var client = 'https://192.168.196.150:8443/CrimeCamera003/camera1.flv'
-var client2 = 'https://192.168.196.150:8443/CrimeCamera003/camera2.flv'
-var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
-		//var canvas = document.getElementById('vid1');
-		//var player = new JSMpeg.Player(client, {canvas:canvas});
-    if (flvjs.isSupported()) {
-        var videoElement = document.getElementById('vid1');
-        var videoElement2 = document.getElementById('vid2');
-         var videoElement3 = document.getElementById('vid3');
-        var flvPlayer = flvjs.createPlayer({
-            type: 'flv',
-            url: client
-        });
-        flvPlayer.attachMediaElement(videoElement);
-        flvPlayer.load();
-        flvPlayer.play();
-    
-     var flvPlayer2 = flvjs.createPlayer({
-            type: 'flv',
-            url: client2
-        });
-        flvPlayer2.attachMediaElement(videoElement2);
-        flvPlayer2.load();
-        flvPlayer2.play();
-        var flvPlayer3 = flvjs.createPlayer({
-            type: 'flv',
-            url: client3
-        });
-        flvPlayer3.attachMediaElement(videoElement3);
-        flvPlayer3.load();
-        flvPlayer3.play();
-    }
-    
-    
-    //var video = document.getElementById('vid1');
-    //var videoSrc = '';
-
-    //var video2 = document.getElementById('vid2');
-    //var videoSrc2 = '';
-
-    //var video3 = document.getElementById('vid3');
-   //var videoSrc3 = '';
-
-    if (Hls.isSupported()) {
-      //var hls = new Hls();
-      //hls.loadSource(videoSrc);
-     // hls.attachMedia(video);
-
-      //var hls2 = new Hls();
-      //hls2.loadSource(videoSrc2);
-     // hls2.attachMedia(video2);
-
-     // var hls3 = new Hls();
-     // hls3.loadSource(videoSrc3);
-     // hls3.attachMedia(video3);
-=======
     var client = 'https://192.168.196.150:8443/CrimeCamera003/camera1.flv';
     var client2 = 'https://192.168.196.150:8443/CrimeCamera003/camera2.flv';
     var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv';
@@ -355,7 +300,6 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
       // var hls3 = new Hls();
       // hls3.loadSource(videoSrc3);
       // hls3.attachMedia(video3);
->>>>>>> 3a240795c61352e9db9c58ed581cfd3c4d20a6fb
     }
     // hls.js is not supported on platforms that do not have Media Source
     // Extensions (MSE) enabled.
@@ -370,10 +314,6 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
     // video.src URL must be on the user-driven white-list before a 'canplay'
     // event will be emitted; the last video event that can be reliably
     // listened-for when the URL is not on the white-list is 'loadedmetadata'.
-<<<<<<< HEAD
-
-=======
->>>>>>> 3a240795c61352e9db9c58ed581cfd3c4d20a6fb
 
     $('#staticBackdrop').modal('show');
     // console.log(':');

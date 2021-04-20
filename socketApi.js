@@ -193,7 +193,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('stopStreaming', function (d) {
     streamingSocket.emit('stopStreaming', d);
-    // console.log(d);
+  console.log(d);
   });
 
   function formatArguments(template) {
