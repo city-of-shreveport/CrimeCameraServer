@@ -6,7 +6,7 @@ const cams = require('../models/cameras');
 const moment = require('moment-timezone');
 
 router.get('/haha', requiresAuth(), async (req, res) => {
-  console.log('HAHA:');
+  // console.log('HAHA:');
   res.end('HAHAHA');
 });
 

@@ -13,9 +13,9 @@ const { JSDOM } = require('jsdom');
 const { data } = require('jquery');
 const { window } = new JSDOM('');
 const $ = require('jquery')(window);
-const streamingServer = require("socket.io-client");
-  var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
-  autoConnect: true
+const streamingServer = require('socket.io-client');
+var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
+  autoConnect: true,
 });
 function checkLastCheckIn() {
   var time = moment.duration('00:15:00');
@@ -51,10 +51,10 @@ function checkLastCheckIn() {
 }
 
 cameraNodes.on('connection', (socket) => {
-  console.log('Someone connected');
+  // console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
-    console.log('CameraAction');
+    // console.log('CameraAction');
   });
 
   socket.on('videoFilesCam1', function (data1) {
@@ -126,7 +126,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
-    console.log(data);
+    // console.log(data);
     cams.exists(
       {
         nodeName: data.name,
@@ -185,16 +185,15 @@ cameraNodes.on('connection', (socket) => {
         return;
       }
       if (stdout) {
-        console.log(stdout);
+        // console.log(stdout);
         return;
       }
     });
   }
 
- 
   socket.on('stopStreaming', function (d) {
-    streamingSocket.emit('stopStreaming', d)
-    console.log(d)
+    streamingSocket.emit('stopStreaming', d);
+    // console.log(d);
   });
 
   function formatArguments(template) {
@@ -205,13 +204,11 @@ cameraNodes.on('connection', (socket) => {
       .filter((arg) => (arg != '' ? true : false));
   }
 
- 
   var activeCamera;
 
   socket.on('startStreaming', function (data) {
-   
-    streamingSocket.emit('startStreaming', data)
-    console.log(data)
+    streamingSocket.emit('startStreaming', data);
+    // console.log(data);
   });
 
   socket.on('videoInfo', function (data) {

@@ -149,8 +149,6 @@ myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
-
-
     var video = document.getElementById('vid1');
     var videoSrc = '';
 
@@ -201,7 +199,7 @@ $(function () {
     video3.muted = 'muted';
     video3.autoplay = 'autoplay';
     video3.playsinline = 'true';
-    console.log('Modal CVLosed');
+    // console.log('Modal CVLosed');
     dreamHost.emit('stopStreaming', ip);
   });
   $('#mainDIV').html(newGrid);
@@ -210,21 +208,21 @@ $(function () {
   $('body').on('click', '.videoTimePlay', function (e) {
     var li = this.id;
     var loc = document.getElementById(li).getAttribute('data-location');
-    console.log(loc);
+    // console.log(loc);
 
     var locationArray = loc.split('/');
 
     var videourlLocation = 'http://' + ip + ':3000/' + locationArray[5] + '/cam1/' + locationArray[7];
     var videourlLocation2 = 'http://' + ip + ':3000/' + locationArray[5] + '/cam2/' + locationArray[7];
     var videourlLocation3 = 'http://' + ip + ':3000/' + locationArray[5] + '/cam3/' + locationArray[7];
-    console.log(videourlLocation);
-    console.log(videourlLocation2);
-    console.log(videourlLocation3);
+    // console.log(videourlLocation);
+    // console.log(videourlLocation2);
+    // console.log(videourlLocation3);
 
     $('#video').html(
       "<video width='400' height='auto'  controls autoplay>" +
         '<source src=' +
-         videourlLocation +
+        videourlLocation +
         " type='video/mp4'>" +
         'Your browser does not support the video tag.' +
         '</video>'
@@ -232,7 +230,7 @@ $(function () {
     $('#video2').html(
       "<video width='400' height='auto'  controls autoplay>" +
         '<source src=' +
-         videourlLocation2 +
+        videourlLocation2 +
         " type='video/mp4'>" +
         'Your browser does not support the video tag.' +
         '</video>'
@@ -240,7 +238,7 @@ $(function () {
     $('#video3').html(
       "<video width='400' height='auto'  controls autoplay>" +
         '<source src=' +
-         videourlLocation3 + 
+        videourlLocation3 +
         " type='video/mp4'>" +
         'Your browser does not support the video tag.' +
         '</video>'
@@ -248,6 +246,7 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
+<<<<<<< HEAD
     var client = 'https://192.168.196.150:8443/CrimeCamera003/camera1.flv'
 var client2 = 'https://192.168.196.150:8443/CrimeCamera003/camera2.flv'
 var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
@@ -303,6 +302,60 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
      // var hls3 = new Hls();
      // hls3.loadSource(videoSrc3);
      // hls3.attachMedia(video3);
+=======
+    var client = 'https://192.168.196.150:8443/CrimeCamera003/camera1.flv';
+    var client2 = 'https://192.168.196.150:8443/CrimeCamera003/camera2.flv';
+    var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv';
+    //var canvas = document.getElementById('vid1');
+    //var player = new JSMpeg.Player(client, {canvas:canvas});
+    if (flvjs.isSupported()) {
+      var videoElement = document.getElementById('vid1');
+      var videoElement2 = document.getElementById('vid2');
+      var videoElement3 = document.getElementById('vid3');
+      var flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        url: client,
+      });
+      flvPlayer.attachMediaElement(videoElement);
+      flvPlayer.load();
+      flvPlayer.play();
+
+      var flvPlayer2 = flvjs.createPlayer({
+        type: 'flv',
+        url: client2,
+      });
+      flvPlayer2.attachMediaElement(videoElement2);
+      flvPlayer2.load();
+      flvPlayer2.play();
+      var flvPlayer3 = flvjs.createPlayer({
+        type: 'flv',
+        url: client3,
+      });
+      flvPlayer3.attachMediaElement(videoElement3);
+      flvPlayer3.load();
+      flvPlayer3.play();
+    }
+
+    //var video = document.getElementById('vid1');
+    //var videoSrc = '';
+
+    //var video2 = document.getElementById('vid2');
+    //var videoSrc2 = '';
+
+    //var video3 = document.getElementById('vid3');
+    //var videoSrc3 = '';
+
+    if (Hls.isSupported()) {
+      //var hls = new Hls();
+      //hls.loadSource(videoSrc);
+      // hls.attachMedia(video);
+      //var hls2 = new Hls();
+      //hls2.loadSource(videoSrc2);
+      // hls2.attachMedia(video2);
+      // var hls3 = new Hls();
+      // hls3.loadSource(videoSrc3);
+      // hls3.attachMedia(video3);
+>>>>>>> 3a240795c61352e9db9c58ed581cfd3c4d20a6fb
     }
     // hls.js is not supported on platforms that do not have Media Source
     // Extensions (MSE) enabled.
@@ -317,10 +370,13 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
     // video.src URL must be on the user-driven white-list before a 'canplay'
     // event will be emitted; the last video event that can be reliably
     // listened-for when the URL is not on the white-list is 'loadedmetadata'.
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3a240795c61352e9db9c58ed581cfd3c4d20a6fb
 
     $('#staticBackdrop').modal('show');
-    console.log(':');
+    // console.log(':');
   });
 
   map = new google.maps.Map(document.getElementById('map'), {
@@ -334,7 +390,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
   infoWindow = new google.maps.InfoWindow(); // Try HTML5 geolocation.
 
   function createMarker(pos, t, v, i, type, numCams) {
-    console.log(pos, t, v, i, type, numCams);
+    // console.log(pos, t, v, i, type, numCams);
     var marker = new google.maps.Marker({
       position: pos,
       map: map, // google.maps.Map
@@ -345,7 +401,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
       icon: i,
     });
     google.maps.event.addListener(marker, 'click', function () {
-      console.log(marker);
+      // console.log(marker);
       ip = marker.videoURL;
       dreamHost.emit('startStreaming', ip);
       $('.videoFeeds').html('');
@@ -355,10 +411,10 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
       var cameraVideoURL = 'https://crime-cameras.shreveport-it.org/cameras/videoDatesbyNode/' + marker.customInfo;
       nodeID = marker.customInfo;
       $.getJSON(cameraVideoURL, function (data) {
-        console.log(data);
+        // console.log(data);
         for (var i = 0; i < data.length; i++) {
           var dateCalendar = moment(data[i].DateTime).format('M/D/YYYY');
-          console.log(moment(data[i].DateTime).format('M/D/YYYY hh:mm'));
+          // console.log(moment(data[i].DateTime).format('M/D/YYYY hh:mm'));
 
           //$(searchparam).css('background', 'lightblue');
 
@@ -369,7 +425,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
           });
         }
       });
-      console.log(marker.cams);
+      // console.log(marker.cams);
       if (marker.cams === 3) {
         var URL1 =
           "<img id='liveVideo' style='height:400px;width:490px' src='http://" + marker.videoURL + ":8081/'></img>";
@@ -396,7 +452,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
 
         $('.up').mousedown(function () {
           dreamHost.emit('Cameraaction', 'up');
-          console.log('UP');
+          // console.log('UP');
         });
         $('.up').mouseup(function () {
           dreamHost.emit('Cameraaction', 'upStop');
@@ -479,7 +535,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
   var videoFiles = [];
 
   $.getJSON('https://crime-cameras.shreveport-it.org/cameras/currentcameraList', function (data) {
-    console.log(data);
+    // console.log(data);
     var lihtmlCameras = '';
 
     for (var i = 0; i < data.length; i++) {
@@ -491,7 +547,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
 
       $('#filterCameras').on('keyup', function () {
         var value = $(this).val().toLowerCase();
-        console.log(value);
+        // console.log(value);
         $('#cameraListItems li').filter(function () {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
@@ -501,13 +557,13 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
         //$('#myModal').modal('show');
         nodeName = this.id;
         $.getJSON('https://crime-cameras.shreveport-it.org/cameras/getCameraInfo/' + nodeName, function (data) {
-          console.log(data);
+          // console.log(data);
 
           var getIPString = 'https://crime-cameras.shreveport-it.org/cameras/getIP/' + nodeName;
           $.getJSON(getIPString, function (data) {
             ip = data[0].ip;
-            console.log(data);
-            var clientInfo = [ip, nodeName]
+            // console.log(data);
+            var clientInfo = [ip, nodeName];
             dreamHost.emit('startStreaming', clientInfo);
 
             var checkinTime = moment(data[0].lastCheckIn);
@@ -530,7 +586,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
             var cameraVideoURL = 'https://crime-cameras.shreveport-it.org/cameras/videoDatesbyNode/' + nodeName;
 
             $.getJSON(cameraVideoURL, function (data) {
-              console.log(data);
+              // console.log(data);
               for (var i = 0; i < data.length; i++) {
                 var dateCalendar = moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY');
 
@@ -760,7 +816,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
           isNextMonth = $target.classList.contains('wc-calendar__days-list__item--next-month');
 
         this.selectedDate = new Date($target.dataset.date);
-        console.log(this.selectedDate);
+        // console.log(this.selectedDate);
         var selectedDate = moment(this.selectedDate).format('YYYY-MM-DD');
         var getIPString = 'https://crime-cameras.shreveport-it.org/cameras/getIP/' + nodeName;
         var getURLString =
@@ -772,7 +828,7 @@ var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
 
         $.getJSON(getIPString, function (data) {
           ip = data[0].ip;
-          var camerainfo = [ip, nodeName]
+          var camerainfo = [ip, nodeName];
           dreamHost.emit('startStreaming', camerainfo);
         });
         $(document).on('input', '#customRange3', function () {

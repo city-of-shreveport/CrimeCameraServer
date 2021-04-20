@@ -85,17 +85,17 @@ var request = require('request');
 var user;
 
 function getStreams() {
-  console.log('yup');
+  // console.log('yup');
   request.get(
     'http://192.168.196.75:8080/' + user.auth_token + '/videos/eGjcwkXXPo/DBxQdxYYak80',
 
     function (error, response, d) {
       if (!error && response.statusCode == 200) {
         var jsonObj = JSON.parse(d);
-        console.log(jsonObj.videos);
+        // console.log(jsonObj.videos);
 
         for (i = 0; i < jsonObj.videos.length; i++) {
-          console.log(jsonObj.videos[i].filename);
+          // console.log(jsonObj.videos[i].filename);
         }
       }
       if (error) {
