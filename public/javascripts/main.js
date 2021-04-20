@@ -248,35 +248,61 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
-    var client = new WebSocket( 'ws://192.168.196.150:8000/crimeCamera003/camera1.flv' );
+    var client = 'https://192.168.196.150:8443/CrimeCamera003/camera1.flv'
+var client2 = 'https://192.168.196.150:8443/CrimeCamera003/camera2.flv'
+var client3 = 'https://192.168.196.150:8443/CrimeCamera003/camera3.flv'
+		//var canvas = document.getElementById('vid1');
+		//var player = new JSMpeg.Player(client, {canvas:canvas});
+    if (flvjs.isSupported()) {
+        var videoElement = document.getElementById('vid1');
+        var videoElement2 = document.getElementById('vid2');
+         var videoElement3 = document.getElementById('vid3');
+        var flvPlayer = flvjs.createPlayer({
+            type: 'flv',
+            url: client
+        });
+        flvPlayer.attachMediaElement(videoElement);
+        flvPlayer.load();
+        flvPlayer.play();
+    
+     var flvPlayer2 = flvjs.createPlayer({
+            type: 'flv',
+            url: client2
+        });
+        flvPlayer2.attachMediaElement(videoElement2);
+        flvPlayer2.load();
+        flvPlayer2.play();
+        var flvPlayer3 = flvjs.createPlayer({
+            type: 'flv',
+            url: client3
+        });
+        flvPlayer3.attachMediaElement(videoElement3);
+        flvPlayer3.load();
+        flvPlayer3.play();
+    }
+    
+    
+    //var video = document.getElementById('vid1');
+    //var videoSrc = '';
 
-		var canvas = document.getElementById('videoCanvas');
-		var player = new jsmpeg(client, {canvas:canvas});
-    
-    
-    
-    
-    var video = document.getElementById('vid1');
-    var videoSrc = '';
+    //var video2 = document.getElementById('vid2');
+    //var videoSrc2 = '';
 
-    var video2 = document.getElementById('vid2');
-    var videoSrc2 = '';
-
-    var video3 = document.getElementById('vid3');
-    var videoSrc3 = '';
+    //var video3 = document.getElementById('vid3');
+   //var videoSrc3 = '';
 
     if (Hls.isSupported()) {
-      var hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
+      //var hls = new Hls();
+      //hls.loadSource(videoSrc);
+     // hls.attachMedia(video);
 
-      var hls2 = new Hls();
-      hls2.loadSource(videoSrc2);
-      hls2.attachMedia(video2);
+      //var hls2 = new Hls();
+      //hls2.loadSource(videoSrc2);
+     // hls2.attachMedia(video2);
 
-      var hls3 = new Hls();
-      hls3.loadSource(videoSrc3);
-      hls3.attachMedia(video3);
+     // var hls3 = new Hls();
+     // hls3.loadSource(videoSrc3);
+     // hls3.attachMedia(video3);
     }
     // hls.js is not supported on platforms that do not have Media Source
     // Extensions (MSE) enabled.
@@ -291,22 +317,7 @@ $(function () {
     // video.src URL must be on the user-driven white-list before a 'canplay'
     // event will be emitted; the last video event that can be reliably
     // listened-for when the URL is not on the white-list is 'loadedmetadata'.
-    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = videoSrc;
-      video2.src = videoSrc2;
-      video3.src = videoSrc3;
-    }
-    video.muted = 'muted';
-    video.autoplay = 'autoplay';
-    video.playsinline = 'true';
 
-    video2.muted = 'muted';
-    video2.autoplay = 'autoplay';
-    video2.playsinline = 'true';
-
-    video3.muted = 'muted';
-    video3.autoplay = 'autoplay';
-    video3.playsinline = 'true';
 
     $('#staticBackdrop').modal('show');
     console.log(':');
@@ -522,7 +533,6 @@ $(function () {
               console.log(data);
               for (var i = 0; i < data.length; i++) {
                 var dateCalendar = moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY');
-                console.log(moment(data[i].DateTime).tz('America/New_York').format('M/D/YYYY hh:mm'));
 
                 //$(searchparam).css('background', 'lightblue');
 
