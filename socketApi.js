@@ -13,13 +13,10 @@ const { JSDOM } = require('jsdom');
 const { data } = require('jquery');
 const { window } = new JSDOM('');
 const $ = require('jquery')(window);
-var spawn = require('child_process').spawn,
-  streamingChildProc = null,
-  streamingChildProc2 = null,
-  streamingChildProc3 = null;
-
-var videoswithData = [];
-
+const streamingServer = require('socket.io-client');
+var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
+  autoConnect: true,
+});
 function checkLastCheckIn() {
   var time = moment.duration('00:15:00');
   var date = moment();
@@ -54,10 +51,10 @@ function checkLastCheckIn() {
 }
 
 cameraNodes.on('connection', (socket) => {
-  console.log('Someone connected');
+  // console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
-    console.log('CameraAction');
+    // console.log('CameraAction');
   });
 
   socket.on('videoFilesCam1', function (data1) {
@@ -129,7 +126,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
-    console.log(data);
+    // console.log(data);
     cams.exists(
       {
         nodeName: data.name,
@@ -188,39 +185,15 @@ cameraNodes.on('connection', (socket) => {
         return;
       }
       if (stdout) {
-        console.log(stdout);
+        // console.log(stdout);
         return;
       }
     });
   }
 
-  function stopStreaming() {
-    streamingChildProc.kill();
-    streamingChildProc2.kill();
-    streamingChildProc3.kill();
-
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/*.ts', function (error, stdout, stderr) {
-      if (error) {
-        console.log(error);
-      }
-      if (!error) {
-        console.log('I remnoved them');
-      }
-    });
-    exec('rm /home/admin/crimeCameraBackend/public/liveStream/*.m3u8', function (error, stdout, stderr) {
-      if (error) {
-        console.log(error);
-      }
-      if (!error) {
-        console.log('I remnoved them');
-      }
-    });
-
-
- 
-  }
   socket.on('stopStreaming', function (d) {
-    stopStreaming();
+    streamingSocket.emit('stopStreaming', d);
+    // console.log(d);
   });
 
   function formatArguments(template) {
@@ -231,116 +204,11 @@ cameraNodes.on('connection', (socket) => {
       .filter((arg) => (arg != '' ? true : false));
   }
 
-  function startStreaming(cameraIP) {
-    //GET IP FOR ACTIVE CAMERA  activeCamera
-
-    streamingChildProc = spawn(
-      'ffmpeg',
-      formatArguments(`
-        -hide_banner
-        -loglevel error
-        -fflags nobuffer
-        -rtsp_transport tcp
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=0
-        -vsync 0
-        -copyts
-        -vcodec copy
-        -movflags frag_keyframe+empty_moov
-        -an
-        -hls_flags delete_segments+append_list
-        -f segment
-        -segment_list_flags live
-        -segment_time 5
-        -segment_list_size 5
-        -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam1.m3u8
-        -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/
-        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam1%d.ts
-      `)
-    );
-
-    streamingChildProc2 = spawn(
-      'ffmpeg',
-      formatArguments(`
-        -hide_banner
-        -loglevel error
-        -fflags nobuffer
-        -rtsp_transport tcp
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=0
-        -vsync 0
-        -copyts
-        -vcodec copy
-        -movflags frag_keyframe+empty_moov
-        -an
-        -hls_flags delete_segments+append_list
-        -f segment
-        -segment_list_flags live
-        -segment_time 5
-        -segment_list_size 5
-        -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam2.m3u8
-        -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/
-        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam2%d.ts
-      `)
-    );
-
-    streamingChildProc3 = spawn(
-      'ffmpeg',
-      formatArguments(`
-        -hide_banner
-        -loglevel error
-        -fflags nobuffer
-        -rtsp_transport tcp 
-        -i rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=0
-        -vsync 0
-        -copyts
-        -vcodec copy
-        -movflags frag_keyframe+empty_moov
-        -an
-        -hls_flags delete_segments+append_list
-        -f segment
-        -segment_list_flags live
-        -segment_time 5
-        -segment_list_size 5
-        -segment_format mpegts
-        -segment_list /home/admin/crimeCameraBackend/public/liveStream/cam3.m3u8
-        -segment_list_type m3u8
-        -segment_list_entry_prefix /liveStream/
-        -segment_wrap 5 /home/admin/crimeCameraBackend/public/liveStream/cam3%d.ts
-      `)
-    );
-
-    streamingChildProc.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    streamingChildProc.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    streamingChildProc2.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    streamingChildProc2.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    streamingChildProc3.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    streamingChildProc3.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-  }
   var activeCamera;
 
   socket.on('startStreaming', function (data) {
-    activeCamera = data;
-    startStreaming(data);
+    streamingSocket.emit('startStreaming', data);
+    // console.log(data);
   });
 
   socket.on('videoInfo', function (data) {
