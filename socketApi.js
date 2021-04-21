@@ -61,7 +61,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam1', function (data1) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam1/' + data1;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/CrimeCamera003/cam1/' + data1;
 
     vids.exists(
       {
@@ -81,7 +81,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam2', function (data2) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam2/' + data2;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/CrimeCamera003/cam2/' + data2;
 
     try {
       vids.exists(
@@ -102,7 +102,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('videoFilesCam3', function (data3) {
     var fileNmaeURL;
-    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/cam3/' + data3;
+    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/CrimeCamera003/cam3/' + data3;
 
     try {
       vids.exists(
@@ -294,6 +294,7 @@ const sleep = (time) => {
 };
 
 function checkVidInDB(camera, fileLocation, node, data) {
+  console.log(fileLocation)
   vids.exists(
     {
       camera: camera,
