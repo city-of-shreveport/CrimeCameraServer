@@ -132,52 +132,28 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
-    const folderName = 'public/videos/CrimeCamera003'
+    const folderName = `public/videos/${data.name}`
 
     try {
   
   if (!fs.existsSync(folderName)) {
-    console.log("Doesnt exsist");
+   
     fs.mkdirSync(folderName)
     
   }
 } catch (err) {
-  console.error(err)
+  
 }
 
-      const { exec } = require('child_process');
-    //check if sshfs is mounted already
-      const stdout2 = execSync(`sudo mountpoint public/videos/CrimeCamera003 ; echo $?`)
-        var responce = stdout2.toString()
+      const { exec } = require('child_process')
+      const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`)
+      var responce = stdout2.toString()
       var reponcecleaned = responce.split('\n')
       if(reponcecleaned[1]=='1'){console.log('Not mounted')
-      exec(` sshfs -o password_stdin pi@192.168.196.164:/home/pi/CrimeCameraClient/public/videos public/videos/CrimeCamera003 <<< "raspberry"`,{shell: '/bin/bash'}, function (error, stdout, stderr) {
-        if (error) {
-          console.log(error)
-        }
-        if (!error) {
-         
-      }
-        
-   
-       
+      exec(` sshfs -o password_stdin pi@${data.ip}:/home/pi/CrimeCameraClient/public/videos public/videos/${data.name} <<< "raspberry"`,{shell: '/bin/bash'}, function (error, stdout, stderr) {
       })
-       
-
     }
-      if(reponcecleaned[1]==='0'){
-        exec(`ls public/videos/CrimeCamera003/cam1`, function (error, stdout, stderr) {
-        if (error) {
-          console.log(error)
-        }
-        if (!error) {
-           console.log('folders list')
-          console.log(stdout)
-          
-
-          }
-
-        })}
+     
     
 
     cams.exists(
