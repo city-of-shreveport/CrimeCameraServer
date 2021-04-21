@@ -6,8 +6,16 @@ const schema = mongoose.Schema({
   location: { lat: Number, lng: Number },
   ip: String,
   numOfCams: Number,
-  systemType: String,
   lastCheckIn: Date,
+  cameras: [
+    {
+      ip: String,
+      direction: Number,
+      username: String,
+      password: String,
+      camType: String,
+    },
+  ],
   sysInfo: {
     memLayout: [
       {
