@@ -13,6 +13,8 @@ const { JSDOM } = require('jsdom');
 const { data } = require('jquery');
 const { window } = new JSDOM('');
 const $ = require('jquery')(window);
+const { execSync } = require('child_process');
+const fs = require('fs')
 const streamingServer = require('socket.io-client');
 var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
   autoConnect: true,
@@ -123,10 +125,61 @@ cameraNodes.on('connection', (socket) => {
     const perf = new perfmons(data);
     perf.save();
   });
+//check if folder exsists
+    
+
+
 
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
-    // console.log(data);
+    const folderName = 'public/videos/CrimeCamera003'
+
+    try {
+  
+  if (!fs.existsSync(folderName)) {
+    console.log("Doesnt exsist");
+    fs.mkdirSync(folderName)
+    
+  }
+} catch (err) {
+  console.error(err)
+}
+
+      const { exec } = require('child_process');
+    //check if sshfs is mounted already
+      const stdout2 = execSync(`sudo mountpoint public/videos/CrimeCamera003 ; echo $?`)
+        var responce = stdout2.toString()
+      var reponcecleaned = responce.split('\n')
+      if(reponcecleaned[1]=='1'){console.log('Not mounted')
+      exec(` sshfs -o password_stdin pi@192.168.196.164:/home/pi/CrimeCameraClient/public/videos public/videos/CrimeCamera003 <<< "raspberry"`,{shell: '/bin/bash'}, function (error, stdout, stderr) {
+        if (error) {
+          console.log(error)
+        }
+        if (!error) {
+         
+      }
+        
+   
+       
+      })
+       
+
+    }
+      if(reponcecleaned[1]==='0'){
+        exec(`ls public/videos/CrimeCamera003/cam1`, function (error, stdout, stderr) {
+        if (error) {
+          console.log(error)
+        }
+        if (!error) {
+           console.log('folders list')
+          console.log(stdout)
+          
+
+          }
+
+        })}
+    
+
     cams.exists(
       {
         nodeName: data.name,
@@ -173,7 +226,6 @@ cameraNodes.on('connection', (socket) => {
 
     socket.emit('getVideos');
   });
-  const { exec } = require('child_process');
 
   function executeCommand(command) {
     exec(command, (error, stdout, stderr) => {
@@ -193,7 +245,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('stopStreaming', function (d) {
     streamingSocket.emit('stopStreaming', d);
-  console.log(d);
+
   });
 
   function formatArguments(template) {
@@ -208,7 +260,7 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('startStreaming', function (data) {
     streamingSocket.emit('startStreaming', data);
-    // console.log(data);
+
   });
 
   socket.on('videoInfo', function (data) {
