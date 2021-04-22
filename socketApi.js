@@ -15,6 +15,7 @@ const { window } = new JSDOM('');
 const $ = require('jquery')(window);
 const { execSync } = require('child_process');
 const fs = require('fs')
+const { exec } = require('child_process')
 const streamingServer = require('socket.io-client');
 var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
   autoConnect: true,
@@ -51,7 +52,71 @@ function checkLastCheckIn() {
     }
   );
 }
+let portStats = {}
 
+
+ function checkCameras(camereaName, ip){
+
+
+ exec('nmap '+ip +' -p 554,555,556', function (error, stdout, stderr) {
+        if (error) {
+        }
+        if (!error) {
+            var out = stdout
+            var cleanedOut = stdout.split("\n")
+            for(i=0;i<cleanedOut.length;i++){
+                    let check = cleanedOut[i].startsWith("554/tcp");
+                    let check2 = cleanedOut[i].startsWith("555/tcp");
+                    let check3 = cleanedOut[i].startsWith("556/tcp");
+                    if(check){
+                        var portCleaned = cleanedOut[i].split(' ')
+                        if(portCleaned[1]==='open'){
+                            portStats.cam1 = true
+
+                        }
+                        if(portCleaned[1]!='open'){
+                            portStats.cam1 = false
+
+                        }
+
+                    }
+                    if(check2){
+                        var portCleaned = cleanedOut[i].split(' ')
+                        if(portCleaned[1]==='open'){
+                            portStats.cam2 = true
+
+                        }
+                         if(portCleaned[1]!='open'){
+                            portStats.cam2 = false
+
+                        }
+
+
+                    }
+                      if(check3){
+                        var portCleaned = cleanedOut[i].split(' ')
+                        if(portCleaned[1]==='open'){
+                            portStats.cam3 = true
+
+                        }
+                         if(portCleaned[1]!='open'){
+                            portStats.cam3 = false
+
+                        }
+
+
+                    }
+            }
+            
+
+
+        }
+        
+    })
+    return portStats
+    }
+
+    
 cameraNodes.on('connection', (socket) => {
   // console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
@@ -132,6 +197,8 @@ cameraNodes.on('connection', (socket) => {
 
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
+ 
+   var camStatus = checkCameras(data.name, data.ip)
     const folderName = `public/videos/${data.name}`
 
     try {
@@ -145,7 +212,6 @@ cameraNodes.on('connection', (socket) => {
   
 }
 
-      const { exec } = require('child_process')
       const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`)
       var responce = stdout2.toString()
       var reponcecleaned = responce.split('\n')
@@ -155,7 +221,6 @@ cameraNodes.on('connection', (socket) => {
     }
      
     
-
     cams.exists(
       {
         nodeName: data.name,
@@ -176,6 +241,7 @@ cameraNodes.on('connection', (socket) => {
               systemType: data.typs,
               lastCheckIn: dateNOW,
               sysInfo: data.sysInfo,
+              camsOnlineStatus: camStatus
             });
             cam.save();
           }
@@ -186,6 +252,7 @@ cameraNodes.on('connection', (socket) => {
                 nodeName: data.name,
               },
               {
+                camsOnlineStatus: camStatus,
                 lastCheckIn: dateNOW,
               },
               null,

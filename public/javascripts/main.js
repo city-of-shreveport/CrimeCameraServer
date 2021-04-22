@@ -34,6 +34,9 @@ var newGrid = `
                 <li class= 'list-group-item ' id='camNameLI'>Camera Name</li>
                 <li class= 'list-group-item ' id='camStatLI'>Status</li>
                 <li class= 'list-group-item ' id='Streaming'>Start Streaming</li>
+                <li class= 'list-group-item ' id='cam1Status'>cam1: </li>
+                <li class= 'list-group-item ' id='cam2Status'>cam2: </li>
+                <li class= 'list-group-item ' id='cam3Status'>cam3: </li>
               </ul>
             </div>
           </div> 
@@ -299,6 +302,9 @@ $(function () {
             var difference = now.diff(checkinTime, 'seconds');
             $('#camNameLI').html('Name: ' + data[0].nodeName);
             $('#camStatLI').html('Checked in: ' + difference + ' seconds ago');
+            $('#cam1Status').html('Camera 1 Online?: ' + data[0].camsOnlineStatus.cam1);
+            $('#cam2Status').html('Camera 3 Online?: ' + data[0].camsOnlineStatus.cam2);
+            $('#cam3Status').html('Camera 2 Online?: ' + data[0].camsOnlineStatus.cam3);
 
             $('.videoFeeds').html('');
             $('.wc-calendar__days-list li').each(function (index) {
@@ -342,6 +348,7 @@ $(function () {
         $.getJSON('https://crime-cameras.shreveport-it.org/cameras/getCameraInfo/' + nodeName, function (data) {
           var getIPString = 'https://crime-cameras.shreveport-it.org/cameras/getIP/' + nodeName;
           $.getJSON(getIPString, function (data) {
+            console.log(data[0])
             ip = data[0].ip;
             var clientInfo = [ip, nodeName];
             dreamHost.emit('startStreaming', clientInfo);
@@ -350,7 +357,10 @@ $(function () {
             var difference = now.diff(checkinTime, 'seconds');
             $('#camNameLI').html('Name: ' + data[0].nodeName);
             $('#camStatLI').html('Checked in: ' + difference + ' seconds ago');
-           
+                       $('#cam1Status').html('Camera 1 Online?: ' + data[0].camsOnlineStatus.cam1);
+            $('#cam2Status').html('Camera 3 Online?: ' + data[0].camsOnlineStatus.cam2);
+            $('#cam3Status').html('Camera 2 Online?: ' + data[0].camsOnlineStatus.cam3);
+
             $('.videoFeeds').html('');
             $('.wc-calendar__days-list li').each(function (index) {
               $(this).css('background', 'white');
