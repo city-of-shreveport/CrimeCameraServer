@@ -13,13 +13,14 @@ const { JSDOM } = require('jsdom');
 const { data } = require('jquery');
 const { window } = new JSDOM('');
 const $ = require('jquery')(window);
-const { execSync } = require('child_process');
-const fs = require('fs')
-const { exec } = require('child_process')
+const { exec, execSync } = require('child_process');
+const fs = require('fs');
 const streamingServer = require('socket.io-client');
+
 var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
   autoConnect: true,
 });
+
 function checkLastCheckIn() {
   var time = moment.duration('00:15:00');
   var date = moment();
@@ -53,69 +54,7 @@ function checkLastCheckIn() {
   );
 }
 
-
-function checkCameras(camereaName, ip){
-let portStats = {}
-
- exec('nmap '+ip +' -p 554,555,556', function (error, stdout, stderr) {
-        if (error) {
-        }
-        if (!error) {
-            var out = stdout
-            var cleanedOut = stdout.split("\n")
-            for(i=0;i<cleanedOut.length;i++){
-                    let check = cleanedOut[i].startsWith("554/tcp");
-                    let check2 = cleanedOut[i].startsWith("555/tcp");
-                    let check3 = cleanedOut[i].startsWith("556/tcp");
-                    if(check){
-                        var portCleaned = cleanedOut[i].split(' ')
-                        if(portCleaned[1]==='open'){
-                            portStats.cam1 = true
-
-                        }
-                        if(portCleaned[1]!='open'){
-                            portStats.cam1 = false
-
-                        }
-
-                    }
-                    if(check2){
-                        var portCleaned = cleanedOut[i].split(' ')
-                        if(portCleaned[1]==='open'){
-                            portStats.cam2 = true
-
-                        }
-                         if(portCleaned[1]!='open'){
-                            portStats.cam2 = false
-
-                        }
-
-
-                    }
-                      if(check3){
-                        var portCleaned = cleanedOut[i].split(' ')
-                        if(portCleaned[1]==='open'){
-                            portStats.cam3 = true
-
-                        }
-                         if(portCleaned[1]!='open'){
-                            portStats.cam3 = false
-
-                        }
-
-
-                    }
-            }
-            
-
-
-        }
-        return portStats
-    })
-    
-    }
-
-  cameraNodes.on('connection', (socket) => {
+cameraNodes.on('connection', (socket) => {
   // console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
@@ -188,37 +127,68 @@ let portStats = {}
     const perf = new perfmons(data);
     perf.save();
   });
-//check if folder exsists
-    
+  //check if folder exsists
 
-
-
-  socket.on('systemOnline', function (data) {
+  socket.on('systemOnline', (data) => {
     var dateNOW = moment().toISOString();
- 
 
-    const folderName = `public/videos/${data.name}`
+    const folderName = `public/videos/${data.name}`;
 
     try {
-  
-  if (!fs.existsSync(folderName)) {
-   
-    fs.mkdirSync(folderName)
-    
-  }
-} catch (err) {
-  
-}
+      if (!fs.existsSync(folderName)) {
+        fs.mkdirSync(folderName);
+      }
+    } catch (err) {}
 
-      const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`)
-      var responce = stdout2.toString()
-      var reponcecleaned = responce.split('\n')
-      if(reponcecleaned[1]=='1'){console.log('Not mounted')
-      exec(` sshfs -o password_stdin pi@${data.ip}:/home/pi/CrimeCameraClient/public/videos public/videos/${data.name} <<< "raspberry"`,{shell: '/bin/bash'}, function (error, stdout, stderr) {
-      })
+    const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`);
+    var responce = stdout2.toString();
+    var reponcecleaned = responce.split('\n');
+    if (reponcecleaned[1] == '1') {
+      console.log('Not mounted');
+      exec(
+        ` sshfs -o password_stdin pi@${data.ip}:/home/pi/CrimeCameraClient/public/videos public/videos/${data.name} <<< "raspberry"`,
+        { shell: '/bin/bash' },
+        function (error, stdout, stderr) {}
+      );
     }
-     
-    
+
+    var portStats = execSync(`nmap ${data.ip} -p 554,555,556`, function (error, stdout, stderr) {}).toString();
+    var cleanedOut = portStats.split('\n');
+    var cameraData = {};
+
+    for (i = 0; i < cleanedOut.length; i++) {
+      let check = cleanedOut[i].startsWith('554/tcp');
+      let check2 = cleanedOut[i].startsWith('555/tcp');
+      let check3 = cleanedOut[i].startsWith('556/tcp');
+      if (check) {
+        var portCleaned = cleanedOut[i].split(' ');
+        if (portCleaned[1] === 'open') {
+          cameraData.cam1 = true;
+        }
+        if (portCleaned[1] != 'open') {
+          cameraData.cam1 = false;
+        }
+      }
+      if (check2) {
+        var portCleaned = cleanedOut[i].split(' ');
+        if (portCleaned[1] === 'open') {
+          cameraData.cam2 = true;
+        }
+        if (portCleaned[1] != 'open') {
+          cameraData.cam2 = false;
+        }
+      }
+      if (check3) {
+        var portCleaned = cleanedOut[i].split(' ');
+        if (portCleaned[1] === 'open') {
+          cameraData.cam3 = true;
+        }
+        if (portCleaned[1] != 'open') {
+          cameraData.cam3 = false;
+        }
+      }
+    }
+
     cams.exists(
       {
         nodeName: data.name,
@@ -239,7 +209,7 @@ let portStats = {}
               systemType: data.typs,
               lastCheckIn: dateNOW,
               sysInfo: data.sysInfo,
-              camsOnlineStatus: checkCameras(data.name, data.ip)
+              camsOnlineStatus: cameraData,
             });
             cam.save();
           }
@@ -250,7 +220,7 @@ let portStats = {}
                 nodeName: data.name,
               },
               {
-                camsOnlineStatus: checkCameras(data.name, data.ip),
+                camsOnlineStatus: cameraData,
                 lastCheckIn: dateNOW,
               },
               null,
@@ -283,16 +253,14 @@ let portStats = {}
       }
     });
   }
-var streamingCamerasOBJ = {}
+  var streamingCamerasOBJ = {};
   socket.on('stopStreaming', function (d) {
-      
-    var cameraName = d
-    streamingCamerasOBJ[cameraName].cam1.stdin.write('q')
-streamingCamerasOBJ[cameraName].cam2.stdin.write('q')
-streamingCamerasOBJ[cameraName].cam3.stdin.write('q')
-console.log(cameraName)
+    var cameraName = d;
+    streamingCamerasOBJ[cameraName].cam1.stdin.write('q');
+    streamingCamerasOBJ[cameraName].cam2.stdin.write('q');
+    streamingCamerasOBJ[cameraName].cam3.stdin.write('q');
+    // console.log(cameraName);
     //streamingSocket.emit('stopStreaming', d);
-
   });
 
   function formatArguments(template) {
@@ -304,16 +272,16 @@ console.log(cameraName)
   }
 
   var activeCamera;
-var spawn = require('child_process').spawn;
+  var spawn = require('child_process').spawn;
   socket.on('startStreaming', function (d) {
-        var cameraIP = d[0]
-    var cameraName = d[1]
-    streamingCamerasOBJ[cameraName] = {}
+    var cameraIP = d[0];
+    var cameraName = d[1];
+    streamingCamerasOBJ[cameraName] = {};
     streamingCamerasOBJ[cameraName]['cam1'] = null;
     streamingCamerasOBJ[cameraName]['cam2'] = null;
     streamingCamerasOBJ[cameraName]['cam3'] = null;
 
-     streamingCamerasOBJ[cameraName].cam1 = spawn(
+    streamingCamerasOBJ[cameraName].cam1 = spawn(
       'ffmpeg',
       formatArguments(`
         -rtsp_transport 
@@ -358,7 +326,7 @@ var spawn = require('child_process').spawn;
       `)
     );
     //streamingSocket.emit('startStreaming', data);
-    console.log(d)
+    // console.log(d);
   });
 
   socket.on('videoInfo', function (data) {
@@ -411,12 +379,13 @@ function intervalFunc() {
 }
 
 setInterval(intervalFunc, 15000);
+
 const sleep = (time) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
 
 function checkVidInDB(camera, fileLocation, node, data) {
-  console.log(fileLocation)
+  // console.log(fileLocation);
   vids.exists(
     {
       camera: camera,
@@ -457,6 +426,7 @@ const updateDBwithVid = async (returnedDocs) => {
   checkVidInDB(returnedDocs.camera, returnedDocs.fileLocation, returnedDocs.node, returnedDocs);
   await sleep(100);
 };
+
 function getVideoUpdateFromCam() {
   var returnedDocs;
   const fetch = require('node-fetch');
@@ -469,6 +439,7 @@ function getVideoUpdateFromCam() {
       returnedDocs = data;
     });
 }
+
 getVideoUpdateFromCam();
 setInterval(getVideoUpdateFromCam, 1800000);
 module.exports = socketApi;

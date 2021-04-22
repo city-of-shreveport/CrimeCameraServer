@@ -17,7 +17,6 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // establish database connection
-console.log('Establishing database connection...');
 mongoose.connect(
   'mongodb://localhost/cameras',
   {
