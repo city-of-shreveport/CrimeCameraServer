@@ -145,45 +145,35 @@ myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 $(function () {
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
     dreamHost.emit('stopStreaming', nodeName);
-    var video = document.getElementById('vid1');
-    var videoSrc = '';
 
-    var video2 = document.getElementById('vid2');
-    var videoSrc2 = '';
 
-    var video3 = document.getElementById('vid3');
-    var videoSrc3 = '';
-    if (Hls.isSupported()) {
-      var hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
+    var videoElement = document.getElementById('vid1');
+      var videoElement2 = document.getElementById('vid2');
+      var videoElement3 = document.getElementById('vid3');
+      var flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        url: client,
+      });
+      flvPlayer.attachMediaElement(videoElement);
+      flvPlayer.load();
+      flvPlayer.play();
 
-      var hls2 = new Hls();
-      hls2.loadSource(videoSrc2);
-      hls2.attachMedia(video2);
-
-      var hls3 = new Hls();
-      hls3.loadSource(videoSrc3);
-      hls3.attachMedia(video3);
-    }
+      var flvPlayer2 = flvjs.createPlayer({
+        type: 'flv',
+        url: client2,
+      });
+      flvPlayer2.attachMediaElement(videoElement2);
+      flvPlayer2.load();
+      flvPlayer2.play();
+      var flvPlayer3 = flvjs.createPlayer({
+        type: 'flv',
+        url: client3,
+      });
+      flvPlayer3.attachMediaElement(videoElement3);
+      flvPlayer3.load();
+      flvPlayer3.play();
     
-    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = videoSrc;
-      video2.src = videoSrc2;
-      video3.src = videoSrc3;
-    }
-    video.muted = 'muted';
-    video.autoplay = 'autoplay';
-    video.playsinline = 'true';
-
-    video2.muted = 'muted';
-    video2.autoplay = 'autoplay';
-    video2.playsinline = 'true';
-
-    video3.muted = 'muted';
-    video3.autoplay = 'autoplay';
-    video3.playsinline = 'true';
-    // console.log('Modal CVLosed');
+    
     
   });
   $('#mainDIV').html(newGrid);
@@ -223,6 +213,7 @@ $(function () {
   });
 
   $('body').on('click', '#Streaming', function () {
+    console.log(nodeName)
     var client = `https://192.168.196.150:8443/${nodeName}/camera1.flv`;
     var client2 = `https://192.168.196.150:8443/${nodeName}/camera2.flv`;
     var client3 = `https://192.168.196.150:8443/${nodeName}/camera3.flv`;
