@@ -52,11 +52,10 @@ function checkLastCheckIn() {
     }
   );
 }
+
+
+function checkCameras(camereaName, ip){
 let portStats = {}
-
-
- function checkCameras(camereaName, ip){
-
 
  exec('nmap '+ip +' -p 554,555,556', function (error, stdout, stderr) {
         if (error) {
@@ -111,13 +110,12 @@ let portStats = {}
 
 
         }
-        
+        return portStats
     })
-    return portStats
+    
     }
 
-    
-cameraNodes.on('connection', (socket) => {
+  cameraNodes.on('connection', (socket) => {
   // console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
@@ -198,7 +196,7 @@ cameraNodes.on('connection', (socket) => {
   socket.on('systemOnline', function (data) {
     var dateNOW = moment().toISOString();
  
-   var camStatus = checkCameras(data.name, data.ip)
+
     const folderName = `public/videos/${data.name}`
 
     try {
@@ -241,7 +239,7 @@ cameraNodes.on('connection', (socket) => {
               systemType: data.typs,
               lastCheckIn: dateNOW,
               sysInfo: data.sysInfo,
-              camsOnlineStatus: camStatus
+              camsOnlineStatus: checkCameras(data.name, data.ip)
             });
             cam.save();
           }
@@ -252,7 +250,7 @@ cameraNodes.on('connection', (socket) => {
                 nodeName: data.name,
               },
               {
-                camsOnlineStatus: camStatus,
+                camsOnlineStatus: checkCameras(data.name, data.ip),
                 lastCheckIn: dateNOW,
               },
               null,
