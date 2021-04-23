@@ -149,9 +149,9 @@ $(function () {
   $('body').on('click', '#startStream', function () {
 
 $.getJSON('https://crime-cameras.shreveport-it.org/streaming/startStreaming/' + nodeName +'/'+ip, function (data) {})
-var client = `https://cc-restreamer.shreveport-it.org:8443/${nodeName}/camera1.flv`;
-    var client2 = `https://cc-restreamer.shreveport-it.org:8443/${nodeName}/camera2.flv`;
-    var client3 = `https://cc-restreamer.shreveport-it.org:8443/${nodeName}/camera3.flv`;
+var client = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera1.flv`;
+    var client2 = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera2.flv`;
+    var client3 = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera3.flv`;
 
     
       setTimeout(() => {
