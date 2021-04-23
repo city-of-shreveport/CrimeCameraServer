@@ -253,15 +253,7 @@ cameraNodes.on('connection', (socket) => {
       }
     });
   }
-  var streamingCamerasOBJ = {};
-  socket.on('stopStreaming', function (d) {
-    var cameraName = d;
-    streamingCamerasOBJ[cameraName].cam1.stdin.write('q');
-    streamingCamerasOBJ[cameraName].cam2.stdin.write('q');
-    streamingCamerasOBJ[cameraName].cam3.stdin.write('q');
-    // console.log(cameraName);
-    //streamingSocket.emit('stopStreaming', d);
-  });
+
 
   function formatArguments(template) {
     return template
@@ -271,63 +263,8 @@ cameraNodes.on('connection', (socket) => {
       .filter((arg) => (arg != '' ? true : false));
   }
 
-  var activeCamera;
-  var spawn = require('child_process').spawn;
-  socket.on('startStreaming', function (d) {
-    var cameraIP = d[0];
-    var cameraName = d[1];
-    streamingCamerasOBJ[cameraName] = {};
-    streamingCamerasOBJ[cameraName]['cam1'] = null;
-    streamingCamerasOBJ[cameraName]['cam2'] = null;
-    streamingCamerasOBJ[cameraName]['cam3'] = null;
+ 
 
-    streamingCamerasOBJ[cameraName].cam1 = spawn(
-      'ffmpeg',
-      formatArguments(`
-        -rtsp_transport 
-        tcp 
-        -i 
-        rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=0
-        -vcodec 
-        copy 
-        -f 
-        flv 
-        rtmp://192.168.196.150/${cameraName}/camera1
-      `)
-    );
-
-    streamingCamerasOBJ[cameraName].cam2 = spawn(
-      'ffmpeg',
-      formatArguments(`
-       -rtsp_transport 
-       tcp 
-       -i 
-       rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=0
-       -vcodec 
-       copy 
-       -f 
-       flv 
-       rtmp://192.168.196.150/${cameraName}/camera2
-      `)
-    );
-
-    streamingCamerasOBJ[cameraName].cam3 = spawn(
-      'ffmpeg',
-      formatArguments(`
-        -rtsp_transport 
-        tcp 
-        -i 
-        rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=0 
-        -vcodec 
-        copy 
-        -f 
-        flv 
-        rtmp://192.168.196.150/${cameraName}/camera3
-      `)
-    );
-    //streamingSocket.emit('startStreaming', data);
-    // console.log(d);
-  });
 
   socket.on('videoInfo', function (data) {
     try {

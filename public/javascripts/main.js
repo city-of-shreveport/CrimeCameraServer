@@ -147,7 +147,8 @@ myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
-    dreamHost.emit('stopStreaming', nodeName);
+    //dreamHost.emit('stopStreaming', nodeName);
+      $.getJSON('https://crime-cameras.shreveport-it.org/streaming/stopStreaming/' + nodeName, function (data) {console.log(data)})
 
 
     var videoElement = document.getElementById('vid1');
@@ -155,7 +156,7 @@ $(function () {
       var videoElement3 = document.getElementById('vid3');
       var flvPlayer = flvjs.createPlayer({
         type: 'flv',
-        url: client,
+        url: '',
       });
       flvPlayer.attachMediaElement(videoElement);
       flvPlayer.load();
@@ -163,14 +164,14 @@ $(function () {
 
       var flvPlayer2 = flvjs.createPlayer({
         type: 'flv',
-        url: client2,
+         url: '',
       });
       flvPlayer2.attachMediaElement(videoElement2);
       flvPlayer2.load();
       flvPlayer2.play();
       var flvPlayer3 = flvjs.createPlayer({
         type: 'flv',
-        url: client3,
+         url: '',
       });
       flvPlayer3.attachMediaElement(videoElement3);
       flvPlayer3.load();
@@ -282,7 +283,6 @@ $(function () {
     });
     google.maps.event.addListener(marker, 'click', function () {
       ip = marker.videoURL;
-      dreamHost.emit('startStreaming', ip);
       $('.videoFeeds').html('');
       $('.wc-calendar__days-list li').each(function (index) {
         $(this).css('background', 'white');
@@ -291,12 +291,12 @@ $(function () {
       nodeID = marker.customInfo;
       nodeName = marker.customInfo
       
-      $.getJSON('https://crime-cameras.shreveport-it.org/cameras/getCameraInfo/' + nodeName, function (data) {
           var getIPString = 'https://crime-cameras.shreveport-it.org/cameras/getIP/' + nodeName;
           $.getJSON(getIPString, function (data) {
             ip = data[0].ip;
             var clientInfo = [ip, nodeName];
-            dreamHost.emit('startStreaming', clientInfo);
+            $.getJSON('https://crime-cameras.shreveport-it.org/streaming/startStreaming/' + nodeName +'/'+ip, function (data) {})
+
             var checkinTime = moment(data[0].lastCheckIn);
             var now = moment();
             var difference = now.diff(checkinTime, 'seconds');
@@ -322,7 +322,7 @@ $(function () {
               }
             });
           });
-        });
+     
       return marker;
     });
   }
@@ -333,7 +333,7 @@ $(function () {
     for (var i = 0; i < data.length; i++) {
       var checkedinTime = moment(data[i].lastCheckIn).format('MM-DD hh:mm');
       $('#cameraListItems').append(
-        "<li class='list-group-item' id='" + data[i].nodeName + "'>" + data[i].nodeName + '</li>'
+        "<li class='list-group-item cameraItem' id='" + data[i].nodeName + "'>" + data[i].nodeName + '</li>'
       );
 
       $('#filterCameras').on('keyup', function () {
@@ -343,15 +343,17 @@ $(function () {
         });
       });
 
-      $('#cameraListItems .list-group-item').on('click', function () {
+      $('.cameraItem').off().on('click', function () {
         nodeName = this.id;
-        $.getJSON('https://crime-cameras.shreveport-it.org/cameras/getCameraInfo/' + nodeName, function (data) {
+        console.log("CLICK")
           var getIPString = 'https://crime-cameras.shreveport-it.org/cameras/getIP/' + nodeName;
           $.getJSON(getIPString, function (data) {
             console.log(data[0])
             ip = data[0].ip;
             var clientInfo = [ip, nodeName];
-            dreamHost.emit('startStreaming', clientInfo);
+
+
+            $.getJSON('https://crime-cameras.shreveport-it.org/streaming/startStreaming/' + nodeName +'/'+ip, function (data) {})
             var checkinTime = moment(data[0].lastCheckIn);
             var now = moment();
             var difference = now.diff(checkinTime, 'seconds');
@@ -377,7 +379,7 @@ $(function () {
               }
             });
           });
-        });
+    
       });
     }
 
@@ -606,7 +608,10 @@ $(function () {
         $.getJSON(getIPString, function (data) {
           ip = data[0].ip;
           var camerainfo = [ip, nodeName];
-          dreamHost.emit('startStreaming', camerainfo);
+
+
+
+          //dreamHost.emit('startStreaming', camerainfo);
         });
         $(document).on('input', '#customRange3', function () {
           $('#customRange3_value').html($(this).val());

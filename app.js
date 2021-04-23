@@ -10,6 +10,7 @@ const cameras = require('./routes/cameras');
 const perfmons = require('./routes/perfmons');
 const managementRouter = require('./routes/management');
 const apiRouter = require('./routes/api');
+const streamingRouter = require('./routes/streaming');
 const app = express();
 const mongoose = require('mongoose');
 
@@ -63,7 +64,7 @@ app.use('/cameras', cameras);
 app.use('/perfmons', perfmons);
 app.use('/management', managementRouter);
 app.use('/api', apiRouter);
-
+app.use('/streaming', streamingRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
