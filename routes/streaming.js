@@ -35,7 +35,7 @@ var cameraIP = req.params.cameraIP;
         -rtsp_transport 
         tcp 
         -i 
-        rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=0
+        rtsp://admin:UUnv9njxg123@${cameraIP}:554/cam/realmonitor?channel=1&subtype=1
         -vcodec 
         copy 
         -f 
@@ -50,7 +50,7 @@ var cameraIP = req.params.cameraIP;
        -rtsp_transport 
        tcp 
        -i 
-       rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=0
+       rtsp://admin:UUnv9njxg123@${cameraIP}:555/cam/realmonitor?channel=1&subtype=1
        -vcodec 
        copy 
        -f 
@@ -65,7 +65,7 @@ var cameraIP = req.params.cameraIP;
         -rtsp_transport 
         tcp 
         -i 
-        rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=0 
+        rtsp://admin:UUnv9njxg123@${cameraIP}:556/cam/realmonitor?channel=1&subtype=1 
         -vcodec 
         copy 
         -f 

@@ -146,6 +146,57 @@ const myLatLng = {
 myLatlng = new google.maps.LatLng(38.926415, -77.704038);
 
 $(function () {
+  $('body').on('click', '#startStream', function () {
+
+$.getJSON('https://crime-cameras.shreveport-it.org/streaming/startStreaming/' + nodeName +'/'+ip, function (data) {})
+var client = `https://cc-restreamer.shreveport-it.org:8443/${nodeName}/camera1.flv`;
+    var client2 = `https://cc-restreamer.shreveport-it.org:8443/${nodeName}/camera2.flv`;
+    var client3 = `https://cc-restreamer.shreveport-it.org:8443/${nodeName}/camera3.flv`;
+
+    
+      setTimeout(() => {
+        if (flvjs.isSupported()) {
+      var videoElement = document.getElementById('vid1');
+      var videoElement2 = document.getElementById('vid2');
+      var videoElement3 = document.getElementById('vid3');
+      var flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        url: client,
+      });
+      flvPlayer.attachMediaElement(videoElement);
+      flvPlayer.load();
+       flvPlayer.play();
+
+      var flvPlayer2 = flvjs.createPlayer({
+        type: 'flv',
+        url: client2,
+      });
+      flvPlayer2.attachMediaElement(videoElement2);
+      flvPlayer2.load();
+       flvPlayer2.play();
+      var flvPlayer3 = flvjs.createPlayer({
+        type: 'flv',
+        url: client3,
+      });
+      flvPlayer3.attachMediaElement(videoElement3);
+      flvPlayer3.load();
+
+      
+     
+      flvPlayer3.play();
+      
+      }
+      }, 3000);
+      setTimeout(() => {
+        $.getJSON('https://crime-cameras.shreveport-it.org/streaming/stopStreaming/' + nodeName, function (data) {console.log(data)})
+      }, 600000);
+  
+})
+  $('body').on('click', '#stopStream', function () {
+
+$.getJSON('https://crime-cameras.shreveport-it.org/streaming/stopStreaming/' + nodeName, function (data) {console.log(data)})
+
+  })
   $('body').on('hidden.bs.modal', '#staticBackdrop', function () {
     //dreamHost.emit('stopStreaming', nodeName);
       $.getJSON('https://crime-cameras.shreveport-it.org/streaming/stopStreaming/' + nodeName, function (data) {console.log(data)})
@@ -218,37 +269,9 @@ $(function () {
 
   $('body').on('click', '#Streaming', function () {
     console.log(nodeName)
-    var client = `https://192.168.196.150:8443/${nodeName}/camera1.flv`;
-    var client2 = `https://192.168.196.150:8443/${nodeName}/camera2.flv`;
-    var client3 = `https://192.168.196.150:8443/${nodeName}/camera3.flv`;
-
-    if (flvjs.isSupported()) {
-      var videoElement = document.getElementById('vid1');
-      var videoElement2 = document.getElementById('vid2');
-      var videoElement3 = document.getElementById('vid3');
-      var flvPlayer = flvjs.createPlayer({
-        type: 'flv',
-        url: client,
-      });
-      flvPlayer.attachMediaElement(videoElement);
-      flvPlayer.load();
-      flvPlayer.play();
-
-      var flvPlayer2 = flvjs.createPlayer({
-        type: 'flv',
-        url: client2,
-      });
-      flvPlayer2.attachMediaElement(videoElement2);
-      flvPlayer2.load();
-      flvPlayer2.play();
-      var flvPlayer3 = flvjs.createPlayer({
-        type: 'flv',
-        url: client3,
-      });
-      flvPlayer3.attachMediaElement(videoElement3);
-      flvPlayer3.load();
-      flvPlayer3.play();
-    }
+    
+      
+   
 
  
 
@@ -295,7 +318,7 @@ $(function () {
           $.getJSON(getIPString, function (data) {
             ip = data[0].ip;
             var clientInfo = [ip, nodeName];
-            $.getJSON('https://crime-cameras.shreveport-it.org/streaming/startStreaming/' + nodeName +'/'+ip, function (data) {})
+            
 
             var checkinTime = moment(data[0].lastCheckIn);
             var now = moment();
@@ -353,7 +376,7 @@ $(function () {
             var clientInfo = [ip, nodeName];
 
 
-            $.getJSON('https://crime-cameras.shreveport-it.org/streaming/startStreaming/' + nodeName +'/'+ip, function (data) {})
+            
             var checkinTime = moment(data[0].lastCheckIn);
             var now = moment();
             var difference = now.diff(checkinTime, 'seconds');
