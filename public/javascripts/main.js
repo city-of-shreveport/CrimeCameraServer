@@ -149,16 +149,22 @@ $(function () {
   $('body').on('click', '#startStream', function () {
 
 $.getJSON('https://crime-cameras.shreveport-it.org/streaming/startStreaming/' + nodeName +'/'+ip, function (data) {})
-var client = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera1.flv`;
-    var client2 = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera2.flv`;
-    var client3 = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera3.flv`;
+//var client = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera1.flv`;
+    //var client2 = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera2.flv`;
+    //var client3 = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera3.flv`;
 
+    var client = `wss://cc-restreamer.shreveport-it.org/${nodeName}/camera1.flv`;
+    var client2 = `wss://cc-restreamer.shreveport-it.org/${nodeName}/camera2.flv`;
+    var client3 = `wss://cc-restreamer.shreveport-it.org/${nodeName}/camera3.flv`;
+    var client4 = `wss://cc-restreamer.shreveport-it.org/${nodeName}/camera4.flv`;
+//wss://localhost:8443/live/STREAM_NAME.flv
     
       setTimeout(() => {
         if (flvjs.isSupported()) {
       var videoElement = document.getElementById('vid1');
       var videoElement2 = document.getElementById('vid2');
       var videoElement3 = document.getElementById('vid3');
+      var videoElement4 = document.getElementById('vid4');
       var flvPlayer = flvjs.createPlayer({
         type: 'flv',
         url: client,
@@ -180,10 +186,15 @@ var client = `https://cc-restreamer.shreveport-it.org/${nodeName}/camera1.flv`;
       });
       flvPlayer3.attachMediaElement(videoElement3);
       flvPlayer3.load();
-
+var flvPlayer4 = flvjs.createPlayer({
+        type: 'flv',
+        url: client4,
+      });
+      flvPlayer4.attachMediaElement(videoElement4);
+      flvPlayer4.load();
       
      
-      flvPlayer3.play();
+      flvPlayer4.play();
       
       }
       }, 3000);
@@ -207,7 +218,7 @@ $.getJSON('https://crime-cameras.shreveport-it.org/streaming/stopStreaming/' + n
       var videoElement3 = document.getElementById('vid3');
       var flvPlayer = flvjs.createPlayer({
         type: 'flv',
-        url: '',
+        url: 'wss://localhost:8000/live/STREAM_NAME.flv',
       });
       flvPlayer.attachMediaElement(videoElement);
       flvPlayer.load();
@@ -235,6 +246,8 @@ $.getJSON('https://crime-cameras.shreveport-it.org/streaming/stopStreaming/' + n
   var myModal = document.getElementById('exampleModal');
 
   $('body').on('click', '.videoTimePlay', function (e) {
+
+    wss://localhost:8443/live/STREAM_NAME.flv
     var li = this.id;
     var loc = document.getElementById(li).getAttribute('data-location');
     var locationArray = loc.split('/');
