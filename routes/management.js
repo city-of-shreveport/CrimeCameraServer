@@ -126,7 +126,7 @@ Router.get('/:nodeName/config', requiresAuth(), async (req, res) => {
 
   try {
     models = await CameraConfigurations.findOne({ cameraName: req.params.nodeName });
-    cameraConfig = JSON.parse(models.cameraConfiguration);
+    cameraConfig = models.cameraConfiguration;
   } catch {
     new CameraConfigurations({
       cameraName: camera.nodeName,
@@ -149,7 +149,7 @@ Router.get('/:nodeName/config/update', requiresAuth(), async (req, res) => {
       cameraName: req.params.nodeName,
     },
     {
-      cameraConfiguration: JSON.stringify(req.query.config),
+      cameraConfiguration: JSON.parse(req.query.config),
     }
   );
 
