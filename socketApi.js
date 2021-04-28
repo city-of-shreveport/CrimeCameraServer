@@ -16,6 +16,7 @@ const $ = require('jquery')(window);
 const { exec, execSync } = require('child_process');
 const fs = require('fs');
 const streamingServer = require('socket.io-client');
+const fetch = require('node-fetch');
 
 var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
   autoConnect: true,
@@ -254,7 +255,6 @@ cameraNodes.on('connection', (socket) => {
     });
   }
 
-
   function formatArguments(template) {
     return template
       .replace(/\s+/g, ' ')
@@ -262,9 +262,6 @@ cameraNodes.on('connection', (socket) => {
       .split('\n')
       .filter((arg) => (arg != '' ? true : false));
   }
-
- 
-
 
   socket.on('videoInfo', function (data) {
     try {
@@ -366,15 +363,15 @@ const updateDBwithVid = async (returnedDocs) => {
 
 function getVideoUpdateFromCam() {
   var returnedDocs;
-  const fetch = require('node-fetch');
-  fetch('http://192.168.196.164:3000/allVideos')
-    .then((response) => response.json())
-    .then((data) => {
-      for (i = 0; i < data.length; i++) {
-        updateDBwithVid(data[i]);
-      }
-      returnedDocs = data;
-    });
+
+  // fetch('http://192.168.196.164:3000/allVideos')
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     for (i = 0; i < data.length; i++) {
+  //       updateDBwithVid(data[i]);
+  //     }
+  //     returnedDocs = data;
+  //   });
 }
 
 getVideoUpdateFromCam();
