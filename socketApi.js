@@ -56,10 +56,8 @@ function checkLastCheckIn() {
 }
 
 cameraNodes.on('connection', (socket) => {
-  // console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
-    // console.log('CameraAction');
   });
 
   socket.on('videoFilesCam1', function (data1) {
@@ -72,7 +70,6 @@ cameraNodes.on('connection', (socket) => {
       },
       function (err, doc) {
         if (err) {
-          console.log(err);
         } else {
           if (doc == false) {
             socket.emit('getVideoInfoCam1', data1);
@@ -128,11 +125,9 @@ cameraNodes.on('connection', (socket) => {
     const perf = new perfmons(data);
     perf.save();
   });
-  //check if folder exsists
 
   socket.on('systemOnline', (data) => {
     var dateNOW = moment().toISOString();
-
     const folderName = `public/videos/${data.name}`;
 
     try {
@@ -144,8 +139,8 @@ cameraNodes.on('connection', (socket) => {
     const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`);
     var responce = stdout2.toString();
     var reponcecleaned = responce.split('\n');
+
     if (reponcecleaned[1] == '1') {
-      console.log('Not mounted');
       exec(
         ` sshfs -o password_stdin pi@${data.ip}:/home/pi/CrimeCameraClient/public/videos public/videos/${data.name} <<< "raspberry"`,
         { shell: '/bin/bash' },
@@ -242,14 +237,12 @@ cameraNodes.on('connection', (socket) => {
   function executeCommand(command) {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        console.log(error);
         return;
       }
       if (stderr) {
         return;
       }
       if (stdout) {
-        // console.log(stdout);
         return;
       }
     });
@@ -319,7 +312,6 @@ const sleep = (time) => {
 };
 
 function checkVidInDB(camera, fileLocation, node, data) {
-  // console.log(fileLocation);
   vids.exists(
     {
       camera: camera,
@@ -328,7 +320,6 @@ function checkVidInDB(camera, fileLocation, node, data) {
     },
     function (err, doc) {
       if (err) {
-        console.log(err);
       } else {
         if (!doc) {
           const vid = new vids({
@@ -364,14 +355,14 @@ const updateDBwithVid = async (returnedDocs) => {
 function getVideoUpdateFromCam() {
   var returnedDocs;
 
-  // fetch('http://192.168.196.164:3000/allVideos')
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     for (i = 0; i < data.length; i++) {
-  //       updateDBwithVid(data[i]);
-  //     }
-  //     returnedDocs = data;
-  //   });
+  fetch('http://10.10.10.100:3000/allVideos')
+    .then((response) => response.json())
+    .then((data) => {
+      for (i = 0; i < data.length; i++) {
+        updateDBwithVid(data[i]);
+      }
+      returnedDocs = data;
+    });
 }
 
 getVideoUpdateFromCam();
