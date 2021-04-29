@@ -301,8 +301,6 @@ function getVideoUpdateFromCam() {
   cams.find({}, function (err, docs) {
     if (err) {
     } else {
-      // console.log(docs);
-
       for (i = 0; i < docs.length; i++) {
         fetch(`http://${docs[i].ip}:3000/allVideos`)
           .then((response) => response.json())
