@@ -11,13 +11,18 @@ Router.get('/', requiresAuth(), async (req, res) => {
   var cameraData = [];
 
   for (var camera of cameras) {
-    lastPerfmon = await Perfmons.find({
+    lastPerfmon = await Perfmons.findOne({
       camera: camera.nodeName,
-    })
-      .sort({ upDated: -1 })
-      .limit(1);
+    }).sort({ upDated: -1 });
 
-    camera.lastPerfmon = lastPerfmon[0];
+    if (lastPerfmon == null) {
+      newPerfmon = new Perfmons(defaultPerfmon(camera));
+      newPerfmon.save();
+      camera.lastPerfmon = newPerfmon;
+    } else {
+      camera.lastPerfmon = lastPerfmon;
+    }
+
     cameraData.push(camera);
   }
 
@@ -162,6 +167,37 @@ function tryValue(tryFunction) {
   } catch {
     return null;
   }
+}
+
+function defaultPerfmon(cameraName) {
+  return {
+    fsSize: [
+      {
+        fs: '',
+        type: '',
+        size: 0.0,
+        used: 0.0,
+        available: 0.0,
+        mount: '',
+      },
+    ],
+    camera: cameraName,
+    currentLoad: {
+      avgLoad: 0,
+      currentLoad: 0.0,
+      currentLoadUser: 0.0,
+    },
+    mem: {
+      total: 0.0,
+      free: 0.0,
+      used: 0.0,
+      available: 0.0,
+    },
+    cpuTemperature: {
+      main: 0.0,
+    },
+    upDated: Date.now(),
+  };
 }
 
 module.exports = Router;
