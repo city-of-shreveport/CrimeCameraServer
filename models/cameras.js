@@ -7,11 +7,10 @@ const schema = mongoose.Schema({
   ip: String,
   numOfCams: Number,
   lastCheckIn: Date,
-  camsOnlineStatus:
-   {
-        type: Map,
-        of: mongoose.Schema.Types.Mixed,
-      },
+  camsOnlineStatus: {
+    type: Map,
+    of: mongoose.Schema.Types.Mixed,
+  },
   cameras: [
     {
       ip: String,

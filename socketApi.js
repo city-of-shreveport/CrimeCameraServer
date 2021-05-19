@@ -16,6 +16,7 @@ const $ = require('jquery')(window);
 const { exec, execSync } = require('child_process');
 const fs = require('fs');
 const streamingServer = require('socket.io-client');
+const fetch = require('node-fetch');
 
 var streamingSocket = streamingServer('http://192.168.196.150:3000/liveStream', {
   autoConnect: true,
@@ -55,102 +56,40 @@ function checkLastCheckIn() {
 }
 
 cameraNodes.on('connection', (socket) => {
-  // console.log('Someone connected');
   socket.on('Cameraaction', function (action) {
     socket.broadcast.emit('Cameraaction', action);
-    // console.log('CameraAction');
-  });
-
-  socket.on('videoFilesCam1', function (data1) {
-    var fileNmaeURL;
-    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/CrimeCamera003/cam1/' + data1;
-
-    vids.exists(
-      {
-        fileLocation: fileLocationDB,
-      },
-      function (err, doc) {
-        if (err) {
-          console.log(err);
-        } else {
-          if (doc == false) {
-            socket.emit('getVideoInfoCam1', data1);
-          }
-        }
-      }
-    );
-  });
-
-  socket.on('videoFilesCam2', function (data2) {
-    var fileNmaeURL;
-    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/CrimeCamera003/cam2/' + data2;
-
-    try {
-      vids.exists(
-        {
-          fileLocation: fileLocationDB,
-        },
-        function (err, doc) {
-          if (err) {
-          } else {
-            if (doc == false) {
-              socket.emit('getVideoInfoCam2', data2);
-            }
-          }
-        }
-      );
-    } catch (error) {}
-  });
-
-  socket.on('videoFilesCam3', function (data3) {
-    var fileNmaeURL;
-    var fileLocationDB = '/home/admin/CrimeCamera/public/videos/CrimeCamera003/cam3/' + data3;
-
-    try {
-      vids.exists(
-        {
-          fileLocation: fileLocationDB,
-        },
-        function (err, doc) {
-          if (err) {
-          } else {
-            if (doc == false) {
-              socket.emit('getVideoInfoCam3', data3);
-            }
-          }
-        }
-      );
-    } catch (error) {}
   });
 
   socket.on('perfmonStats', function (data) {
     const perf = new perfmons(data);
     perf.save();
   });
-  //check if folder exsists
 
   socket.on('systemOnline', (data) => {
     var dateNOW = moment().toISOString();
-
     const folderName = `public/videos/${data.name}`;
 
-    try {
-      if (!fs.existsSync(folderName)) {
-        fs.mkdirSync(folderName);
-      }
-    } catch (err) {}
+    // try {
+    //   if (!fs.existsSync(folderName)) {
+    //     const mkDriCommand = execSync(`sudo mkdir public/videos/${data.name} ; echo $?`);
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
-    const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`);
-    var responce = stdout2.toString();
-    var reponcecleaned = responce.split('\n');
-    if (reponcecleaned[1] == '1') {
-      console.log('Not mounted');
-      exec(
-        ` sshfs -o password_stdin pi@${data.ip}:/home/pi/CrimeCameraClient/public/videos public/videos/${data.name} <<< "raspberry"`,
-        { shell: '/bin/bash' },
-        function (error, stdout, stderr) {}
-      );
-    }
+    // const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`);
+    // var responce = stdout2.toString();
+    // var reponcecleaned = responce.split('\n');
+    // console.log(reponcecleaned[1]);
+    // if (reponcecleaned[1] == '1') {
+    //   exec(
+    //     ` sshfs -o password_stdin pi@${data.ip}:/home/pi/videos public/videos/${data.name} <<< "raspberry"`,
+    //     { shell: '/bin/bash' },
+    //     function (error, stdout, stderr) {
+    //       console.log(stderr);
+    //     }
+    //   );
+    // }
 
     var portStats = execSync(`nmap ${data.ip} -p 554,555,556`, function (error, stdout, stderr) {}).toString();
     var cleanedOut = portStats.split('\n');
@@ -241,19 +180,16 @@ cameraNodes.on('connection', (socket) => {
   function executeCommand(command) {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        console.log(error);
         return;
       }
       if (stderr) {
         return;
       }
       if (stdout) {
-        // console.log(stdout);
         return;
       }
     });
   }
-
 
   function formatArguments(template) {
     return template
@@ -262,9 +198,6 @@ cameraNodes.on('connection', (socket) => {
       .split('\n')
       .filter((arg) => (arg != '' ? true : false));
   }
-
- 
-
 
   socket.on('videoInfo', function (data) {
     try {
@@ -322,7 +255,6 @@ const sleep = (time) => {
 };
 
 function checkVidInDB(camera, fileLocation, node, data) {
-  // console.log(fileLocation);
   vids.exists(
     {
       camera: camera,
@@ -331,7 +263,6 @@ function checkVidInDB(camera, fileLocation, node, data) {
     },
     function (err, doc) {
       if (err) {
-        console.log(err);
       } else {
         if (!doc) {
           const vid = new vids({
@@ -366,15 +297,22 @@ const updateDBwithVid = async (returnedDocs) => {
 
 function getVideoUpdateFromCam() {
   var returnedDocs;
-  const fetch = require('node-fetch');
-  fetch('http://192.168.196.164:3000/allVideos')
-    .then((response) => response.json())
-    .then((data) => {
-      for (i = 0; i < data.length; i++) {
-        updateDBwithVid(data[i]);
+  //call here to get all cameras and then loop through and run below code.
+  cams.find({}, function (err, docs) {
+    if (err) {
+    } else {
+      for (i = 0; i < docs.length; i++) {
+        fetch(`http://${docs[i].ip}:3000/allVideos`)
+          .then((response) => response.json())
+          .then((data) => {
+            for (i = 0; i < data.length; i++) {
+              updateDBwithVid(data[i]);
+            }
+            returnedDocs = data;
+          });
       }
-      returnedDocs = data;
-    });
+    }
+  });
 }
 
 getVideoUpdateFromCam();
