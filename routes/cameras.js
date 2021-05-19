@@ -4,6 +4,7 @@ const { requiresAuth } = require('express-openid-connect');
 const vids = require('../models/videos');
 const cams = require('../models/cameras');
 const moment = require('moment-timezone');
+const CameraConfigurations = require('../models/cameraconfigurations');
 
 router.get('/haha', requiresAuth(), async (req, res) => {
   // console.log('HAHA:');
@@ -45,7 +46,7 @@ router.get('/videosByNode/:nodeName', requiresAuth(), async (req, res) => {
   });
 });
 
-router.get('/getCameraInfo/:node', requiresAuth(), async (req, res) => {
+router.get('/getCameraInfo/:node',  requiresAuth(), async (req, res) => {
   const node = req.params.node;
   cams.find({ nodeName: node }, function (err, docs) {
     if (err) {
@@ -181,14 +182,30 @@ router.get('/currentcameraList', requiresAuth(), async (req, res) => {
     }
   });
 });
+router.get('/getCamConfig/:node', async (req, res) => {
+        CameraConfigurations.find({}, function (err, docConfig) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(docConfig)
+         res.send(docConfig)
+   
+        }
+  })
 
-router.get('/cameraList', requiresAuth(), async (req, res) => {
+
+
+})
+router.get('/cameraList',  async (req, res) => {
+  var cameraInfo = []
   cams.find({}, function (err, docs) {
     if (err) {
       console.log(err);
     } else {
-      res.send(docs);
+    res.send(docs)
+     
     }
+    
   });
 });
 
