@@ -14,4 +14,16 @@ const tryValue = (tryFunction) => {
   }
 };
 
-module.exports = [formatArguments, tryValue];
+const isAuthorized = (token) => {
+  if (token == process.env.API_KEY) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const unauthrizedMessage = () => {
+  return { message: 'You are not authorized to access this resource.' };
+};
+
+module.exports = [formatArguments, tryValue, isAuthorized, unauthrizedMessage];

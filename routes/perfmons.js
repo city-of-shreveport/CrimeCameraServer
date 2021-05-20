@@ -1,7 +1,6 @@
 const Express = require('express');
 const PerfMons = require('../models/perfMons');
 const Router = Express.Router();
-const { requiresAuth } = require('express-openid-connect');
 
 Router.get('/getPerfDataNode/:nodeName', requiresAuth(), async (req, res) => {
   PerfMons.find({ node: Nodes.findOne({ name: req.params.node })._id })

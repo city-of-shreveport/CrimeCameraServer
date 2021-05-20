@@ -1,17 +1,16 @@
 // basic requires
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const indexRouter = require('./routes/index');
-const cameras = require('./routes/cameras');
-const PerfMons = require('./routes/perfMons');
-const managementRouter = require('./routes/management');
-const apiRouter = require('./routes/api');
-const streamingRouter = require('./routes/streaming');
 const app = express();
+const cookieParser = require('cookie-parser');
+const createError = require('http-errors');
+const Express = require('express');
+const logger = require('morgan');
 const mongoose = require('mongoose');
+const path = require('path');
+
+// require routes
+const NodesRouter = require('./routes/nodes');
+const PerfMonsRouter = require('./routes/perfMons');
+const StreamsRouter = require('./routes/streaming');
 
 // require .env variables
 require('dotenv').config();
@@ -29,40 +28,18 @@ mongoose.connect(
   }
 );
 
-// configure auth0
-const { auth } = require('express-openid-connect');
-
-const auth_config = {
-  authRequired: false,
-  auth0Logout: true,
-  baseURL: process.env.AUTH0_BASEURL,
-  issuerBaseURL: process.env.AUTH0_ISSUERBASEURL,
-  clientID: process.env.AUTH0_CLIENTID,
-  secret: process.env.AUTH0_SECRET,
-};
-
-// auth router attaches /login, /logout, and /callback routes to the baseurl
-app.use(auth(auth_config));
-
-// req.isAuthenticated is provided from the auth router
-app.get('/authenticated', (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-});
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(Express.json());
+app.use(Express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', indexRouter);
-app.use('/cameras', cameras);
-app.use('/perfmons', PerfMons);
-app.use('/management', managementRouter);
-app.use('/api', apiRouter);
-app.use('/streaming', streamingRouter);
+app.use(Express.static(path.join(__dirname, 'public')));
+app.use('/nodes', NodesRouter);
+app.use('/perfmons', PerfMonsRouter);
+app.use('/streams', StreamsRouter);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

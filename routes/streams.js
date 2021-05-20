@@ -3,7 +3,7 @@ const Router = Express.Router();
 const dedent = require('dedent-js');
 const spawn = require('child_process').spawn;
 const { formatArguments } = require('../helperFunctions');
-const { requiresAuth } = require('express-openid-connect');
+
 var streamingCamerasOBJ = {};
 
 Router.get('/stopStreaming/:nodeName', async (req, res) => {

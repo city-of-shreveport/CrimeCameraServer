@@ -1,9 +1,31 @@
 const Express = require('express');
 const Moment = require('moment-timezone');
 const Nodes = require('../models/nodes');
+const PerfMons = require('../models/perfMons');
 const Router = Express.Router();
 const Videos = require('../models/videos');
-const { requiresAuth } = require('express-openid-connect');
+const { isAuthorized, unauthrizedMessage } = require('../helperFunctions');
+
+Router.get('/getConfig', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    const node = await Nodes.findOne({ name: req.query.node });
+
+    if (node) {
+      res.json(node);
+    } else {
+      newNode = await new Nodes({
+        name: req.query.node,
+      }).save();
+
+      new PerfMons({ node: newNode }).save();
+      const node = new Nodes({ name: req.query.node });
+      await node.save();
+      res.json(node);
+    }
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
 
 Router.get('/oldestVideo/:nodeName', requiresAuth(), async (req, res) => {
   Videos.findOne({ node: req.params.nodeName })
