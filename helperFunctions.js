@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const formatArguments = (template) => {
   return template
     .replace(/\s+/g, ' ')

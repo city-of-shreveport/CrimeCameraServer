@@ -1,11 +1,15 @@
 // basic requires
+const Express = require('express');
+const app = Express();
 const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
-const Express = require('express');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const path = require('path');
-const app = Express();
+
+// Disable CORS.
+const cors = require('cors');
+app.use(cors);
 
 // require routes
 const NodesRouter = require('./routes/nodes');
