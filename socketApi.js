@@ -130,7 +130,7 @@ cameraNodes.on('connection', (socket) => {
 
     Nodes.exists(
       {
-        nodeName: data.name,
+        name: data.name,
       },
       function (err, doc) {
         if (err) {

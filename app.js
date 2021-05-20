@@ -1,16 +1,16 @@
 // basic requires
-const app = express();
 const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
 const Express = require('express');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const path = require('path');
+const app = Express();
 
 // require routes
 const NodesRouter = require('./routes/nodes');
 const PerfMonsRouter = require('./routes/perfMons');
-const StreamsRouter = require('./routes/streaming');
+const StreamsRouter = require('./routes/streams');
 
 // require .env variables
 require('dotenv').config();

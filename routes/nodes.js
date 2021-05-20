@@ -27,7 +27,7 @@ Router.get('/getConfig', async (req, res) => {
   }
 });
 
-Router.get('/oldestVideo/:nodeName', requiresAuth(), async (req, res) => {
+Router.get('/oldestVideo/:nodeName', async (req, res) => {
   Videos.findOne({ node: req.params.nodeName })
     .sort({ date: -1 })
     .exec(function (err, docs) {
@@ -35,7 +35,7 @@ Router.get('/oldestVideo/:nodeName', requiresAuth(), async (req, res) => {
     });
 });
 
-Router.get('/videoDatesbyNode/:nodeName', requiresAuth(), async (req, res) => {
+Router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
   Videos.find({ node: req.params.nodeName }, { DateTime: true, _id: false }, function (err, docs) {
     if (err) {
       console.log(err);
@@ -46,7 +46,7 @@ Router.get('/videoDatesbyNode/:nodeName', requiresAuth(), async (req, res) => {
   });
 });
 
-Router.get('/videosByNode/:nodeName', requiresAuth(), async (req, res) => {
+Router.get('/videosByNode/:nodeName', async (req, res) => {
   Videos.find({ node: req.params.nodeName }, function (err, docs) {
     if (err) {
       console.log(err);
@@ -56,7 +56,7 @@ Router.get('/videosByNode/:nodeName', requiresAuth(), async (req, res) => {
   });
 });
 
-Router.get('/getNodeInfo/:nodeName', requiresAuth(), async (req, res) => {
+Router.get('/getNodeInfo/:nodeName', async (req, res) => {
   Nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
       console.log(err);
@@ -66,7 +66,7 @@ Router.get('/getNodeInfo/:nodeName', requiresAuth(), async (req, res) => {
   });
 });
 
-Router.get('/videosByDay/:date/:nodeName', requiresAuth(), async (req, res) => {
+Router.get('/videosByDay/:date/:nodeName', async (req, res) => {
   const date = req.params.date;
 
   var documents = {
@@ -105,7 +105,7 @@ Router.get('/videosByDay/:date/:nodeName', requiresAuth(), async (req, res) => {
     });
 });
 
-Router.get('/videos/:startDate/:endDate/:nodeName', requiresAuth(), async (req, res) => {
+Router.get('/videos/:startDate/:endDate/:nodeName', async (req, res) => {
   const startDate = req.params.startDate;
   const splitFileString = startDate.split('_');
   const fileData = splitFileString[0];
@@ -145,7 +145,7 @@ Router.get('/videos/:startDate/:endDate/:nodeName', requiresAuth(), async (req, 
   );
 });
 
-Router.get('/currentCameraList', requiresAuth(), async (req, res) => {
+Router.get('/currentCameraList', async (req, res) => {
   Nodes.find({}, function (err, docs) {
     if (err) {
       console.log(err);
@@ -164,7 +164,7 @@ Router.get('/currentCameraList', requiresAuth(), async (req, res) => {
   });
 });
 
-Router.get('/nodeList', requiresAuth(), async (req, res) => {
+Router.get('/index', async (req, res) => {
   Nodes.find({}, function (err, docs) {
     if (err) {
       console.log(err);
@@ -174,7 +174,7 @@ Router.get('/nodeList', requiresAuth(), async (req, res) => {
   });
 });
 
-Router.post('/addVideos', requiresAuth(), async (req, res) => {
+Router.post('/addVideos', async (req, res) => {
   const video = await new Videos({
     node: Nodes.findOne({ name: req.body.nodeName })._id,
     fileLocation: req.body.filename,
