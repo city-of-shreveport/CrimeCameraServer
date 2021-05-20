@@ -5,8 +5,8 @@ socketApi.io = io;
 var moment = require('moment');
 var cameraNodes = io.of('/cameras');
 const vids = require('./models/videos');
-const cams = require('./models/cameras');
-const perfmons = require('./models/perfmons');
+const Nodes = require('./models/nodes');
+const perfmons = require('./models/perfMons');
 const mongoose = require('mongoose');
 const { Console } = require('console');
 const { JSDOM } = require('jsdom');
@@ -28,7 +28,7 @@ function checkLastCheckIn() {
   var newDateTime = date.subtract(time);
   var olderThanDate = moment(newDateTime).toISOString();
 
-  cams.find(
+  Nodes.find(
     {
       lastCheckIn: {
         $lte: olderThanDate,
@@ -41,7 +41,7 @@ function checkLastCheckIn() {
     }
   );
 
-  cams.find(
+  Nodes.find(
     {
       lastCheckIn: {
         $gte: olderThanDate,
@@ -128,7 +128,7 @@ cameraNodes.on('connection', (socket) => {
       }
     }
 
-    cams.exists(
+    Nodes.exists(
       {
         nodeName: data.name,
       },
@@ -136,7 +136,7 @@ cameraNodes.on('connection', (socket) => {
         if (err) {
         } else {
           if (doc == false) {
-            const cam = new cams({
+            const cam = new Nodes({
               nodeName: data.name,
               id: data.id,
               location: {
@@ -144,22 +144,22 @@ cameraNodes.on('connection', (socket) => {
                 lng: data.location.lng,
               },
               ip: data.ip,
-              numOfCams: data.numOfCams,
+              numOfNodes: data.numOfNodes,
               systemType: data.typs,
               lastCheckIn: dateNOW,
               sysInfo: data.sysInfo,
-              camsOnlineStatus: cameraData,
+              NodesOnlineStatus: cameraData,
             });
             cam.save();
           }
 
           if (doc == true) {
-            cams.findOneAndUpdate(
+            Nodes.findOneAndUpdate(
               {
                 nodeName: data.name,
               },
               {
-                camsOnlineStatus: cameraData,
+                NodesOnlineStatus: cameraData,
                 lastCheckIn: dateNOW,
               },
               null,
@@ -298,7 +298,7 @@ const updateDBwithVid = async (returnedDocs) => {
 function getVideoUpdateFromCam() {
   var returnedDocs;
   //call here to get all cameras and then loop through and run below code.
-  cams.find({}, function (err, docs) {
+  Nodes.find({}, function (err, docs) {
     if (err) {
     } else {
       for (i = 0; i < docs.length; i++) {

@@ -1,19 +1,11 @@
-const express = require('express');
-const router = express.Router();
+const Express = require('express');
+const PerfMons = require('../models/perfMons');
+const Router = Express.Router();
 const { requiresAuth } = require('express-openid-connect');
-const perfmons = require('../models/perfmons');
-const moment = require('moment-timezone');
 
-router.get('/haha', requiresAuth(), async (req, res) => {
-  // console.log('HAHA:');
-  res.end('HAHAHA');
-});
-
-router.get('/getPerfDataNode/:node', requiresAuth(), async (req, res) => {
-  const nodeName = req.params.node;
-  perfmons
-    .find({ camera: nodeName })
-    .sort([['DateTime', 1]])
+Router.get('/getPerfDataNode/:nodeName', requiresAuth(), async (req, res) => {
+  PerfMons.find({ node: Nodes.findOne({ name: req.params.node })._id })
+    .sort([['dateTime', 1]])
     .exec(function (err, docs) {
       if (err) {
         console.log(err);
@@ -23,11 +15,11 @@ router.get('/getPerfDataNode/:node', requiresAuth(), async (req, res) => {
     });
 });
 
-router.post('/adddata/:node', requiresAuth(), async (req, res) => {
-  const perf = new perfmons(req);
-  perf.camera = req.body.node;
-  await perf.save();
-  res.send(perf);
+Router.post('/addData/:nodeName', requiresAuth(), async (req, res) => {
+  const PerfMon = new PerfMons(req.params);
+  PerfMon.node = Nodes.findOne({ name: req.params.nodeName })._id;
+  await PerfMon.save();
+  res.send(PerfMon);
 });
 
-module.exports = router;
+module.exports = Router;

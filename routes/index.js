@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
+const Express = require('express');
+const Router = Express.Router();
 const { requiresAuth } = require('express-openid-connect');
 
-router.get('/', requiresAuth(), function (req, res) {
+Router.get('/', requiresAuth(), function (req, res) {
   res.render('index', {
     title: 'Home',
   });
 });
 
-module.exports = router;
+module.exports = Router;

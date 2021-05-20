@@ -6,8 +6,8 @@
   <body>
     <div style="width: 25vw; height: 90vh; display: inline-block">
       <a href="/management" style="display: inline-block; width: 100px; text-align: center">Back</a>
-      <h2 style="display: inline-block; text-align: center"><%= camera.nodeName %></h2>
-      <pre class="prettyprint lang-json" style="height: 90vh"><%= JSON.stringify(camera, null, 4) %></pre>
+      <h2 style="display: inline-block; text-align: center"><%= node.name %></h2>
+      <pre class="prettyprint lang-json" style="height: 90vh"><%= JSON.stringify(node, null, 4) %></pre>
     </div>
 
     <div class="content" style="width: 70vw; height: 90vh; display: inline-block">
@@ -20,7 +20,7 @@
       var statsChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: <%- JSON.stringify(perfmonDates) %>,
+          labels: <%- JSON.stringify(perfMonDates) %>,
           datasets: [
             {
               label: 'avgLoad',

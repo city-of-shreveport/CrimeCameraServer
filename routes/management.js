@@ -1,121 +1,121 @@
 const Express = require('express');
-const Router = Express.Router();
-const { requiresAuth } = require('express-openid-connect');
 const Moment = require('moment');
-const CameraConfigurations = require('../models/cameraconfigurations');
-const Cameras = require('../models/cameras');
-const Perfmons = require('../models/perfmons');
+const Nodes = require('../models/nodes');
+const PerfMons = require('../models/perfMons');
+const Router = Express.Router();
+const { tryFunction } = require('../helperFunctions');
+const { requiresAuth } = require('express-openid-connect');
 
 Router.get('/', requiresAuth(), async (req, res) => {
-  let cameras = await Cameras.find({});
-  var cameraData = [];
+  const Nodes = await Nodes.find({});
+  var nodeData = [];
 
-  for (var camera of cameras) {
-    lastPerfmon = await Perfmons.findOne({
-      camera: camera.nodeName,
-    }).sort({ upDated: -1 });
+  for (var node of Nodes) {
+    latestPerfMon = await PerfMons.findOne({
+      node: node._id,
+    }).sort({ updatedAt: -1 });
 
-    if (lastPerfmon == null) {
-      newPerfmon = new Perfmons(defaultPerfmon(camera));
-      newPerfmon.save();
-      camera.lastPerfmon = newPerfmon;
+    if (latestPerfMon == null) {
+      const newPerfMon = await new PerfMons({ node: node._id }).save();
+      node.latestPerfMon = newPerfMon;
     } else {
-      camera.lastPerfmon = lastPerfmon;
+      node.latestPerfMon = latestPerfMon;
     }
 
-    cameraData.push(camera);
+    nodeData.push(node);
   }
 
-  res.render('management', {
+  res.render('management/index', {
     title: 'Management',
-    cameraData: cameraData,
+    nodeData: nodeData,
   });
 });
 
 Router.get('/:nodeName', requiresAuth(), async (req, res) => {
-  let camera = await Cameras.find({ nodeName: req.params.nodeName });
-  let cameraPerfmons = await Perfmons.find({
-    camera: req.params.nodeName,
+  let node = await Nodes.findOne({ name: req.params.nodeName });
+
+  let nodePerfMons = await PerfMons.find({
+    node: node._id,
   })
-    .sort({ upDated: -1 })
+    .sort({ updatedAt: -1 })
     .limit(30);
 
-  cameraPerfmons = cameraPerfmons.reverse();
+  nodePerfMons = nodePerfMons.reverse();
 
-  perfmonDates = cameraPerfmons.map((perfmon) => {
-    return Moment(perfmon.upDated).tz('America/Chicago').format('h:mm:ss a');
+  PerfMonDates = nodePerfMons.map((PerfMon) => {
+    return Moment(PerfMon.updatedAt).tz('America/Chicago').format('h:mm:ss a');
   });
 
-  avgLoad = cameraPerfmons.map((perfmon) => {
+  avgLoad = nodePerfMons.map((PerfMon) => {
     return {
       x: tryValue(function () {
-        return perfmon.upDated;
+        return PerfMon.updatedAt;
       }),
       y: tryValue(function () {
-        return perfmon.currentLoad.avgLoad;
+        return PerfMon.currentLoad.avgLoad;
       }),
     };
   });
 
-  currentLoad = cameraPerfmons.map((perfmon) => {
+  currentLoad = nodePerfMons.map((PerfMon) => {
     return {
       x: tryValue(function () {
-        return perfmon.upDated;
+        return PerfMon.updatedAt;
       }),
       y: tryValue(function () {
-        return perfmon.currentLoad.currentLoad;
+        return PerfMon.currentLoad.currentLoad;
       }),
     };
   });
 
-  currentLoadUser = cameraPerfmons.map((perfmon) => {
+  currentLoadUser = nodePerfMons.map((PerfMon) => {
     return {
       x: tryValue(function () {
-        return perfmon.upDated;
+        return PerfMon.updatedAt;
       }),
       y: tryValue(function () {
-        perfmon.currentLoad.currentLoadUser;
+        PerfMon.currentLoad.currentLoadUser;
       }),
     };
   });
 
-  cpuTemperature = cameraPerfmons.map((perfmon) => {
+  cpuTemperature = nodePerfMons.map((PerfMon) => {
     return {
       x: tryValue(function () {
-        return perfmon.upDated;
+        return PerfMon.updatedAt;
       }),
       y: tryValue(function () {
-        return perfmon.cpuTemperature.main;
+        return PerfMon.cpuTemperature.main;
       }),
     };
   });
 
-  memUsage = cameraPerfmons.map((perfmon) => {
+  memUsage = nodePerfMons.map((PerfMon) => {
     return {
       x: tryValue(function () {
-        return perfmon.upDated;
+        return PerfMon.updatedAt;
       }),
       y: tryValue(function () {
-        return (perfmon.mem.used / perfmon.mem.total / 8) * 100;
+        return (PerfMon.mem.used / PerfMon.mem.total / 8) * 100;
       }),
     };
   });
 
-  diskUsage = cameraPerfmons.map((perfmon) => {
+  diskUsage = nodePerfMons.map((PerfMon) => {
     return {
       x: tryValue(function () {
-        return perfmon.upDated;
+        return PerfMon.updatedAt;
       }),
       y: tryValue(function () {
-        return (perfmon.fsSize[2].get('used') / perfmon.fsSize[2].get('size') / 8) * 100;
+        return (PerfMon.fsSize[2].get('used') / PerfMon.fsSize[2].get('size') / 8) * 100;
       }),
     };
   });
 
-  res.render('management-camera', {
-    title: 'Camera Information',
-    camera: camera[0],
-    perfmonDates: perfmonDates,
+  res.render('management/nodes', {
+    title: 'Node Information',
+    node: node,
+    PerfMonDates: PerfMonDates,
     avgLoad: avgLoad,
     currentLoad: currentLoad,
     currentLoadUser: currentLoadUser,
@@ -126,78 +126,38 @@ Router.get('/:nodeName', requiresAuth(), async (req, res) => {
 });
 
 Router.get('/:nodeName/config', requiresAuth(), async (req, res) => {
-  let camera = await Cameras.findOne({ nodeName: req.params.nodeName });
-  var cameraConfig;
-
   try {
-    models = await CameraConfigurations.findOne({ cameraName: req.params.nodeName });
-    cameraConfig = models.cameraConfiguration;
+    const node = await Nodes.findOne({ name: req.params.nodeName });
+
+    res.render('management/nodeConfig', {
+      title: 'Node Config',
+      name: node.name,
+      config: node.config,
+    });
   } catch {
-    new CameraConfigurations({
-      cameraName: camera.nodeName,
-      cameraConfiguration: '{}',
+    const node = await new Nodes({
+      name: req.params.nodeName,
     }).save();
 
-    cameraConfig = '{}';
+    res.render('management/nodeConfig', {
+      title: 'Node Config',
+      name: node.name,
+      config: node.config,
+    });
   }
-
-  res.render('management-camera-config', {
-    title: 'Camera Config',
-    cameraName: camera.nodeName,
-    cameraConfig: cameraConfig,
-  });
 });
 
 Router.get('/:nodeName/config/update', requiresAuth(), async (req, res) => {
-  await CameraConfigurations.findOneAndUpdate(
+  await Nodes.findOneAndUpdate(
     {
-      cameraName: req.params.nodeName,
+      name: req.params.nodeName,
     },
     {
-      cameraConfiguration: JSON.parse(req.query.config),
+      config: JSON.parse(req.query.config),
     }
   );
 
   res.redirect('/management');
 });
-
-function tryValue(tryFunction) {
-  try {
-    return tryFunction();
-  } catch {
-    return null;
-  }
-}
-
-function defaultPerfmon(cameraName) {
-  return {
-    fsSize: [
-      {
-        fs: '',
-        type: '',
-        size: 0.0,
-        used: 0.0,
-        available: 0.0,
-        mount: '',
-      },
-    ],
-    camera: cameraName,
-    currentLoad: {
-      avgLoad: 0,
-      currentLoad: 0.0,
-      currentLoadUser: 0.0,
-    },
-    mem: {
-      total: 0.0,
-      free: 0.0,
-      used: 0.0,
-      available: 0.0,
-    },
-    cpuTemperature: {
-      main: 0.0,
-    },
-    upDated: Date.now(),
-  };
-}
 
 module.exports = Router;

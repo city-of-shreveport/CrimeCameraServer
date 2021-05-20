@@ -1,37 +1,30 @@
 const Express = require('express');
 const Router = Express.Router();
-const { requiresAuth } = require('express-openid-connect');
+const dedent = require('dedent-js');
 const spawn = require('child_process').spawn;
+const { formatArguments } = require('../helperFunctions');
+const { requiresAuth } = require('express-openid-connect');
 var streamingCamerasOBJ = {};
 
-function formatArguments(template) {
-  return template
-    .replace(/\s+/g, ' ')
-    .replace(/\s/g, '\n')
-    .split('\n')
-    .filter((arg) => (arg != '' ? true : false));
-}
-
-Router.get('/stopStreaming/:camera', async (req, res) => {
-  var node = req.params.camera;
-  streamingCamerasOBJ[node]['cam1'].stdin.write('q');
-  streamingCamerasOBJ[node]['cam2'].stdin.write('q');
-  streamingCamerasOBJ[node]['cam3'].stdin.write('q');
+Router.get('/stopStreaming/:nodeName', async (req, res) => {
+  streamingCamerasOBJ[req.params.nodeName]['cam1'].stdin.write('q');
+  streamingCamerasOBJ[req.params.nodeName]['cam2'].stdin.write('q');
+  streamingCamerasOBJ[req.params.nodeName]['cam3'].stdin.write('q');
   res.send('ok');
 });
 
-Router.get('/startStreaming/:cameraName/:cameraIP', async (req, res) => {
-  var cameraName = req.params.cameraName;
+Router.get('/startStreaming/:nodeName/:cameraIP', async (req, res) => {
+  var nodeName = req.params.nodeName;
   var cameraIP = req.params.cameraIP;
 
-  streamingCamerasOBJ[cameraName] = {};
-  streamingCamerasOBJ[cameraName]['cam1'] = null;
-  streamingCamerasOBJ[cameraName]['cam2'] = null;
-  streamingCamerasOBJ[cameraName]['cam3'] = null;
+  streamingCamerasOBJ[nodeName] = {};
+  streamingCamerasOBJ[nodeName]['cam1'] = null;
+  streamingCamerasOBJ[nodeName]['cam2'] = null;
+  streamingCamerasOBJ[nodeName]['cam3'] = null;
 
-  streamingCamerasOBJ[cameraName].cam1 = spawn(
+  streamingCamerasOBJ[nodeName].cam1 = spawn(
     'ffmpeg',
-    formatArguments(`
+    dedent`
       -rtsp_transport 
       tcp 
       -i 
@@ -40,13 +33,13 @@ Router.get('/startStreaming/:cameraName/:cameraIP', async (req, res) => {
       copy 
       -f 
       flv 
-      rtmp://10.10.10.53/${cameraName}/camera1
-    `)
+      rtmp://10.10.10.53/${nodeName}/camera1
+    `
   );
 
-  streamingCamerasOBJ[cameraName].cam2 = spawn(
+  streamingCamerasOBJ[nodeName].cam2 = spawn(
     'ffmpeg',
-    formatArguments(`
+    dedent`
       -rtsp_transport 
       tcp 
       -i 
@@ -55,13 +48,13 @@ Router.get('/startStreaming/:cameraName/:cameraIP', async (req, res) => {
       copy 
       -f 
       flv 
-      rtmp://10.10.10.53/${cameraName}/camera2
-    `)
+      rtmp://10.10.10.53/${nodeName}/camera2
+    `
   );
 
-  streamingCamerasOBJ[cameraName].cam3 = spawn(
+  streamingCamerasOBJ[nodeName].cam3 = spawn(
     'ffmpeg',
-    formatArguments(`
+    dedent`
       -rtsp_transport 
       tcp 
       -i 
@@ -70,8 +63,8 @@ Router.get('/startStreaming/:cameraName/:cameraIP', async (req, res) => {
       copy 
       -f 
       flv 
-      rtmp://10.10.10.53/${cameraName}/camera3
-    `)
+      rtmp://10.10.10.53/${nodeName}/camera3
+    `
   );
 
   res.send('ok');

@@ -5,9 +5,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const cameras = require('./routes/cameras');
-const perfmons = require('./routes/perfmons');
+const PerfMons = require('./routes/perfMons');
 const managementRouter = require('./routes/management');
 const apiRouter = require('./routes/api');
 const streamingRouter = require('./routes/streaming');
@@ -19,7 +18,7 @@ require('dotenv').config();
 
 // establish database connection
 mongoose.connect(
-  'mongodb://localhost/cameras',
+  'mongodb://localhost/CrimeCameraSystem',
   {
     useFindAndModify: false,
     useNewUrlParser: true,
@@ -59,9 +58,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/cameras', cameras);
-app.use('/perfmons', perfmons);
+app.use('/perfmons', PerfMons);
 app.use('/management', managementRouter);
 app.use('/api', apiRouter);
 app.use('/streaming', streamingRouter);
