@@ -28,4 +28,4 @@ const unauthrizedMessage = () => {
   return { message: 'You are not authorized to access this resource.' };
 };
 
-module.exports = [formatArguments, tryValue, isAuthorized, unauthrizedMessage];
+module.exports = { formatArguments, tryValue, isAuthorized, unauthrizedMessage };

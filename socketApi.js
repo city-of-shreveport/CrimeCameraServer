@@ -295,26 +295,4 @@ const updateDBwithVid = async (returnedDocs) => {
   await sleep(100);
 };
 
-function getVideoUpdateFromCam() {
-  var returnedDocs;
-  //call here to get all cameras and then loop through and run below code.
-  Nodes.find({}, function (err, docs) {
-    if (err) {
-    } else {
-      for (i = 0; i < docs.length; i++) {
-        fetch(`http://${docs[i].ip}:3000/allVideos`)
-          .then((response) => response.json())
-          .then((data) => {
-            for (i = 0; i < data.length; i++) {
-              updateDBwithVid(data[i]);
-            }
-            returnedDocs = data;
-          });
-      }
-    }
-  });
-}
-
-getVideoUpdateFromCam();
-setInterval(getVideoUpdateFromCam, 1800000);
 module.exports = socketApi;
