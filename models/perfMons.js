@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
 
 const schema = mongoose.Schema({
-  node: {
-    type: Schema.Types.ObjectId,
-    ref: 'Nodes',
-    required: true,
-  },
+  node: { type: String, default: '' },
   currentLoad: {
     avgLoad: { type: Number, default: 0 },
     currentLoad: { type: Number, default: 0 },

@@ -1,23 +1,21 @@
-// basic requires
-const Express = require('express');
-const app = Express();
+// require basic
+const express = require('express');
+const app = express();
 const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const path = require('path');
 
-// Disable CORS.
-const cors = require('cors');
-app.use(cors());
-
-// require routes
-const NodesRouter = require('./routes/nodes');
-const PerfMonsRouter = require('./routes/perfMons');
-const StreamsRouter = require('./routes/streams');
+// require routers
+const apiRouter = require('./routes/api');
 
 // require .env variables
 require('dotenv').config();
+
+// disable cors
+const cors = require('cors');
+app.use(cors());
 
 // establish database connection
 mongoose.connect(
@@ -36,13 +34,11 @@ mongoose.connect(
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
-app.use(Express.json());
-app.use(Express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(Express.static(path.join(__dirname, 'public')));
-app.use('/nodes', NodesRouter);
-app.use('/perfmons', PerfMonsRouter);
-app.use('/streams', StreamsRouter);
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -59,29 +55,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-var request = require('request');
-var user;
-
-function getStreams() {
-  // console.log('yup');
-  request.get(
-    'http://192.168.196.75:8080/' + user.auth_token + '/videos/eGjcwkXXPo/DBxQdxYYak80',
-
-    function (error, response, d) {
-      if (!error && response.statusCode == 200) {
-        var jsonObj = JSON.parse(d);
-        // console.log(jsonObj.videos);
-
-        for (i = 0; i < jsonObj.videos.length; i++) {
-          // console.log(jsonObj.videos[i].filename);
-        }
-      }
-      if (error) {
-        console.log(error);
-      }
-    }
-  );
-}
 
 module.exports = app;

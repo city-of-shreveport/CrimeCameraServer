@@ -1,52 +1,32 @@
+// require basic
 const Express = require('express');
+const Router = Express.Router();
 const Moment = require('moment-timezone');
+const Dedent = require('dedent-js');
+const Spawn = require('child_process').spawn;
+const { formatArguments, isAuthorized, unauthrizedMessage } = require('../helperFunctions');
+
+// require models
 const Nodes = require('../models/nodes');
 const PerfMons = require('../models/perfMons');
-const Router = Express.Router();
 const Videos = require('../models/videos');
-const { isAuthorized, unauthrizedMessage } = require('../helperFunctions');
 
-Router.get('/getConfig', async (req, res) => {
+Router.get('/nodes', async (req, res) => {
   if (isAuthorized(req.query.token)) {
-    const node = await Nodes.findOne({ name: req.query.node });
-
-    if (node) {
-      res.json(node);
-    } else {
-      newNode = await new Nodes({
-        name: req.query.node,
-      }).save();
-
-      new PerfMons({ node: newNode }).save();
-      const node = new Nodes({ name: req.query.node });
-      await node.save();
-      res.json(node);
-    }
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
-
-Router.get('/oldestVideo/:nodeName', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    Videos.findOne({ node: req.params.nodeName })
-      .sort({ date: -1 })
-      .exec(function (err, docs) {
-        res.send(docs);
-      });
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
-
-Router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    Videos.find({ node: req.params.nodeName }, { DateTime: true, _id: false }, function (err, docs) {
+    Nodes.find({}, function (err, docs) {
       if (err) {
         console.log(err);
       } else {
-        for (i = 0; i < docs.length; i++) {}
-        res.send(docs);
+        var response = [];
+        for (i = 0; i < docs.length; i++) {
+          const hours = Moment().diff(Moment(docs[i].lastCheckIn), 'hours', true);
+          hours = hours.toFixed(2);
+
+          if (hours < 0.3) {
+            response.push(docs[i]);
+          }
+        }
+        res.send(response);
       }
     });
   } else {
@@ -54,21 +34,7 @@ Router.get('/videoDatesbyNode/:nodeName', async (req, res) => {
   }
 });
 
-Router.get('/videosByNode/:nodeName', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    Videos.find({ node: req.params.nodeName }, function (err, docs) {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(docs);
-      }
-    });
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
-
-Router.get('/getNodeInfo/:nodeName', async (req, res) => {
+Router.get('/nodes/:nodeName', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     Nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
       if (err) {
@@ -82,7 +48,48 @@ Router.get('/getNodeInfo/:nodeName', async (req, res) => {
   }
 });
 
-Router.get('/videosByDay/:date/:nodeName', async (req, res) => {
+Router.get('/perfmons/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    PerfMons.find({ node: Nodes.findOne({ name: req.params.node })._id })
+      .sort([['dateTime', 1]])
+      .exec(function (err, docs) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(docs);
+        }
+      });
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+Router.post('/perfmons/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    const PerfMon = new PerfMons(req.params);
+    PerfMon.node = Nodes.findOne({ name: req.params.nodeName })._id;
+    await PerfMon.save();
+    res.send(PerfMon);
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+Router.get('/videos/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    Videos.find({ node: req.params.nodeName }, function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(docs);
+      }
+    });
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+Router.get('/videos/:date/:nodeName', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     const date = req.params.date;
 
@@ -169,35 +176,13 @@ Router.get('/videos/:startDate/:endDate/:nodeName', async (req, res) => {
   }
 });
 
-Router.get('/currentnodeList', async (req, res) => {
+Router.get('/videos/dates/:nodeName', async (req, res) => {
   if (isAuthorized(req.query.token)) {
-    Nodes.find({}, function (err, docs) {
+    Videos.find({ node: req.params.nodeName }, { DateTime: true, _id: false }, function (err, docs) {
       if (err) {
         console.log(err);
       } else {
-        var response = [];
-        for (i = 0; i < docs.length; i++) {
-          const hours = Moment().diff(Moment(docs[i].lastCheckIn), 'hours', true);
-          hours = hours.toFixed(2);
-
-          if (hours < 0.3) {
-            response.push(docs[i]);
-          }
-        }
-        res.send(response);
-      }
-    });
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
-
-Router.get('/index', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    Nodes.find({}, function (err, docs) {
-      if (err) {
-        console.log(err);
-      } else {
+        for (i = 0; i < docs.length; i++) {}
         res.send(docs);
       }
     });
@@ -206,7 +191,19 @@ Router.get('/index', async (req, res) => {
   }
 });
 
-Router.post('/addVideos', async (req, res) => {
+Router.get('/videos/oldest/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    Videos.findOne({ node: req.params.nodeName })
+      .sort({ date: -1 })
+      .exec(function (err, docs) {
+        res.send(docs);
+      });
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+Router.post('/videos/create', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     const video = await new Videos({
       node: Nodes.findOne({ name: req.body.nodeName })._id,
@@ -223,6 +220,78 @@ Router.post('/addVideos', async (req, res) => {
     }).save();
 
     res.send(video);
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+Router.get('/streams/start/:nodeName/:cameraIP', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    var nodeName = req.params.nodeName;
+    var cameraIP = req.params.cameraIP;
+
+    streamingCamerasOBJ[nodeName] = {};
+    streamingCamerasOBJ[nodeName]['cam1'] = null;
+    streamingCamerasOBJ[nodeName]['cam2'] = null;
+    streamingCamerasOBJ[nodeName]['cam3'] = null;
+
+    streamingCamerasOBJ[nodeName].cam1 = Spawn(
+      'ffmpeg',
+      Dedent`
+      -rtsp_transport 
+      tcp 
+      -i 
+      rtsp://admin:UUnv9njxg@${cameraIP}:554/cam/realmonitor?channel=1&subtype=1
+      -vcodec 
+      copy 
+      -f 
+      flv 
+      rtmp://10.10.10.53/${nodeName}/camera1
+    `
+    );
+
+    streamingCamerasOBJ[nodeName].cam2 = Spawn(
+      'ffmpeg',
+      Dedent`
+      -rtsp_transport 
+      tcp 
+      -i 
+      rtsp://admin:UUnv9njxg@${cameraIP}:555/cam/realmonitor?channel=1&subtype=1
+      -vcodec 
+      copy 
+      -f 
+      flv 
+      rtmp://10.10.10.53/${nodeName}/camera2
+    `
+    );
+
+    streamingCamerasOBJ[nodeName].cam3 = Spawn(
+      'ffmpeg',
+      Dedent`
+      -rtsp_transport 
+      tcp 
+      -i 
+      rtsp://admin:UUnv9njxg@${cameraIP}:556/cam/realmonitor?channel=1&subtype=1 
+      -vcodec 
+      copy 
+      -f 
+      flv 
+      rtmp://10.10.10.53/${nodeName}/camera3
+    `
+    );
+
+    res.send('ok');
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+Router.get('/streams/stop/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    streamingCamerasOBJ[req.params.nodeName]['cam1'].stdin.write('q');
+    streamingCamerasOBJ[req.params.nodeName]['cam2'].stdin.write('q');
+    streamingCamerasOBJ[req.params.nodeName]['cam3'].stdin.write('q');
+    res.send('ok');
   } else {
     res.json(unauthrizedMessage());
   }

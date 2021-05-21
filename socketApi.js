@@ -69,28 +69,6 @@ cameraNodes.on('connection', (socket) => {
     var dateNOW = moment().toISOString();
     const folderName = `public/videos/${data.name}`;
 
-    // try {
-    //   if (!fs.existsSync(folderName)) {
-    //     const mkDriCommand = execSync(`sudo mkdir public/videos/${data.name} ; echo $?`);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
-    // const stdout2 = execSync(`sudo mountpoint public/videos/${data.name} ; echo $?`);
-    // var responce = stdout2.toString();
-    // var reponcecleaned = responce.split('\n');
-    // console.log(reponcecleaned[1]);
-    // if (reponcecleaned[1] == '1') {
-    //   exec(
-    //     ` sshfs -o password_stdin pi@${data.ip}:/home/pi/videos public/videos/${data.name} <<< "raspberry"`,
-    //     { shell: '/bin/bash' },
-    //     function (error, stdout, stderr) {
-    //       console.log(stderr);
-    //     }
-    //   );
-    // }
-
     var portStats = execSync(`nmap ${data.ip} -p 554,555,556`, function (error, stdout, stderr) {}).toString();
     var cleanedOut = portStats.split('\n');
     var cameraData = {};

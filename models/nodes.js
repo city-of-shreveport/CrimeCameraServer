@@ -2,12 +2,6 @@ const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
 
 const schema = mongoose.Schema({
-  perfmons: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'PerfMons',
-    },
-  ],
   name: { type: String, default: '' },
   ip: { type: String, default: 'CONFIGURE' },
   location: { lat: { type: Number, default: 0 }, lng: Number },
