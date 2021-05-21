@@ -9,7 +9,7 @@ const path = require('path');
 
 // Disable CORS.
 const cors = require('cors');
-app.use(cors);
+app.use(cors());
 
 // require routes
 const NodesRouter = require('./routes/nodes');
