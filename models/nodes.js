@@ -4,7 +4,6 @@ const { Schema } = require('mongoose');
 const schema = mongoose.Schema({
   name: { type: String, default: '' },
   ip: { type: String, default: 'CONFIGURE' },
-  location: { lat: { type: Number, default: 0 }, lng: Number },
   lastCheckIn: { type: Date, default: new Date() },
   sysInfo: {
     memLayout: [

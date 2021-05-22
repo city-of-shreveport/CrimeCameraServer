@@ -11,6 +11,87 @@ const Nodes = require('../models/nodes');
 const PerfMons = require('../models/perfMons');
 const Videos = require('../models/videos');
 
+Router.post('/newNode', async (req, res) => {
+ 
+  if (isAuthorized(req.query.token)) {
+
+    const newNode = new Nodes({
+          name : req.body.name,
+          ip:req.body.zeroTierIP,
+          config:{
+                hostName:req.body.hostName,
+                locationLat:req.body.locationLat,
+                locationLong:req.body.locationLong,
+                zeroTierNetworkID:req.body.zeroTierNetworkID,
+                zeroTierIP:req.body.zeroTierIP,
+                videoDriveDevicePath:req.body.videoDriveDevicePath,
+                videoDriveMountPath:req.body.videoDriveMountPath,
+                videoDriveEncryptionKey:req.body.videoDriveEncryptionKey,
+                buddyDriveDevicePath:req.body.buddyDriveDevicePath,
+                buddyDriveMountPath:req.body.buddyDriveMountPath,
+                buddyDriveEncryptionKey:req.body.buddyDriveEncryptionKey,
+                serverURL:req.body.serverURL,
+                buddyDrives:[{
+                  sshfsMountPath:req.body.BuddyDrive1MountPath,
+                  hostName:req.body.BuddyDrive1HostName,
+                },
+                {
+                  hostName:req.body.BuddyDrive2HostName,
+                  sshfsMountPath:req.body.BuddyDrive2MountPath,
+
+                }],
+                cameras: [{ 
+                  ip: req.body.camera1IP,
+                  type: req.body.camera1Type,
+                  direction: req.body.camera1Direction,
+                  username: req.body.camera1Username,
+                  password: req.body.camera1Password,
+                  folderName: req.body.camera1FolderName,
+                },
+                { 
+                  ip: req.body.camera2IP,
+                  type: req.body.camera2Type,
+                  direction: req.body.camera2Direction,
+                  username: req.body.camera2Username,
+                  password: req.body.camera2Password,
+                  folderName: req.body.camera2FolderName,
+                },
+                { 
+                  ip: req.body.camera3IP,
+                  type: req.body.camera3Type,
+                  direction: req.body.camera3Direction,
+                  username: req.body.camera3Username,
+                  password: req.body.camera3Password,
+                  folderName: req.body.camera3FolderName,
+                }],
+            
+                
+              }
+            });
+    console.log(req.body)
+    await newNode.save();
+    res.send(newNode);
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+
+Router.post('/upDateNode/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    
+    Nodes.findOneAndUpdate({ "name": req.params.nodeName }, { "$set": { "lastCheckIn": new Date(), "sysInfo": req.body, }}).exec(function(err, node){
+   if(err) {
+       console.log(err);
+       res.status(500).send(err);
+   } else {
+            res.status(200).send(node);
+   }
+});
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
 Router.get('/nodes', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     Nodes.find({}, function (err, docs) {
@@ -18,16 +99,16 @@ Router.get('/nodes', async (req, res) => {
         console.log(err);
       } else {
         var response = [];
-        for (i = 0; i < docs.length; i++) {
-          const hours = Moment().diff(Moment(docs[i].lastCheckIn), 'hours', true);
-          hours = hours.toFixed(2);
-
-          if (hours < 0.3) {
-            response.push(docs[i]);
-          }
+        //for (i = 0; i < docs.length; i++) {
+        //  let hours = Moment().diff(Moment(docs[i].lastCheckIn), 'hours', true);
+        //  hours = hours.toFixed(2);
+        //
+         // if (hours < 0.3) {
+         //   response.push(docs[i]);
+         // }
         }
-        res.send(response);
-      }
+        res.send(docs);
+      
     });
   } else {
     res.json(unauthrizedMessage());
