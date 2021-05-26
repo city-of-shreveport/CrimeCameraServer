@@ -301,7 +301,7 @@ router.post('/videos/create', async (req, res) => {
   }
 });
 
-Router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
+router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     var nodeName = req.params.nodeName;
     var cameraIP = req.params.cameraIP;
