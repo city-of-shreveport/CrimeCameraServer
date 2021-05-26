@@ -5,7 +5,7 @@ const Moment = require('moment-timezone');
 const Dedent = require('dedent-js');
 const Spawn = require('child_process').spawn;
 const { formatArguments, isAuthorized, unauthrizedMessage } = require('../helperFunctions');
-
+var md5 = require('md5');
 // require models
 const Nodes = require('../models/nodes');
 const PerfMons = require('../models/perfMons');
@@ -306,59 +306,38 @@ Router.post('/videos/create', async (req, res) => {
   }
 });
 
-Router.get('/streams/start/:nodeName/:cameraIP', async (req, res) => {
+Router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     var nodeName = req.params.nodeName;
     var cameraIP = req.params.cameraIP;
-
+var streamingCamerasOBJ = {}
     streamingCamerasOBJ[nodeName] = {};
     streamingCamerasOBJ[nodeName]['cam1'] = null;
     streamingCamerasOBJ[nodeName]['cam2'] = null;
     streamingCamerasOBJ[nodeName]['cam3'] = null;
-
+    let checkSum = md5("/CrimeCamera003/camera1-9999999999-nodemedia2017privatekey")
+    let rtmpURL = Dedent`rtmp://10.10.10.53/${nodeName}/camera1?sign=9999999999-${checkSum}`
+    let ffmpegStreaming = formatArguments("-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@"+ cameraIP+":554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv "+rtmpURL)
     streamingCamerasOBJ[nodeName].cam1 = Spawn(
-      'ffmpeg',
-      Dedent`
-      -rtsp_transport 
-      tcp 
-      -i 
-      rtsp://admin:UUnv9njxg@${cameraIP}:554/cam/realmonitor?channel=1&subtype=1
-      -vcodec 
-      copy 
-      -f 
-      flv 
-      rtmp://10.10.10.53/${nodeName}/camera1
-    `
+      'ffmpeg' ,
+      ffmpegStreaming
     );
+  let checkSum2 = md5("/"+ nodeName +"/camera2-9999999999-nodemedia2017privatekey")
+  let rtmpURL2 = "rtmp://10.10.10.53/"+ nodeName +"/camera1?sign=9999999999-"+checkSum2 
+  let ffmpegStreaming2 = formatArguments("-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@"+ cameraIP+":554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv "+rtmpURL2)
 
-    streamingCamerasOBJ[nodeName].cam2 = Spawn(
-      'ffmpeg',
-      Dedent`
-      -rtsp_transport 
-      tcp 
-      -i 
-      rtsp://admin:UUnv9njxg@${cameraIP}:555/cam/realmonitor?channel=1&subtype=1
-      -vcodec 
-      copy 
-      -f 
-      flv 
-      rtmp://10.10.10.53/${nodeName}/camera2
-    `
+  streamingCamerasOBJ[nodeName].cam2 = Spawn(
+    'ffmpeg' ,
+      ffmpegStreaming2
     );
+    let checkSum3 = md5("/"+ nodeName +"/camera3-9999999999-nodemedia2017privatekey")
+    let rtmpURL3 = "rtmp://10.10.10.53/"+ nodeName +"/camera1?sign=9999999999-"+checkSum3
+    let ffmpegStreaming3 = formatArguments("-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@"+ cameraIP+":554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv "+rtmpURL3)
 
     streamingCamerasOBJ[nodeName].cam3 = Spawn(
-      'ffmpeg',
-      Dedent`
-      -rtsp_transport 
-      tcp 
-      -i 
-      rtsp://admin:UUnv9njxg@${cameraIP}:556/cam/realmonitor?channel=1&subtype=1 
-      -vcodec 
-      copy 
-      -f 
-      flv 
-      rtmp://10.10.10.53/${nodeName}/camera3
-    `
+      
+      'ffmpeg' ,
+      ffmpegStreaming3
     );
 
     res.send('ok');
