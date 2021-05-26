@@ -74,7 +74,27 @@ router.post('/newNode', async (req, res) => {
     res.json(unauthrizedMessage());
   }
 });
-
+router.post('/editNodeInfo/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    console.log(req.body)
+    nodes
+      .findOneAndUpdate({ name: req.params.nodeName }, { $set:  
+        req.body
+      
+      
+       })
+      .exec(function (err, node) {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        } else {
+          res.status(200).send(node);
+        }
+      });
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
 router.post('/upDateNode/:nodeName', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     nodes
