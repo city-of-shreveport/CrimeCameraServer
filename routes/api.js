@@ -1,17 +1,33 @@
 // require basic
-const express = require('express');
-const router = express.Router();
-const moment = require('moment-timezone');
 const dedent = require('dedent-js');
+const express = require('express');
+const md5 = require('md5');
+const moment = require('moment-timezone');
+const router = express.Router();
 const spawn = require('child_process').spawn;
 const { formatArguments, isAuthorized, unauthrizedMessage } = require('../helperFunctions');
-var md5 = require('md5');
+
 // require models
 const nodes = require('../models/nodes');
 const perfMons = require('../models/perfMons');
 const videos = require('../models/videos');
 
-router.post('/newNode', async (req, res) => {
+router.get('/nodes', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    nodes.find({}, function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        var response = [];
+      }
+      res.send(docs);
+    });
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+router.post('/nodes', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     const newNode = new nodes({
       name: req.body.name,
@@ -74,58 +90,6 @@ router.post('/newNode', async (req, res) => {
     res.json(unauthrizedMessage());
   }
 });
-router.post('/editNodeInfo/:nodeName', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    console.log(req.body)
-    nodes
-      .findOneAndUpdate({ name: req.params.nodeName }, { $set:  
-        req.body
-      
-      
-       })
-      .exec(function (err, node) {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          res.status(200).send(node);
-        }
-      });
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
-router.post('/upDateNode/:nodeName', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    nodes
-      .findOneAndUpdate({ name: req.params.nodeName }, { $set: { lastCheckIn: new Date(), sysInfo: req.body } })
-      .exec(function (err, node) {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          res.status(200).send(node);
-        }
-      });
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
-
-router.get('/nodes', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    nodes.find({}, function (err, docs) {
-      if (err) {
-        console.log(err);
-      } else {
-        var response = [];
-      }
-      res.send(docs);
-    });
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
 
 router.get('/nodes/:nodeName', async (req, res) => {
   if (isAuthorized(req.query.token)) {
@@ -136,6 +100,23 @@ router.get('/nodes/:nodeName', async (req, res) => {
         res.send(doc);
       }
     });
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+router.post('/nodes/sysInfo/:nodeName', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    nodes
+      .findOneAndUpdate({ name: req.params.nodeName }, { $set: { lastCheckIn: new Date(), sysInfo: req.body } })
+      .exec(function (err, node) {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        } else {
+          res.status(200).send('Node updated!');
+        }
+      });
   } else {
     res.json(unauthrizedMessage());
   }
@@ -158,12 +139,41 @@ router.get('/perfmons/:nodeName', async (req, res) => {
   }
 });
 
-router.post('/perfmons/:nodeName', async (req, res) => {
+router.post('/perfmons', async (req, res) => {
   if (isAuthorized(req.query.token)) {
-    const PerfMon = new perfMons(req.params);
-    PerfMon.node = nodes.findOne({ name: req.params.nodeName })._id;
-    await PerfMon.save();
-    res.send(PerfMon);
+    new perfMons(req.body).save();
+    res.send('PerfMon created!');
+  } else {
+    res.json(unauthrizedMessage());
+  }
+});
+
+router.post('/videos', async (req, res) => {
+  if (isAuthorized(req.query.token)) {
+    for (var i = 0; i < req.body.length; i++) {
+      console.log(req.body[i]);
+      new videos({
+        node: req.body[i].node,
+        fileLocation: req.body[i].fileLocation,
+        location: {
+          lat: req.body[i].location.lat,
+          lng: req.body[i].location.lng,
+        },
+        startPts: req.body[i].start_pts,
+        startTime: req.body[i].start_time,
+        duration: req.body[i].duration,
+        bitRate: req.body[i].bit_rate,
+        height: req.body[i].height,
+        width: req.body[i].width,
+        size: req.body[i].size,
+        dateTime: req.body[i].dateTime,
+        hash: req.body[i].dateTime,
+        camera: req.body[i].camera,
+        hash: req.body[i].hash,
+      }).save();
+    }
+
+    res.send('Videos created!');
   } else {
     res.json(unauthrizedMessage());
   }
@@ -299,61 +309,48 @@ router.get('/videos/oldest/:nodeName', async (req, res) => {
   }
 });
 
-router.post('/videos/create', async (req, res) => {
-  if (isAuthorized(req.query.token)) {
-    const video = await new videos({
-      node: nodes.findOne({ name: req.body.nodeName })._id,
-      fileLocation: req.body.filename,
-      location: { lat: req.body.location.lat, lng: req.body.location.lng },
-      startPts: req.body.start_pts,
-      startTime: req.body.start_time,
-      duration: req.body.duration,
-      bitRate: req.body.bit_rate,
-      height: req.body.height,
-      width: req.body.width,
-      size: req.body.size,
-      dateTime: body.dateTime,
-    }).save();
-
-    res.send(video);
-  } else {
-    res.json(unauthrizedMessage());
-  }
-});
-
 router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     var nodeName = req.params.nodeName;
     var cameraIP = req.params.cameraIP;
-var streamingCamerasOBJ = {}
+    var streamingCamerasOBJ = {};
+
     streamingCamerasOBJ[nodeName] = {};
     streamingCamerasOBJ[nodeName]['cam1'] = null;
     streamingCamerasOBJ[nodeName]['cam2'] = null;
     streamingCamerasOBJ[nodeName]['cam3'] = null;
-    let checkSum = md5("/CrimeCamera003/camera1-9999999999-nodemedia2017privatekey")
-    let rtmpURL = Dedent`rtmp://10.10.10.53/${nodeName}/camera1?sign=9999999999-${checkSum}`
-    let ffmpegStreaming = formatArguments("-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@"+ cameraIP+":554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv "+rtmpURL)
-    streamingCamerasOBJ[nodeName].cam1 = Spawn(
-      'ffmpeg' ,
-      ffmpegStreaming
-    );
-  let checkSum2 = md5("/"+ nodeName +"/camera2-9999999999-nodemedia2017privatekey")
-  let rtmpURL2 = "rtmp://10.10.10.53/"+ nodeName +"/camera1?sign=9999999999-"+checkSum2 
-  let ffmpegStreaming2 = formatArguments("-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@"+ cameraIP+":554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv "+rtmpURL2)
 
-  streamingCamerasOBJ[nodeName].cam2 = Spawn(
-    'ffmpeg' ,
-      ffmpegStreaming2
+    let checkSum = md5('/CrimeCamera003/camera1-9999999999-nodemedia2017privatekey');
+    let rtmpURL = Dedent`rtmp://10.10.10.53/${nodeName}/camera1?sign=9999999999-${checkSum}`;
+    let ffmpegStreaming = formatArguments(
+      '-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@' +
+        cameraIP +
+        ':554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv ' +
+        rtmpURL
     );
-    let checkSum3 = md5("/"+ nodeName +"/camera3-9999999999-nodemedia2017privatekey")
-    let rtmpURL3 = "rtmp://10.10.10.53/"+ nodeName +"/camera1?sign=9999999999-"+checkSum3
-    let ffmpegStreaming3 = formatArguments("-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@"+ cameraIP+":554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv "+rtmpURL3)
+    streamingCamerasOBJ[nodeName].cam1 = Spawn('ffmpeg', ffmpegStreaming);
 
-    streamingCamerasOBJ[nodeName].cam3 = Spawn(
-      
-      'ffmpeg' ,
-      ffmpegStreaming3
+    let checkSum2 = md5('/' + nodeName + '/camera2-9999999999-nodemedia2017privatekey');
+    let rtmpURL2 = 'rtmp://10.10.10.53/' + nodeName + '/camera1?sign=9999999999-' + checkSum2;
+    let ffmpegStreaming2 = formatArguments(
+      '-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@' +
+        cameraIP +
+        ':554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv ' +
+        rtmpURL2
     );
+
+    streamingCamerasOBJ[nodeName].cam2 = Spawn('ffmpeg', ffmpegStreaming2);
+
+    let checkSum3 = md5('/' + nodeName + '/camera3-9999999999-nodemedia2017privatekey');
+    let rtmpURL3 = 'rtmp://10.10.10.53/' + nodeName + '/camera1?sign=9999999999-' + checkSum3;
+    let ffmpegStreaming3 = formatArguments(
+      '-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@' +
+        cameraIP +
+        ':554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv ' +
+        rtmpURL3
+    );
+
+    streamingCamerasOBJ[nodeName].cam3 = Spawn('ffmpeg', ffmpegStreaming3);
 
     res.send('ok');
   } else {
