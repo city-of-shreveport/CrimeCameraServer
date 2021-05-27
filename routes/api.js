@@ -83,7 +83,7 @@ router.post('/nodes', async (req, res) => {
         ],
       },
     });
-    console.log(req.body);
+
     await newNode.save();
     res.send(newNode);
   } else {
@@ -151,7 +151,6 @@ router.post('/perfmons', async (req, res) => {
 router.post('/videos', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     for (var i = 0; i < req.body.length; i++) {
-      console.log(req.body[i]);
       new videos({
         node: req.body[i].node,
         fileLocation: req.body[i].fileLocation,
