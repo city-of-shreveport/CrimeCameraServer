@@ -125,8 +125,9 @@ router.post('/nodes/sysInfo/:nodeName', async (req, res) => {
 router.get('/perfmons/:nodeName', async (req, res) => {
   if (isAuthorized(req.query.token)) {
     perfMons
-      .find({ node: nodes.findOne({ name: req.params.node })._id })
+      .find({ node: nodes.find({ name: req.params.node })._id })
       .sort([['dateTime', 1]])
+      .limit(60)
       .exec(function (err, docs) {
         if (err) {
           console.log(err);
