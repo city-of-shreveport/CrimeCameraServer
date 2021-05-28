@@ -19,6 +19,7 @@
     "http-errors": "~1.6.3",
     "jquery": "^3.5.1",
     "jsdom": "^16.5.2",
+    "md5": "^2.3.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "mongoose": "^5.11.13",
