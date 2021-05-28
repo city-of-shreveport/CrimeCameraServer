@@ -24,6 +24,7 @@ router.get('/nodes', async (req, res) => {
 });
 
 router.post('/nodes', async (req, res) => {
+  console.log(req.body);
   const newNode = new nodes({
     name: req.body.name,
     ip: req.body.zeroTierIP,
