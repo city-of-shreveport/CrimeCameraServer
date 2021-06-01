@@ -93,7 +93,23 @@ router.get('/nodes/:nodeName', async (req, res) => {
     }
   });
 });
-
+router.post('/nodes/:nodeName', async (req, res) => {
+  console.log(req.body)
+  nodes
+      .findOneAndUpdate({ name: req.params.nodeName }, { $set:  
+        req.body
+      
+      
+       })
+      .exec(function (err, node) {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        } else {
+          res.status(200).send(node);
+        }
+      });
+});
 router.post('/nodes/sysInfo/:nodeName', async (req, res) => {
   nodes
     .findOneAndUpdate({ name: req.params.nodeName }, { $set: { lastCheckIn: new Date(), sysInfo: req.body } })
