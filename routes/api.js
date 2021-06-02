@@ -10,6 +10,7 @@ const { formatArguments } = require('../helperFunctions');
 // require models
 const nodes = require('../models/nodes');
 const perfMons = require('../models/perfMons');
+const servers = require('../models/servers')
 const videos = require('../models/videos');
 
 router.get('/nodes', async (req, res) => {
@@ -141,7 +142,28 @@ router.post('/perfmons', async (req, res) => {
   new perfMons(req.body).save();
   res.send('PerfMon created!');
 });
+router.get('/servers', async (req, res) => {
+  servers.find({}, function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      var response = [];
+    }
+    res.send(docs);
+  });
+});
+router.post('/servers', async (req, res) => {
+  console.log(req.body);
+  const newServer = new servers({
+    name: req.body.name,
+    service: req.body.service,
+    ip: req.body.zeroTierIP,
+    lastCheckIn: new Date()
+  });
 
+  await newServer.save();
+  res.send(newServer);
+});
 router.post('/videos', async (req, res) => {
   for (var i = 0; i < req.body.length; i++) {
     new videos({
