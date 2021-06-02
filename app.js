@@ -9,6 +9,7 @@ const path = require('path');
 const axios = require('axios');
 const si = require('systeminformation');
 var os = require("os");
+var hostname = os.hostname();
 // require routers
 const apiRouter = require('./routes/api');
 
@@ -57,7 +58,8 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-function sendPerfMon(){
+const sendPerfMon = async () => {
+
 var perfMon = {
   node: hostname,
   currentLoad: {
@@ -103,7 +105,7 @@ await si.fsSize(function (data) {
   }
 });
 
-axios.post(`${process.env.CAMERA_SERVER}/api/perfmons`, perfMon);
+axios.post(`http://10.10.10.10:3001/api/perfmons`, perfMon);
 }
 
 setInterval(() => {
