@@ -10,7 +10,7 @@ const { formatArguments } = require('../helperFunctions');
 // require models
 const nodes = require('../models/nodes');
 const perfMons = require('../models/perfMons');
-const servers = require('../models/servers')
+const servers = require('../models/servers');
 const videos = require('../models/videos');
 
 router.get('/nodes', async (req, res) => {
@@ -95,21 +95,15 @@ router.get('/nodes/:nodeName', async (req, res) => {
   });
 });
 router.post('/nodes/:nodeName', async (req, res) => {
-  console.log(req.body)
-  nodes
-      .findOneAndUpdate({ name: req.params.nodeName }, { $set:  
-        req.body
-      
-      
-       })
-      .exec(function (err, node) {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          res.status(200).send(node);
-        }
-      });
+  console.log(req.body);
+  nodes.findOneAndUpdate({ name: req.params.nodeName }, { $set: req.body }).exec(function (err, node) {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(node);
+    }
+  });
 });
 router.post('/nodes/sysInfo/:nodeName', async (req, res) => {
   nodes
@@ -159,7 +153,7 @@ router.post('/servers', async (req, res) => {
     service: req.body.service,
     zeroTierIP: req.body.zeroTierIP,
     zeroTierNetworkID: req.body.zeroTierNetworkID,
-    lastCheckIn: new Date()
+    lastCheckIn: new Date(),
   });
 
   await newServer.save();
@@ -299,59 +293,6 @@ router.get('/videos/oldest/:nodeName', async (req, res) => {
     .exec(function (err, docs) {
       res.send(docs);
     });
-});
-
-router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
-  var nodeName = req.params.nodeName;
-  var cameraIP = req.params.cameraIP;
-  var streamingCamerasOBJ = {};
-
-  streamingCamerasOBJ[nodeName] = {};
-  streamingCamerasOBJ[nodeName]['cam1'] = null;
-  streamingCamerasOBJ[nodeName]['cam2'] = null;
-  streamingCamerasOBJ[nodeName]['cam3'] = null;
-
-  let checkSum = md5('/CrimeCamera003/camera1-9999999999-nodemedia2017privatekey');
-  let rtmpURL = Dedent`rtmp://10.10.10.53/${nodeName}/camera1?sign=9999999999-${checkSum}`;
-  let ffmpegStreaming = formatArguments(
-    '-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@' +
-      cameraIP +
-      ':554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv ' +
-      rtmpURL
-  );
-
-  streamingCamerasOBJ[nodeName].cam1 = Spawn('ffmpeg', ffmpegStreaming);
-
-  let checkSum2 = md5('/' + nodeName + '/camera2-9999999999-nodemedia2017privatekey');
-  let rtmpURL2 = 'rtmp://10.10.10.53/' + nodeName + '/camera1?sign=9999999999-' + checkSum2;
-  let ffmpegStreaming2 = formatArguments(
-    '-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@' +
-      cameraIP +
-      ':554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv ' +
-      rtmpURL2
-  );
-
-  streamingCamerasOBJ[nodeName].cam2 = Spawn('ffmpeg', ffmpegStreaming2);
-
-  let checkSum3 = md5('/' + nodeName + '/camera3-9999999999-nodemedia2017privatekey');
-  let rtmpURL3 = 'rtmp://10.10.10.53/' + nodeName + '/camera1?sign=9999999999-' + checkSum3;
-  let ffmpegStreaming3 = formatArguments(
-    '-rtsp_transport tcp -i rtsp://admin:UUnv9njxg@' +
-      cameraIP +
-      ':554/cam/realmonitor?channel=1&subtype=1 -vcodec copy -f flv ' +
-      rtmpURL3
-  );
-
-  streamingCamerasOBJ[nodeName].cam3 = Spawn('ffmpeg', ffmpegStreaming3);
-
-  res.send('ok');
-});
-
-router.get('/streams/stop/:nodeName', async (req, res) => {
-  streamingCamerasOBJ[req.params.nodeName]['camera1'].stdin.write('q');
-  streamingCamerasOBJ[req.params.nodeName]['camera2'].stdin.write('q');
-  streamingCamerasOBJ[req.params.nodeName]['camera3'].stdin.write('q');
-  res.send('ok');
 });
 
 module.exports = router;
