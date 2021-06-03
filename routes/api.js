@@ -157,7 +157,8 @@ router.post('/servers', async (req, res) => {
   const newServer = new servers({
     name: req.body.name,
     service: req.body.service,
-    ip: req.body.zeroTierIP,
+    zeroTierIP: req.body.zeroTierIP,
+    zeroTierNetworkID: req.body.zeroTierNetworkID,
     lastCheckIn: new Date()
   });
 
