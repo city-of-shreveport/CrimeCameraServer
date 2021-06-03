@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const axios = require('axios');
 const si = require('systeminformation');
-var os = require("os");
+var os = require('os');
 var hostname = os.hostname();
 // require routers
 const apiRouter = require('./routes/api');
@@ -59,56 +59,55 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 const sendPerfMon = async () => {
+  var perfMon = {
+    node: hostname,
+    currentLoad: {
+      cpus: [],
+    },
+    mem: {},
+    cpuTemperature: {},
+    fsSize: [],
+  };
 
-var perfMon = {
-  node: hostname,
-  currentLoad: {
-    cpus: [],
-  },
-  mem: {},
-  cpuTemperature: {},
-  fsSize: [],
+  await si.currentLoad(function (data) {
+    perfMon.currentLoad.cpus = [];
+    perfMon.currentLoad.avgLoad = data.avgLoad;
+    perfMon.currentLoad.currentLoad = data.currentLoad;
+    perfMon.currentLoad.currentLoadUser = data.currentLoadUser;
+
+    for (var i = 0; i < data.cpus.length; i++) {
+      perfMon.currentLoad.cpus.push(data.cpus[i].load);
+    }
+  });
+
+  await si.mem(function (data) {
+    perfMon['mem']['total'] = data.total;
+    perfMon['mem']['free'] = data.free;
+    perfMon['mem']['used'] = data.used;
+    perfMon['mem']['available'] = data.available;
+  });
+
+  await si.cpuTemperature(function (data) {
+    perfMon['cpuTemperature'].main = data.main;
+  });
+
+  await si.fsSize(function (data) {
+    for (var i = 0; i < data.length; i++) {
+      perfMon.fsSize.push({
+        fs: data[i].fs,
+        type: data[i].type,
+        size: data[i].size,
+        used: data[i].used,
+        available: data[i].available,
+        mount: data[i].mount,
+      });
+    }
+  });
+
+  axios.post(`http://10.10.200.10:3001/api/perfmons`, perfMon);
 };
 
-await si.currentLoad(function (data) {
-  perfMon.currentLoad.cpus = [];
-  perfMon.currentLoad.avgLoad = data.avgLoad;
-  perfMon.currentLoad.currentLoad = data.currentLoad;
-  perfMon.currentLoad.currentLoadUser = data.currentLoadUser;
-
-  for (var i = 0; i < data.cpus.length; i++) {
-    perfMon.currentLoad.cpus.push(data.cpus[i].load);
-  }
-});
-
-await si.mem(function (data) {
-  perfMon['mem']['total'] = data.total;
-  perfMon['mem']['free'] = data.free;
-  perfMon['mem']['used'] = data.used;
-  perfMon['mem']['available'] = data.available;
-});
-
-await si.cpuTemperature(function (data) {
-  perfMon['cpuTemperature'].main = data.main;
-});
-
-await si.fsSize(function (data) {
-  for (var i = 0; i < data.length; i++) {
-    perfMon.fsSize.push({
-      fs: data[i].fs,
-      type: data[i].type,
-      size: data[i].size,
-      used: data[i].used,
-      available: data[i].available,
-      mount: data[i].mount,
-    });
-  }
-});
-
-axios.post(`http://10.10.10.10:3001/api/perfmons`, perfMon);
-}
-
 setInterval(() => {
-  sendPerfMon()
+  sendPerfMon();
 }, 60000);
 module.exports = app;
