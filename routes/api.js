@@ -315,7 +315,7 @@ router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
       -i rtsp://admin:UUnv9njxg123@${nodeIP}:554/cam/realmonitor?channel=1&subtype=1
       -r 15 
       -f flv 
-      rtmp://10.10.200.10/${nodeName}camera1
+      rtmp://10.10.200.41/${nodeName}camera1
     `)
   );
 
@@ -331,7 +331,7 @@ router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
       -i rtsp://admin:UUnv9njxg123@${nodeIP}:555/cam/realmonitor?channel=1&subtype=1
       -r 15 
       -f flv 
-      rtmp://10.10.200.10/${nodeName}camera2
+      rtmp://10.10.200.41/${nodeName}camera2
     `)
   );
 
@@ -346,7 +346,7 @@ router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
       -i rtsp://admin:UUnv9njxg123@${nodeIP}:556/cam/realmonitor?channel=1&subtype=1
       -r 15 
       -f flv 
-      rtmp://10.10.200.10/${nodeName}camera3
+      rtmp://10.10.200.41/${nodeName}camera3
     `)
   );
 
