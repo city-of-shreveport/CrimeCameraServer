@@ -295,4 +295,74 @@ router.get('/videos/oldest/:nodeName', async (req, res) => {
     });
 });
 
+var streamingCameras = {};
+
+router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
+  console.log(req.params.nodeName);
+  var nodeName = req.params.nodeName;
+  var nodeIP = req.params.nodeIP;
+
+  streamingCameras[nodeName] = {};
+  streamingCameras[nodeName]['camera1'] = null;
+  streamingCameras[nodeName]['camera2'] = null;
+  streamingCameras[nodeName]['camera3'] = null;
+
+  streamingCameras[nodeName].camera1 = spawn(
+    'ffmpeg',
+    formatArguments(`
+      -loglevel panic
+      -rtsp_transport tcp
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:554/cam/realmonitor?channel=1&subtype=1
+      -r 15 
+      -f flv 
+      rtmp://10.10.200.10/${nodeName}camera1
+    `)
+  );
+
+  streamingCameras[nodeName].camera1.stdout.on('data', (data) => {});
+
+  streamingCameras[nodeName].camera1.stderr.on('data', (data) => {});
+
+  streamingCameras[nodeName].camera2 = spawn(
+    'ffmpeg',
+    formatArguments(`
+      -loglevel panic
+      -rtsp_transport tcp
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:555/cam/realmonitor?channel=1&subtype=1
+      -r 15 
+      -f flv 
+      rtmp://10.10.200.10/${nodeName}camera2
+    `)
+  );
+
+  streamingCameras[nodeName].camera2.stdout.on('data', (data) => {});
+
+  streamingCameras[nodeName].camera2.stderr.on('data', (data) => {});
+
+  streamingCameras[nodeName].camera3 = spawn(
+    'ffmpeg',
+    formatArguments(`
+      -rtsp_transport tcp
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:556/cam/realmonitor?channel=1&subtype=1
+      -r 15 
+      -f flv 
+      rtmp://10.10.200.10/${nodeName}camera3
+    `)
+  );
+
+  streamingCameras[nodeName].camera3.stdout.on('data', (data) => {});
+
+  streamingCameras[nodeName].camera3.stderr.on('data', (data) => {});
+
+  res.send('ok');
+});
+
+router.get('/streams/stop/:nodeName', async (req, res) => {
+  var nodeName = req.params.nodeName;
+
+  streamingCameras[nodeName]['camera1'].stdin.write('q');
+  streamingCameras[nodeName]['camera2'].stdin.write('q');
+  streamingCameras[nodeName]['camera3'].stdin.write('q');
+});
+
 module.exports = router;
