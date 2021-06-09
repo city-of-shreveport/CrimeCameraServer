@@ -34,12 +34,13 @@ const schema = mongoose.Schema({
     buddyDriveMountPath: { type: String, default: '' },
     buddyDriveEncryptionKey: { type: String, default: '' },
     serverURL: { type: String, default: '' },
-    buddyDrives: [
-      {
+    buddyDrives: {
+      buddy1: {
         hostName: { type: String, default: '' },
         sshfsMountPath: { type: String, default: '' },
       },
-    ],
+      buddy2: { hostName: { type: String, default: '' }, sshfsMountPath: { type: String, default: '' } },
+    },
     cameras: {
       camera1: {
         ip: { type: String, default: 'CONFIGURE' },
