@@ -6,6 +6,7 @@ const moment = require('moment-timezone');
 const router = express.Router();
 const spawn = require('child_process').spawn;
 const { formatArguments } = require('../helperFunctions');
+
 // require models
 const nodes = require('../models/nodes');
 const perfMons = require('../models/perfMons');
@@ -93,6 +94,7 @@ router.get('/nodes/:nodeName', async (req, res) => {
     }
   });
 });
+
 router.post('/nodes/:nodeName', async (req, res) => {
   console.log(req.body);
   nodes.findOneAndUpdate({ name: req.params.nodeName }, { $set: req.body }).exec(function (err, node) {
@@ -104,6 +106,7 @@ router.post('/nodes/:nodeName', async (req, res) => {
     }
   });
 });
+
 router.post('/nodes/sysInfo/:nodeName', async (req, res) => {
   nodes
     .findOneAndUpdate({ name: req.params.nodeName }, { $set: { lastCheckIn: new Date(), sysInfo: req.body } })
@@ -140,14 +143,12 @@ router.post('/perfmons', async (req, res) => {
   };
   new perfMons(req.body).save();
   res.send('PerfMon created!');
-  console.log();
   nodes.findOne({ name: req.body.node }, function (err, doc) {
     if (err) {
       console.log(err);
     } else {
       if (!doc) {
       } else {
-        console.log(doc.ip);
         const ls = spawn('nmap', ['-p', '554,555,556', doc.ip]);
         ls.stdout.on('data', (data) => {
           var nmapOutput = data.toString().split('\n');
@@ -185,6 +186,7 @@ router.post('/perfmons', async (req, res) => {
     }
   });
 });
+
 router.get('/servers', async (req, res) => {
   servers.find({}, function (err, docs) {
     if (err) {
@@ -195,6 +197,7 @@ router.get('/servers', async (req, res) => {
     res.send(docs);
   });
 });
+
 router.post('/servers', async (req, res) => {
   console.log(req.body);
   const newServer = new servers({
@@ -208,6 +211,7 @@ router.post('/servers', async (req, res) => {
   await newServer.save();
   res.send(newServer);
 });
+
 router.post('/videos', async (req, res) => {
   for (var i = 0; i < req.body.length; i++) {
     new videos({
@@ -284,39 +288,19 @@ router.get('/videos/:date/:nodeName', async (req, res) => {
     });
 });
 
-router.get('/videos/:startDate/:endDate/:nodeName', async (req, res) => {
-  const startDate = req.params.startDate;
-  const splitFileString = startDate.split('_');
-  const fileData = splitFileString[0];
-  const fileTimewithExtention = splitFileString[1];
-  const fileTimesplit = fileTimewithExtention.split('.');
-  const fileTime = fileTimesplit[0];
-  const fileTimeCelaned = fileTime.split('-');
-  const dateTime = fileData + ' ' + fileTimeCelaned[0] + ':' + fileTimeCelaned[1] + ':00';
-  const dateTimeString = moment(dateTime).toISOString();
-  const endDate = req.params.endDate;
-  const splitFileString2 = endDate.split('_');
-  const fileData2 = splitFileString2[0];
-  const fileTimewithExtention2 = splitFileString2[1];
-  const fileTimesplit2 = fileTimewithExtention2.split('.');
-  const fileTime2 = fileTimesplit2[0];
-  const fileTimeCelaned2 = fileTime2.split('-');
-  const dateTime2 = fileData2 + ' ' + fileTimeCelaned2[0] + ':' + fileTimeCelaned2[1] + ':00';
-  const dateTimeString2 = moment(dateTime2);
-  const time = moment.duration('00:04:00');
-  const dateTimeString2Cleaned = dateTimeString2.subtract(time).toISOString();
-
+router.get('/videos/:nodeName/:startDate/:endDate', async (req, res) => {
   videos.find(
     {
-      node: nodes.findOne({ name: req.params.nodeName })._id,
+      node: req.params.nodeName,
       dateTime: {
-        $gte: dateTimeString,
-        $lte: dateTimeString2Cleaned,
+        $gte: req.params.startDate,
+        $lte: req.params.endDate,
       },
     },
     function (err, docs) {
       if (err) {
         console.log(err);
+        res.send('error');
       } else {
         res.send(docs);
       }
