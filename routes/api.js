@@ -6,7 +6,6 @@ const moment = require('moment-timezone');
 const router = express.Router();
 const spawn = require('child_process').spawn;
 const { formatArguments } = require('../helperFunctions');
-
 // require models
 const nodes = require('../models/nodes');
 const perfMons = require('../models/perfMons');
@@ -52,8 +51,8 @@ router.post('/nodes', async (req, res) => {
           sshfsMountPath: req.body.BuddyDrive2MountPath,
         },
       ],
-      cameras: [
-        {
+      cameras: {
+        camera1: {
           ip: req.body.camera1IP,
           type: req.body.camera1Type,
           direction: req.body.camera1Direction,
@@ -61,7 +60,7 @@ router.post('/nodes', async (req, res) => {
           password: req.body.camera1Password,
           folderName: req.body.camera1FolderName,
         },
-        {
+        camera2: {
           ip: req.body.camera2IP,
           type: req.body.camera2Type,
           direction: req.body.camera2Direction,
@@ -69,7 +68,7 @@ router.post('/nodes', async (req, res) => {
           password: req.body.camera2Password,
           folderName: req.body.camera2FolderName,
         },
-        {
+        camera3: {
           ip: req.body.camera3IP,
           type: req.body.camera3Type,
           direction: req.body.camera3Direction,
@@ -77,7 +76,7 @@ router.post('/nodes', async (req, res) => {
           password: req.body.camera3Password,
           folderName: req.body.camera3FolderName,
         },
-      ],
+      },
     },
   });
 
@@ -133,8 +132,58 @@ router.get('/perfmons/:nodeName', async (req, res) => {
 });
 
 router.post('/perfmons', async (req, res) => {
+  const ports = ['554', '555', '556'];
+  var cameraStatus = {
+    camera1: false,
+    camera2: false,
+    camera3: false,
+  };
   new perfMons(req.body).save();
   res.send('PerfMon created!');
+  console.log();
+  nodes.findOne({ name: req.body.node }, function (err, doc) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (!doc) {
+      } else {
+        console.log(doc.ip);
+        const ls = spawn('nmap', ['-p', '554,555,556', doc.ip]);
+        ls.stdout.on('data', (data) => {
+          var nmapOutput = data.toString().split('\n');
+          for (i = 0; i < nmapOutput.length; i++) {
+            for (pn = 0; pn < ports.length; pn++) {
+              var n = nmapOutput[i].includes(ports[pn]);
+              if (n) {
+                var p = nmapOutput[i].includes('open');
+                if (p) {
+                  switch (ports[pn]) {
+                    case '554':
+                      const node = nodes.findOne({ ip: doc.ip });
+                      //node.config.cameras.camera1 = req.body;
+
+                      //const updated = node.save();
+                      //console.log(updated);
+
+                      break;
+                    case '555':
+                      // code block
+                      break;
+                    case '556':
+                      // code block
+                      break;
+                    default:
+                    // code block
+                  }
+                } else {
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+  });
 });
 router.get('/servers', async (req, res) => {
   servers.find({}, function (err, docs) {
@@ -311,11 +360,12 @@ router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
     'ffmpeg',
     formatArguments(`
       -loglevel panic
+      -re
       -rtsp_transport tcp
-      -i rtsp://admin:UUnv9njxg123@${nodeIP}:554/cam/realmonitor?channel=1&subtype=1
-      -r 15 
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:554/cam/realmonitor?channel=1&subtype=0
+      -codec copy 
       -f flv 
-      rtmp://10.10.200.41/${nodeName}camera1
+      rtmp://10.10.200.10/live/${nodeName}camera1
     `)
   );
 
@@ -327,11 +377,12 @@ router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
     'ffmpeg',
     formatArguments(`
       -loglevel panic
+      -re
       -rtsp_transport tcp
-      -i rtsp://admin:UUnv9njxg123@${nodeIP}:555/cam/realmonitor?channel=1&subtype=1
-      -r 15 
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:555/cam/realmonitor?channel=1&subtype=0
+      -codec copy 
       -f flv 
-      rtmp://10.10.200.41/${nodeName}camera2
+      rtmp://10.10.200.10/live/${nodeName}camera2
     `)
   );
 
@@ -342,11 +393,14 @@ router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
   streamingCameras[nodeName].camera3 = spawn(
     'ffmpeg',
     formatArguments(`
+      -loglevel panic
+
+      -re
       -rtsp_transport tcp
-      -i rtsp://admin:UUnv9njxg123@${nodeIP}:556/cam/realmonitor?channel=1&subtype=1
-      -r 15 
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:556/cam/realmonitor?channel=1&subtype=0
+      -codec copy 
       -f flv 
-      rtmp://10.10.200.41/${nodeName}camera3
+      rtmp://10.10.200.10/live/${nodeName}camera3
     `)
   );
 
@@ -359,10 +413,11 @@ router.get('/streams/start/:nodeName/:nodeIP', async (req, res) => {
 
 router.get('/streams/stop/:nodeName', async (req, res) => {
   var nodeName = req.params.nodeName;
-
+  console.log(nodeName);
   streamingCameras[nodeName]['camera1'].stdin.write('q');
   streamingCameras[nodeName]['camera2'].stdin.write('q');
   streamingCameras[nodeName]['camera3'].stdin.write('q');
+  res.send('ok');
 });
 
 module.exports = router;

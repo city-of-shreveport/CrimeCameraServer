@@ -40,8 +40,8 @@ const schema = mongoose.Schema({
         sshfsMountPath: { type: String, default: '' },
       },
     ],
-    cameras: [
-      {
+    cameras: {
+      camera1: {
         ip: { type: String, default: 'CONFIGURE' },
         type: { type: String, default: 'Standard' },
         direction: { type: Number, default: 0 },
@@ -50,7 +50,25 @@ const schema = mongoose.Schema({
         folderName: { type: String, default: '' },
         onlineStatus: { type: Boolean, default: false },
       },
-    ],
+      camera2: {
+        ip: { type: String, default: 'CONFIGURE' },
+        type: { type: String, default: 'Standard' },
+        direction: { type: Number, default: 0 },
+        username: { type: String, default: 'admin' },
+        password: { type: String, default: 'admin' },
+        folderName: { type: String, default: '' },
+        onlineStatus: { type: Boolean, default: false },
+      },
+      camera3: {
+        ip: { type: String, default: 'CONFIGURE' },
+        type: { type: String, default: 'Standard' },
+        direction: { type: Number, default: 0 },
+        username: { type: String, default: 'admin' },
+        password: { type: String, default: 'admin' },
+        folderName: { type: String, default: '' },
+        onlineStatus: { type: Boolean, default: false },
+      },
+    },
   },
 
   // Default properties.
