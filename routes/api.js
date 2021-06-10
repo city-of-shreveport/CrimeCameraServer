@@ -163,30 +163,24 @@ router.post('/perfmons', async (req, res) => {
                   switch (ports[pn]) {
                     case '554':
                       cameraStatus.camera1 = true;
-                      console.log(perfmonObj);
                       break;
                     case '555':
                       cameraStatus.camera2 = true;
-                      console.log(perfmonObj);
                       break;
                     case '556':
                       cameraStatus.camera3 = true;
-                      console.log(perfmonObj);
                       break;
                   }
                 } else {
                   switch (ports[pn]) {
                     case '554':
                       cameraStatus.camera1 = false;
-                      console.log(perfmonObj);
                       break;
                     case '555':
                       cameraStatus.camera2 = false;
-                      console.log(perfmonObj);
                       break;
                     case '556':
                       cameraStatus.camera3 = false;
-                      console.log(perfmonObj);
                       break;
                   }
                   let perfmonObj = req.body;
