@@ -1,8 +1,5 @@
-// require basic
 var express = require('express');
 var router = express.Router();
-
-// require models
 var perfMons = require('../models/perfMons');
 
 router.get('/', async (req, res) => {

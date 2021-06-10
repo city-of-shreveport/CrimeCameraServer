@@ -1,8 +1,5 @@
-// require basic
 var express = require('express');
 var router = express.Router();
-
-// require models
 var videos = require('../models/videos');
 
 router.get('/', async (req, res) => {

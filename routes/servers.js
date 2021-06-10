@@ -1,8 +1,5 @@
-// require basic
 var express = require('express');
 var router = express.Router();
-
-// require models
 var servers = require('../models/servers');
 
 router.get('/', async (req, res) => {

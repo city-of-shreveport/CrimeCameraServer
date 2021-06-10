@@ -11,6 +11,7 @@ var path = require('path');
 var nodesRouter = require('./routes/nodes');
 var perfmonsRouter = require('./routes/perfMons');
 var serversRouter = require('./routes/servers');
+var streamsRouter = require('./routes/streams');
 var videosRouter = require('./routes/videos');
 
 // disable cors
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/nodes', nodesRouter);
 app.use('/api/perfmons', perfmonsRouter);
 app.use('/api/servers', serversRouter);
+app.use('/api/streams', streamsRouter);
 app.use('/api/videos', videosRouter);
 
 // catch 404 and forward to error handler
