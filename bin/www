@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
+var nodeMediaServer = require('node-media-server');
 
 /**
  * Get port from environment and store in Express.
@@ -28,6 +29,31 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+new nodeMediaServer({
+  rtmp: {
+    port: 1935,
+    chunk_size: 60000,
+    gop_cache: true,
+    ping: 30,
+    ping_timeout: 60,
+  },
+  http: {
+    port: 8000,
+    mediaroot: './media',
+    allow_origin: '*',
+  },
+  trans: {
+    ffmpeg: '/usr/bin/ffmpeg',
+    tasks: [
+      {
+        app: 'streams',
+        hls: true,
+        hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
+      },
+    ],
+  },
+}).run();
 
 /**
  * Normalize a port into a number, string, or false.

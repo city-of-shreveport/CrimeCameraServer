@@ -1,5 +1,6 @@
 *.log
 .DS_Store
-.env*
-/.vscode
-/node_modules
+.env
+.vscode/
+media/
+node_modules/
