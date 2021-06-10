@@ -16,13 +16,12 @@ router.get('/start/:nodeName/:nodeIP', async (req, res) => {
   streamingCameras[nodeName].camera1 = spawn(
     'ffmpeg',
     formatArguments(`
-      -loglevel panic
       -re
       -rtsp_transport tcp
       -i rtsp://admin:UUnv9njxg123@${nodeIP}:554/cam/realmonitor?channel=1&subtype=1
       -codec copy 
       -f flv 
-      rtmp://10.10.200.10/live/${nodeName}camera1
+      rtmp://10.10.200.10/streams/${nodeName}-camera1
     `)
   );
 
@@ -32,13 +31,12 @@ router.get('/start/:nodeName/:nodeIP', async (req, res) => {
   streamingCameras[nodeName].camera2 = spawn(
     'ffmpeg',
     formatArguments(`
-      -loglevel panic
       -re
       -rtsp_transport tcp
       -i rtsp://admin:UUnv9njxg123@${nodeIP}:555/cam/realmonitor?channel=1&subtype=1
       -codec copy 
       -f flv 
-      rtmp://10.10.200.10/live/${nodeName}camera2
+      rtmp://10.10.200.10/streams/${nodeName}-camera2
     `)
   );
 
@@ -48,14 +46,12 @@ router.get('/start/:nodeName/:nodeIP', async (req, res) => {
   streamingCameras[nodeName].camera3 = spawn(
     'ffmpeg',
     formatArguments(`
-      -loglevel panic
-
       -re
       -rtsp_transport tcp
       -i rtsp://admin:UUnv9njxg123@${nodeIP}:556/cam/realmonitor?channel=1&subtype=1
       -codec copy 
       -f flv 
-      rtmp://10.10.200.10/live/${nodeName}camera3
+      rtmp://10.10.200.10/streams/${nodeName}-camera3
     `)
   );
 
