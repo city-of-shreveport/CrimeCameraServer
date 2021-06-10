@@ -26,7 +26,11 @@ const schema = mongoose.Schema({
       of: mongoose.Schema.Types.Mixed,
     },
   ],
-
+  cameraStatus: {
+    camera1: Boolean,
+    camera2: Boolean,
+    camera3: Boolean,
+  },
   // Default properties.
   createdAt: { type: Date, default: Date.now },
   updatedAt: Date,
