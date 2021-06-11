@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   new perfMons(req.body).save();
+  res.send('ok');
 });
 
 router.get('/:nodeName', async (req, res) => {

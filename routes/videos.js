@@ -2,20 +2,36 @@ var express = require('express');
 var router = express.Router();
 var videos = require('../models/videos');
 
-router.get('/', async (req, res) => {
-  videos.find({}, function (err, docs) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(docs);
-    }
-  });
+router.post('/', async (req, res) => {
+  for (var i = 0; i < req.body.length; i++) {
+    new videos({
+      node: req.body[i].node,
+      fileLocation: req.body[i].fileLocation,
+      location: {
+        lat: req.body[i].location.lat,
+        lng: req.body[i].location.lng,
+      },
+      startPts: req.body[i].start_pts,
+      startTime: req.body[i].start_time,
+      duration: req.body[i].duration,
+      bitRate: req.body[i].bit_rate,
+      height: req.body[i].height,
+      width: req.body[i].width,
+      size: req.body[i].size,
+      dateTime: req.body[i].dateTime,
+      hash: req.body[i].dateTime,
+      camera: req.body[i].camera,
+      hash: req.body[i].hash,
+    }).save();
+  }
+
+  res.send('Videos created!');
 });
 
 router.get('/:nodeName', async (req, res) => {
   videos.find({ node: req.params.nodeName }, function (err, docs) {
     if (err) {
-      res.send(err);
+      console.log(err);
     } else {
       res.send(docs);
     }
@@ -23,7 +39,7 @@ router.get('/:nodeName', async (req, res) => {
 });
 
 router.get('/:date/:nodeName', async (req, res) => {
-  var date = req.params.date;
+  const date = req.params.date;
 
   var documents = {
     camera1: [],
@@ -33,7 +49,7 @@ router.get('/:date/:nodeName', async (req, res) => {
 
   videos
     .find({
-      node: nodeName,
+      node: nodes.findOne({ name: req.params.nodeName })._id,
       dateTime: {
         $gte: new Date(date + 'T00:00:00.000Z'),
         $lte: new Date(date + 'T23:59:00.000Z'),
@@ -42,7 +58,7 @@ router.get('/:date/:nodeName', async (req, res) => {
     .sort([['dateTime', 1]])
     .exec(function (err, docs) {
       if (err) {
-        response.send(err);
+        console.log(err);
       } else {
         for (var i = 0; i < docs.length; i++) {
           switch (docs[i].camera) {
@@ -57,7 +73,6 @@ router.get('/:date/:nodeName', async (req, res) => {
               break;
           }
         }
-
         res.send(documents);
       }
     });
@@ -74,7 +89,8 @@ router.get('/:nodeName/:startDate/:endDate', async (req, res) => {
     },
     function (err, docs) {
       if (err) {
-        res.send(err);
+        console.log(err);
+        res.send('error');
       } else {
         res.send(docs);
       }
@@ -85,8 +101,9 @@ router.get('/:nodeName/:startDate/:endDate', async (req, res) => {
 router.get('/dates/:nodeName', async (req, res) => {
   videos.find({ node: req.params.nodeName }, { DateTime: true, _id: false }, function (err, docs) {
     if (err) {
-      res.send(err);
+      console.log(err);
     } else {
+      for (i = 0; i < docs.length; i++) {}
       res.send(docs);
     }
   });
