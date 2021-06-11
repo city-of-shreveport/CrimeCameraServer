@@ -73,6 +73,61 @@ router.post('/', async (req, res) => {
   res.send(newNode);
 });
 
+router.get('/seed', async (req, res) => {
+  nodeNumbers = [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
+    '24',
+    '25',
+    '26',
+    '27',
+    '28',
+    '29',
+    '30',
+  ];
+
+  for (var i = 0; i < nodeNumbers.length; i++) {
+    new nodes({
+      config: {
+        hostName: `CrimeCamera0${nodeNumbers[i]}`,
+        ip: `10.10.200.1${nodeNumbers[i]}`,
+        locationLat: `32.44336${nodeNumbers[i]}`,
+        locationLong: `-93.7655${nodeNumbers[i]}`,
+        videoDriveDevicePath: '/dev/sdb1',
+        videoDriveMountPath: '/home/pi/videos',
+        videoDriveEncryptionKey: 'pAVQn3IHEFIOcQEqBs6yXy7NK10OWAG',
+        buddyDriveDevicePath: '/dev/sda1',
+        buddyDriveMountPath: '/home/pi/remote_backups',
+        buddyDriveEncryptionKey: 'AnlmETjP8lRQ7Z7noJQEbi4yvOYMGNU',
+      },
+      name: `CrimeCamera0${nodeNumbers[i]}`,
+    }).save();
+  }
+
+  res.send('ok');
+});
+
 router.get('/:nodeName', async (req, res) => {
   nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
