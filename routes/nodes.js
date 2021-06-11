@@ -112,8 +112,8 @@ router.get('/seed', async (req, res) => {
       config: {
         hostName: `CrimeCamera0${nodeNumbers[i]}`,
         ip: `10.10.200.1${nodeNumbers[i]}`,
-        locationLat: `32.443${nodeNumbers[i]}36`,
-        locationLong: `-93.76${nodeNumbers[i]}55`,
+        locationLat: `32.4${Math.random().toPrecision(6).slice(2)}`,
+        locationLong: `-93.7${Math.random().toPrecision(6).slice(2)}`,
         videoDriveDevicePath: '/dev/sdb1',
         videoDriveMountPath: '/home/pi/videos',
         videoDriveEncryptionKey: 'pAVQn3IHEFIOcQEqBs6yXy7NK10OWAG',
