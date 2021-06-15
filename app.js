@@ -13,7 +13,7 @@ var perfmonsRouter = require('./routes/perfMons');
 var serversRouter = require('./routes/servers');
 var streamsRouter = require('./routes/streams');
 var videosRouter = require('./routes/videos');
-
+var cameraConfigRouter = require('./routes/cameraConfig');
 // disable cors
 const cors = require('cors');
 app.use(cors());
@@ -44,7 +44,7 @@ app.use('/api/perfmons', perfmonsRouter);
 app.use('/api/servers', serversRouter);
 app.use('/api/streams', streamsRouter);
 app.use('/api/videos', videosRouter);
-
+app.use('/api/cameraConfig', cameraConfigRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
