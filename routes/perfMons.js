@@ -16,11 +16,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  let cameraStatus = {
 
-
-  }
   let nodePerfmon = req.body
+  nodePerfmon.cameraStatus = {}
   nodes.findOne({ name: req.body.node }, function (err, doc) {
 
    const nmapScan = spawn(
@@ -35,36 +33,27 @@ router.post('/', async (req, res) => {
     for(i=0;i<dataStringSplit.length;i++){
 
       if(dataStringSplit[i].includes('554') && dataStringSplit[i].includes('open')){
-        cameraStatus.camera1 = true
+        nodePerfmon.cameraStatus.camera1 = true
 
         
       }
       if(dataStringSplit[i].includes('555') && dataStringSplit[i].includes('open')){
-          cameraStatus.camera2 = true
+          nodePerfmon.cameraStatus.camera2 = true
       
 
       }
       if(dataStringSplit[i].includes('556') && dataStringSplit[i].includes('open')){
-          cameraStatus.camera3 = true
+          nodePerfmon.cameraStatus.camera3 = true
 
 
       }
-  console.log('cameraStatus')
-  console.log(cameraStatus)
-  new perfMons(nodePerfmon).save();
-nodePerfmon.cameraStatus = cameraStatus
-nodes
-    .findOneAndUpdate({ name: req.params.nodeName }, { $set: { cameraStatus: cameraStatus} })
-    .exec(function (err, node) {
-      if (err) {
-        
-      } else {
-        
-      }
-    });
+
+
   
   }
 
+
+new perfMons(nodePerfmon).save();
 res.end();
 });
 
@@ -78,7 +67,7 @@ res.end();
 router.get('/:nodeName', async (req, res) => {
   perfMons
     .find({ node: req.params.nodeName })
-    .sort([['dateTime', -1]])
+    .sort([['createdAt', 'desc']])
     .limit(60)
     .exec(function (err, docs) {
       if (err) {
