@@ -18,7 +18,7 @@ router.get('/start/:nodeName/:nodeIP', async (req, res) => {
     formatArguments(`
       -re
       -rtsp_transport tcp
-      -i rtsp://admin:admin@${nodeIP}:554/cam/realmonitor?channel=1&subtype=1
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:554/cam/realmonitor?channel=1&subtype=1
       -codec copy 
       -f flv 
       rtmp://127.0.0.1/streams/${nodeName}-camera1
@@ -33,7 +33,7 @@ router.get('/start/:nodeName/:nodeIP', async (req, res) => {
     formatArguments(`
       -re
       -rtsp_transport tcp
-      -i rtsp://admin:admin@${nodeIP}:555/cam/realmonitor?channel=1&subtype=1
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:555/cam/realmonitor?channel=1&subtype=1
       -codec copy 
       -f flv 
       rtmp://127.0.0.1/streams/${nodeName}-camera2
@@ -48,7 +48,7 @@ router.get('/start/:nodeName/:nodeIP', async (req, res) => {
     formatArguments(`
       -re
       -rtsp_transport tcp
-      -i rtsp://admin:admin@${nodeIP}:556/cam/realmonitor?channel=1&subtype=1
+      -i rtsp://admin:UUnv9njxg123@${nodeIP}:556/cam/realmonitor?channel=1&subtype=1
       -codec copy 
       -f flv 
       rtmp://127.0.0.1/streams/${nodeName}-camera3
