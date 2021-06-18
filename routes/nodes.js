@@ -17,11 +17,11 @@ router.post('/', async (req, res) => {
   var newNode = new nodes({
     name: req.body.name,
     ip: req.body.zeroTierIP,
-      cameraStatus: {
-    camera1: Boolean,
-    camera2: Boolean,
-    camera3: Boolean,
-  },
+    cameraStatus: {
+      camera1: Boolean,
+      camera2: Boolean,
+      camera3: Boolean,
+    },
     config: {
       hostName: req.body.hostName,
       locationLat: req.body.locationLat,
@@ -110,6 +110,16 @@ router.get('/seed', async (req, res) => {
     '28',
     '29',
     '30',
+    '31',
+    '32',
+    '33',
+    '34',
+    '35',
+    '36',
+    '37',
+    '38',
+    '39',
+    '40',
   ];
 
   for (var i = 0; i < nodeNumbers.length; i++) {
@@ -144,7 +154,6 @@ router.get('/:nodeName', async (req, res) => {
 });
 
 router.post('/:nodeName', async (req, res) => {
-
   nodes.findOneAndUpdate({ name: req.params.nodeName }, { $set: req.body }).exec(function (err, node) {
     if (err) {
       res.status(500).send(err);
