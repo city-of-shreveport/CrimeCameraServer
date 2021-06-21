@@ -8,7 +8,8 @@ var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
 var nodeMediaServer = require('node-media-server');
-
+const fetch = require('node-fetch');
+var streamMons = require('../models/streamMons.js')
 /**
  * Get port from environment and store in Express.
  */
@@ -49,7 +50,15 @@ new nodeMediaServer({
 /**
  * Normalize a port into a number, string, or false.
  */
-
+setInterval(() => {
+      fetch('http://10.10.10.10:8000/api/server')
+    .then(res => res.json())
+    .then(json => {
+      json.node='CrimeCamerServer'
+      
+    new streamMons(json).save();
+  })
+    }, 60000);
 function normalizePort(val) {
   var port = parseInt(val, 10);
 

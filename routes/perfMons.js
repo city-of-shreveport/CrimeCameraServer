@@ -46,7 +46,6 @@ router.post('/', async (req, res) => {
 router.get('/:nodeName', async (req, res) => {
   perfMons
     .find({ node: req.params.nodeName })
-    .sort([['createdAt', 'desc']])
     .limit(60)
     .exec(function (err, docs) {
       if (err) {
@@ -56,16 +55,9 @@ router.get('/:nodeName', async (req, res) => {
     });
 });
 
-router.get('/streamstatistics/:ip', async (req, res) => {
-  fetch('http://10.10.10.10:8000/api/streams')
-    .then(res => res.json())
-    .then(json => res.send(json));
 
-});
-router.get('/restreamerserverstatistics/:ip', async (req, res) => {
-  fetch('http://10.10.10.10:8000/api/server')
-    .then(res => res.json())
-    .then(json => res.send(json));
 
-});
+
+ 
+
 module.exports = router;

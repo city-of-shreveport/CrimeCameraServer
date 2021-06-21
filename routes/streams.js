@@ -3,6 +3,8 @@ var router = express.Router();
 var spawn = require('child_process').spawn;
 var { formatArguments } = require('../helperFunctions');
 var streamingCameras = {};
+var streamMons = require('../models/streamMons.js')
+const fetch = require('node-fetch');
 
 router.get('/start/:nodeName/:nodeIP', async (req, res) => {
   var nodeName = req.params.nodeName;
@@ -69,4 +71,28 @@ router.get('/stop/:nodeName', async (req, res) => {
   res.send('ok');
 });
 
+router.get('/streamingserverstats', async (req, res) => {
+  
+  var q = streamMons.find({node:'CrimeCamerServer'})
+  .sort([['createdAt', -1]])
+  .limit(20);
+q.exec(function(err, posts) {
+  const sortByDate = arr => {
+   const sorter = (a, b) => {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+   }
+   posts.sort(sorter);
+};
+  sortByDate(posts);
+  res.send(posts)
+});
+})
+  
+
+router.get('/streamstatistics/:ip', async (req, res) => {
+  fetch('http://10.10.10.10:8000/api/streams')
+    .then(res => res.json())
+    .then(json => res.send(json));
+
+});
 module.exports = router;
