@@ -18,11 +18,14 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   let nodePerfmon = req.body
+  let nmapScan = null
   nodePerfmon.cameraStatus = {}
   nodes.findOne({ name: req.body.node }, function (err, doc) {
-   const nmapScan = spawn(
+    if(doc){
+    nmapScan = spawn(
     'nmap',  ['-p', '554-556', doc.config.ip]
     );
+   
     nmapScan.stdout.on('data', (data) => {
       var dataStringSplit = data.toString().split("\n")
       for(i=0;i<dataStringSplit.length;i++){
@@ -36,17 +39,22 @@ router.post('/', async (req, res) => {
             nodePerfmon.cameraStatus.camera3 = true
         }  
       }
+
       new perfMons(nodePerfmon).save();
       res.end();
     });
-
-  })
+}else{new perfMons(nodePerfmon).save();
+      res.end();
+}
+  
+})
 });
 
 router.get('/:nodeName', async (req, res) => {
   perfMons
     .find({ node: req.params.nodeName })
-    .limit(60)
+    .sort([['createdAt', -1]])
+    .limit(20)
     .exec(function (err, docs) {
       if (err) {
       } else {

@@ -58,7 +58,7 @@ setInterval(() => {
       
     new streamMons(json).save();
   })
-    }, 60000);
+    }, 10000);
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
