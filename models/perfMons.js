@@ -31,9 +31,10 @@ const schema = mongoose.Schema({
     camera2: Boolean,
     camera3: Boolean,
   },
-  // Default properties.
+
+  // Default
   createdAt: { type: Date, default: Date.now },
   updatedAt: Date,
 });
 
-module.exports = mongoose.model('PerfMons', schema);
+module.exports = mongoose.model('perfMons', schema);

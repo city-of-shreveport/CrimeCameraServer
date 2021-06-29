@@ -7,9 +7,9 @@ const schema = mongoose.Schema({
   zeroTierNetworkID: { type: String, default: '' },
   zeroTierIP: { type: String, default: '' },
 
-  // Default properties.
+  // Default
   createdAt: { type: Date, default: Date.now },
   updatedAt: Date,
 });
 
-module.exports = mongoose.model('Servers', schema);
+module.exports = mongoose.model('servers', schema);

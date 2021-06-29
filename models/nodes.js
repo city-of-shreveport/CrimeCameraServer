@@ -72,7 +72,7 @@ const schema = mongoose.Schema({
     },
   },
 
-  // Default properties.
+  // Default
   createdAt: { type: Date, default: Date.now },
   updatedAt: Date,
 });

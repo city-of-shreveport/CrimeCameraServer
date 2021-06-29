@@ -20,8 +20,8 @@ const schema = mongoose.Schema({
     free: { type: Number, default: '' },
   },
   net: {
-    inbytes:{ type: Number, default: '' },
-    outbytes:{ type: Number, default: '' },
+    inbytes: { type: Number, default: '' },
+    outbytes: { type: Number, default: '' },
   },
   nodejs: {
     uptime: { type: Number, default: '' },
@@ -31,7 +31,7 @@ const schema = mongoose.Schema({
       heapTotal: { type: Number, default: '' },
       heapUsed: { type: Number, default: '' },
       external: { type: Number, default: '' },
-    }
+    },
   },
   clients: {
     accepted: { type: Number, default: '' },
@@ -42,7 +42,7 @@ const schema = mongoose.Schema({
     ws: { type: Number, default: '' },
   },
 
-  // Default properties.
+  // Default
   createdAt: { type: Date, default: Date.now },
   updatedAt: Date,
 });
