@@ -29,19 +29,15 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/recordings/', async (req, res) => {
-  var unixTime = Date.parse(req.body.dateTime) / 1000;
   var response = {};
 
   for (var i = 0; i < req.body.nodes.length; i++) {
     nodeName = req.body.nodes[i];
 
-    videos.find(
+    await videos.find(
       {
         node: nodeName,
-        dateTime: {
-          $gte: unixTime - 60,
-          $lte: unixTime + 60,
-        },
+        dateTime: req.body.dateTime,
       },
       function (err, docs) {
         if (err) {
