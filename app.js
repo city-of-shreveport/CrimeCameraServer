@@ -6,6 +6,7 @@ var createError = require('http-errors');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var path = require('path');
+var bodyParser = require('body-parser');
 
 // require routers
 var nodesRouter = require('./routes/nodes');
@@ -32,6 +33,7 @@ mongoose.connect(
 );
 
 // view engine setup
+app.use(bodyParser({ limit: '100mb' }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
