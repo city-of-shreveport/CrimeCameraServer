@@ -51,7 +51,7 @@ new nodeMediaServer({
  * Normalize a port into a number, string, or false.
  */
 setInterval(() => {
-      fetch('http://10.10.10.10:8000/api/server')
+      fetch('http://10.10.30.10:8000/api/server')
     .then(res => res.json())
     .then(json => {
       json.node='CrimeCamerServer'
