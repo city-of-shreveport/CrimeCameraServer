@@ -136,7 +136,7 @@ router.get('/seed', async (req, res) => {
     new nodes({
       config: {
         hostName: `CrimeCamera0${nodeNumbers[i]}`,
-        ip: `10.10.200.1${nodeNumbers[i]}`,
+        ip: `10.10.30.1${nodeNumbers[i]}`,
         locationLat: `32.4${Math.random().toPrecision(6).slice(2)}`,
         locationLong: `-93.7${Math.random().toPrecision(6).slice(2)}`,
         videoDriveDevicePath: '/dev/sdb1',
@@ -157,10 +157,10 @@ router.get('/:nodeName', async (req, res) => {
   nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
       res.send(err);
-      console.log(err)
+      console.log(err);
     } else {
       res.send(doc);
-      res.end()
+      res.end();
     }
   });
 });
