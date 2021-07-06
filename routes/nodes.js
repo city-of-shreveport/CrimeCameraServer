@@ -157,8 +157,10 @@ router.get('/:nodeName', async (req, res) => {
   nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
       res.send(err);
+      console.log(err)
     } else {
       res.send(doc);
+      res.end()
     }
   });
 });
