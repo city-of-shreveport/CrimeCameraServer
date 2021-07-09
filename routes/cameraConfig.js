@@ -91,8 +91,10 @@ router.get('/videoColorConfig/:nodeName/:camera', async (req, res) => {
           }
         })
         .then(function (response) {
-          console.log(response.body);
-          res.write(response.body)
+          console.log(response.body)
+
+
+          res.send(response.body)
           res.end()
         })
         .catch(function (error) {
