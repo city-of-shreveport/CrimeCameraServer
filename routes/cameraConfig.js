@@ -39,7 +39,7 @@ router.get('/snapshot/:nodeName/:camera', async (req, res) => {
                     "keepAliveSocket": true
                 }
             }, function(data) {
-                //receiving the data stream from the NVR to be saved to file
+                
                 data.on('data', function(data) {
                     requestedData = data
                     res.write(requestedData)
@@ -62,12 +62,20 @@ router.get('/videoColorConfig/:nodeName/:camera', async (req, res) => {
   var cameraPortNumber = 81
   var cameraIP
   var requestedData
+    var obj = {Camera:camera,Brightness:'',
+ChromaSuppress:'',
+Contrast:'',
+Gamma:'',
+Hue:'',
+Saturation:'',
+Style:'',
+TimeSection:''}
   nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
       
     } else {
         cameraIP = doc.config.ip
-        console.log(doc.config.ip)
+      
         var settings = {}
         switch(camera) {
           case 'camera2':
@@ -91,16 +99,35 @@ router.get('/videoColorConfig/:nodeName/:camera', async (req, res) => {
           }
         })
         .then(function (response) {
-          console.log(response.body)
+          
+          var stringResponse = response.body.split('\r\n')
+          for(i=0;i< stringResponse.length;i++){
+           
+            var stringAfterSplit = stringResponse[i].toString().split(".")
+       
+            
+                 if(stringAfterSplit[1] == 'VideoColor[0][0]'){
+            
+              var stringAfterThirdSplit = stringAfterSplit[2].toString().split("=")
+               
+                obj[stringAfterThirdSplit[0]] = stringAfterThirdSplit[1]
+              
+                }
+              
 
+           
+            
 
-          res.send(response.body)
+          }
+          
+          
+        }).then(function(){
+
+          res.send(obj)
           res.end()
+
         })
-        .catch(function (error) {
-          console.log(error.body);
-          res.end()
-        });
+        
       }
   })
 })
@@ -259,13 +286,18 @@ router.get('/time/:nodeName/:camera', async (req, res) => {
           }
         })
         .then(function (response) {
-          console.log("respoionce")
-          console.log(response.body);
-          res.write(response.body)
+          
+          var resultSplit = response.body.toString().split('\r')
+          var resultSplitClean = resultSplit[0].toString().split('=')
+          var obj = {'time':resultSplitClean[1]}
+
+    
+          res.send(obj)
           res.end()
         })
         .catch(function (error) {
-          console.log(error);
+          console.log(error)
+          res.end()
         });
 
       }
@@ -282,6 +314,20 @@ router.get('/networkSettings/:nodeName/:camera', async (req, res) => {
   var cameraPortNumber = 81
   var cameraIP
   var requestedData
+  var obj = {
+DefaultInterface:"",
+Domain:"",
+Hostname:"",
+DefaultGateway:"",
+DhcpEnable:"",
+DnsServer1:"",
+DnsServer2:"",
+EnableDhcpReservedIP:"",
+IPAddress:"",
+MTU:"",
+PhysicalAddress:"",
+SubnetMask:""
+}
   nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
       
@@ -312,14 +358,64 @@ router.get('/networkSettings/:nodeName/:camera', async (req, res) => {
           }
         })
         .then(function (response) {
-          console.log("respoionce")
-          console.log(response.body);
-          res.write(response.body)
-          res.end()
+
+         /*
+
+
+         */ 
+
+
+
+           var stringResponse = response.body.split('\r\n')
+          for(i=0;i< stringResponse.length;i++){
+           
+            var stringAfterSplit = stringResponse[i].toString().split("=")
+      
+        
+
+           var stringAfterSecondSplit = stringAfterSplit[0].toString().split('.')
+           if(stringAfterSecondSplit[2]==='eth0'){
+              if(stringAfterSecondSplit[3]==='DnsServers[0]'){
+                  obj['DnsServer1'] = stringAfterSplit[1]
+
+
+               }
+               else if(stringAfterSecondSplit[3]==='DnsServers[1]'){
+                  obj['DnsServer2'] = stringAfterSplit[1]
+
+
+               }
+                
+              else{
+                
+              obj[stringAfterSecondSplit[3]] = stringAfterSplit[1]
+
+           
+            
+
+          }
+
+
+           }
+           else{
+
+              obj[stringAfterSecondSplit[2]] = stringAfterSplit[1]
+
+
+
+           }
+              
+            
+              
+              }
+        
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+        .then(function(){
+          res.send(obj)
+          res.end()
+
+
+        })
 
       }
   })
@@ -339,8 +435,6 @@ router.get('/setnetworkSettings/:nodeName/:camera/:settings', async (req, res) =
         console.log(doc.config.ip)
         var settings = {}
         var url = 'cgi-bin/configManager.cgi?action=setConfig&NetWork.'
-//DhcpEnable=true
-//Domain Hostname DefaultGateway DnsServers[0] DnsServers[1] IPAddress SubnetMask
 switch(setting) {
           case 'camera2':
             cameraPortNumber = 82
@@ -443,6 +537,25 @@ router.get('/settings/:nodeName/:camera', async (req, res) => {
   var cameraPortNumber = 81
   var cameraIP
   var requestedData
+  var obj = {
+resolution:"",
+BitRate:"",
+BitRateControl:"",
+Compression:"",
+CustomResolutionName:"",
+FPS:"",
+GOP:"",
+Height:"",
+Pack:"",
+Profile:"",
+Quality:"",
+QualityRange:"",
+SVCTLayer:"",
+Width:""
+
+
+
+  }
   nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
       
@@ -473,14 +586,35 @@ router.get('/settings/:nodeName/:camera', async (req, res) => {
           }
         })
         .then(function (response) {
-          console.log("respoionce")
-          console.log(response.body);
-          res.write(response.body)
-          res.end()
+            var stringResponse = response.body.split('\r\n')
+          for(i=0;i< stringResponse.length;i++){
+           
+            var stringAfterSplit = stringResponse[i].toString().split("=")
+       
+            
+                 
+            
+              var stringAfterThirdSplit = stringAfterSplit[0].toString().split(".")
+              console.log(stringAfterThirdSplit[3])
+               if(stringAfterThirdSplit[3]==='Video'){
+                obj[stringAfterThirdSplit[4]] = stringAfterSplit[1]
+              }
+                
+              
+
+           
+            
+
+          }
+          
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+        .then(function (){
+console.log(obj);
+          res.send(obj)
+          res.end()
+
+
+        })
 
       }
   })
