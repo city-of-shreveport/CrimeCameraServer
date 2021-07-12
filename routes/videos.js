@@ -3,24 +3,6 @@ var fs = require('fs');
 var router = express.Router();
 var videos = require('../models/videos');
 
-router.post('/', async (req, res) => {
-  req.body.map((video) => {
-    videos.exists(
-      {
-        node: video.node,
-        fileLocation: video.fileLocation,
-      },
-      function (err, doc) {
-        if (!doc) {
-          new videos(video).save();
-        }
-      }
-    );
-  });
-
-  res.send('ok');
-});
-
 router.post('/recordings/', async (req, res) => {
   var response = {};
 
