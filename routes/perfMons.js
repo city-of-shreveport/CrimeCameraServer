@@ -27,6 +27,7 @@ router.post('/', async (req, res) => {
     );
    
     nmapScan.stdout.on('data', (data) => {
+    
       var dataStringSplit = data.toString().split("\n")
       for(i=0;i<dataStringSplit.length;i++){
         if(dataStringSplit[i].includes('554') && dataStringSplit[i].includes('open')){
@@ -37,7 +38,16 @@ router.post('/', async (req, res) => {
         }
         if(dataStringSplit[i].includes('556') && dataStringSplit[i].includes('open')){
             nodePerfmon.cameraStatus.camera3 = true
-        }  
+        }
+        if(dataStringSplit[i].includes('554') && dataStringSplit[i].includes('filtered')){
+          nodePerfmon.cameraStatus.camera1 = false
+        }
+        if(dataStringSplit[i].includes('555') && dataStringSplit[i].includes('filtered')){
+            nodePerfmon.cameraStatus.camera2 = false
+        }
+        if(dataStringSplit[i].includes('556') && dataStringSplit[i].includes('filtered')){
+            nodePerfmon.cameraStatus.camera3 = false
+        }   
       }
 
       new perfMons(nodePerfmon).save();
