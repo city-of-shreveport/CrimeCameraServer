@@ -47,16 +47,13 @@ const updateVideos = async (config) => {
                       },
                       function (err, doc) {
                         if (!doc) {
+                          console.log(`saving video /home/pi/mounts/${node.name}/${camera.name}/${video.name}...`);
+
                           new videos({
                             node: node.name,
                             camera: camera.name,
                             fileLocation: video.name,
-                            width: metadata.streams[0].width,
-                            height: metadata.streams[0].height,
-                            duration: metadata.format.duration,
-                            size: metadata.format.size,
                             dateTime: dateTime,
-                            hash: execSync(`sha1sum ${metadata.format.filename}`).toString().split(' ')[0],
                           }).save();
                         }
                       }
