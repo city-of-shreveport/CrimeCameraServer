@@ -42,14 +42,15 @@ const updateVideos = async (config) => {
                     videos.exists(
                       {
                         node: node.name,
-                        fileLocation: `${camera.name}/${video.name}`,
+                        camera: camera.name,
+                        fileLocation: video.name,
                       },
                       function (err, doc) {
                         if (!doc) {
                           new videos({
                             node: node.name,
                             camera: camera.name,
-                            fileLocation: `${camera.name}/${video.name}`,
+                            fileLocation: video.name,
                             width: metadata.streams[0].width,
                             height: metadata.streams[0].height,
                             duration: metadata.format.duration,
