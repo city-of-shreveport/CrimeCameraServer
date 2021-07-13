@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
@@ -8,8 +6,10 @@ var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
 var nodeMediaServer = require('node-media-server');
-const fetch = require('node-fetch');
-var streamMons = require('../models/streamMons.js')
+var fetch = require('node-fetch');
+var streamMons = require('../models/streamMons.js');
+var { formatArguments, tryValue, updateVideos } = require('../helperFunctions');
+
 /**
  * Get port from environment and store in Express.
  */
@@ -44,21 +44,24 @@ new nodeMediaServer({
     mediaroot: './media',
     allow_origin: '*',
   },
-
 }).run();
+
+setInterval(() => {
+  fetch('http://10.10.30.10:8000/api/server')
+    .then((res) => res.json())
+    .then((json) => {
+      json.node = 'CrimeCamerServer';
+      new streamMons(json).save();
+    });
+}, 10000);
+
+// setInterval(() => { updateVideos() }, 60000);
+updateVideos();
 
 /**
  * Normalize a port into a number, string, or false.
  */
-setInterval(() => {
-      fetch('http://10.10.30.10:8000/api/server')
-    .then(res => res.json())
-    .then(json => {
-      json.node='CrimeCamerServer'
-      
-    new streamMons(json).save();
-  })
-    }, 10000);
+
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
@@ -84,9 +87,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -109,8 +110,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
