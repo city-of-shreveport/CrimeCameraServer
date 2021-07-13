@@ -57,7 +57,7 @@ setInterval(() => {
 
 setInterval(() => {
   updateVideos();
-}, 60000 * 60);
+}, 60000 * 15);
 
 updateVideos();
 
