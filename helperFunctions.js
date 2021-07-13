@@ -48,17 +48,13 @@ const updateVideos = async (config) => {
                         if (!doc) {
                           new videos({
                             node: node.name,
-                            fileLocation: `${camera.name}/${video.name}`,
-                            startPts: metadata.streams[0].start_pts,
-                            startTime: metadata.streams[0].start_time,
-                            duration: metadata.format.duration,
-                            bitRate: metadata.format.bit_rate,
-                            height: metadata.streams[0].height,
-                            width: metadata.streams[0].width,
-                            size: metadata.format.size,
                             camera: camera.name,
+                            fileLocation: `${camera.name}/${video.name}`,
+                            width: metadata.streams[0].width,
+                            height: metadata.streams[0].height,
+                            duration: metadata.format.duration,
+                            size: metadata.format.size,
                             dateTime: dateTime,
-
                             hash: execSync(`sha1sum ${metadata.format.filename}`).toString().split(' ')[0],
                           }).save();
                         }
