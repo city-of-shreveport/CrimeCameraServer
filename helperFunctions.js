@@ -1,3 +1,8 @@
+var ffmpeg = require('fluent-ffmpeg');
+var videos = require('./models/videos');
+var { execSync } = require('child_process');
+var { readdirSync } = require('fs');
+
 const formatArguments = (template) => {
   return template
     .replace(/\s+/g, ' ')
@@ -15,58 +20,58 @@ const tryValue = (tryFunction) => {
 };
 
 const updateVideos = async (config) => {
-  // var cameras = ['camera1', 'camera2', 'camera3'];
-  // for (var c = 0; c < cameras.length; c++) {
-  //   var camera = cameras[c];
-  //   var fileList = await execCommand(`ls /home/pi/videos/${camera}`);
-  //   var videoFiles = fileList.split('\n').filter((file) => file !== '');
-  //   videoFiles.forEach(
-  //     await async function (videoFile) {
-  //       try {
-  //         ffmpeg.ffprobe(`/home/pi/videos/${camera}/${videoFile}`, function (error, metadata) {
-  //           if (videoFiles != undefined && metadata != undefined) {
-  //             var year = parseInt(metadata.format.filename.split('/')[5].split('-')[0]);
-  //             var monthIndex = parseInt(metadata.format.filename.split('/')[5].split('-')[1]) - 1;
-  //             var day = parseInt(metadata.format.filename.split('/')[5].split('-')[2]);
-  //             var hours = parseInt(metadata.format.filename.split('/')[5].split('-')[3]);
-  //             var minutes = parseInt(metadata.format.filename.split('/')[5].split('-')[4]);
-  //             var dateTime = new Date(year, monthIndex, day, hours, minutes);
-  //             videos.exists(
-  //               {
-  //                 node: config.hostName,
-  //                 fileLocation: `${camera}/${videoFile}`,
-  //               },
-  //               function (err, doc) {
-  //                 if (!doc) {
-  //                   new videos({
-  //                     node: config.hostName,
-  //                     fileLocation: `${camera}/${videoFile}`,
-  //                     location: {
-  //                       lat: config.locationLat,
-  //                       lng: config.locationLong,
-  //                     },
-  //                     startPts: metadata.streams[0].start_pts,
-  //                     startTime: metadata.streams[0].start_time,
-  //                     duration: metadata.format.duration,
-  //                     bitRate: metadata.format.bit_rate,
-  //                     height: metadata.streams[0].height,
-  //                     width: metadata.streams[0].width,
-  //                     size: metadata.format.size,
-  //                     camera: camera,
-  //                     dateTime: dateTime,
-  //                     hash: execSync(`sha1sum ${metadata.format.filename}`).toString().split(' ')[0],
-  //                   }).save();
-  //                 }
-  //               }
-  //             );
-  //           }
-  //         });
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   );
-  // }
+  readdirSync('/home/pi/mounts', { withFileTypes: true })
+    .filter((node) => node.isDirectory())
+    .map((node) => {
+      readdirSync(`/home/pi/mounts/${node.name}`, { withFileTypes: true })
+        .filter((camera) => camera.isDirectory())
+        .map((camera) => {
+          readdirSync(`/home/pi/mounts/${node.name}/${camera.name}`, { withFileTypes: true })
+            .filter((video) => video.isFile())
+            .map((video) => {
+              try {
+                ffmpeg.ffprobe(`/home/pi/mounts/${node.name}/${camera.name}/${video.name}`, function (error, metadata) {
+                  if (metadata != undefined) {
+                    var year = parseInt(video.name.split('-')[0]);
+                    var monthIndex = parseInt(video.name.split('-')[1]) - 1;
+                    var day = parseInt(video.name.split('-')[2]);
+                    var hours = parseInt(video.name.split('-')[3]);
+                    var minutes = parseInt(video.name.split('-')[4]);
+                    var dateTime = new Date(year, monthIndex, day, hours, minutes);
+
+                    videos.exists(
+                      {
+                        node: node.name,
+                        fileLocation: `${camera.name}/${video.name}`,
+                      },
+                      function (err, doc) {
+                        if (!doc) {
+                          new videos({
+                            node: node.name,
+                            fileLocation: `${camera.name}/${video.name}`,
+                            startPts: metadata.streams[0].start_pts,
+                            startTime: metadata.streams[0].start_time,
+                            duration: metadata.format.duration,
+                            bitRate: metadata.format.bit_rate,
+                            height: metadata.streams[0].height,
+                            width: metadata.streams[0].width,
+                            size: metadata.format.size,
+                            camera: camera.name,
+                            dateTime: dateTime,
+
+                            hash: execSync(`sha1sum ${metadata.format.filename}`).toString().split(' ')[0],
+                          }).save();
+                        }
+                      }
+                    );
+                  }
+                });
+              } catch (error) {
+                console.log(error);
+              }
+            });
+        });
+    });
 };
 
 module.exports = { formatArguments, tryValue, updateVideos };

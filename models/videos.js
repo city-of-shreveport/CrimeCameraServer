@@ -4,7 +4,6 @@ const { Schema } = require('mongoose');
 const schema = mongoose.Schema({
   node: { type: String, default: '' },
   fileLocation: { type: String, default: '' },
-  location: { lat: { type: Number, default: 0 }, lng: { type: Number, default: 0 } },
   startPts: { type: Number, default: 0 },
   startTime: { type: Number, default: 0 },
   duration: { type: Number, default: 0 },

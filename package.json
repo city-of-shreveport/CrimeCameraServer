@@ -15,6 +15,7 @@
     "digest-fetch": "^1.1.6",
     "ejs": "^3.1.5",
     "express": "4.17.0",
+    "fluent-ffmpeg": "^2.1.2",
     "http-digest-client": "^0.0.3",
     "http-errors": "~1.6.3",
     "install": "^0.13.0",
