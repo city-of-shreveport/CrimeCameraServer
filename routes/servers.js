@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     zeroTierNetworkID: req.body.zeroTierNetworkID,
     lastCheckIn: new Date(),
   });
-console.log(newServer)
+  console.log(newServer);
   await newServer.save();
   res.send(newServer);
 });
