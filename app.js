@@ -20,7 +20,7 @@ app.use(cors());
 
 // establish database connection
 mongoose.connect(
-  'mongodb://localhost/CrimeCameraSystem',
+  'mongodb://rtcc-mongo.shreveport-it.org/RTCC',
   {
     useFindAndModify: false,
     useNewUrlParser: true,
