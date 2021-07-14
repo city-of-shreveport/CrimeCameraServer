@@ -14,23 +14,6 @@ var { formatArguments, tryValue, cleanupVideos } = require('../helperFunctions')
  * Get port from environment and store in Express.
  */
 
-let tasks = [];
-
-function retreiveNodesList() {
-  fetch('http://10.10.30.12:3001/api/nodes')
-    .then((response) => response.json())
-    .then((json) => {
-      json.map((node) => {
-        tasks.push({
-          app: node.name,
-          mode: 'pull',
-          edge: 'rtmp://' + node.config.ip,
-        });
-        console.log(tasks);
-      });
-    });
-}
-
 var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
 
@@ -54,39 +37,58 @@ setInterval(() => {
 
 cleanupVideos();
 
-const config = {
-  rtmp: {
-    port: 1936,
-    chunk_size: 60000,
-    gop_cache: true,
-    ping: 30,
-    ping_timeout: 60,
-  },
-  http: {
-    port: 8001,
-    allow_origin: '*',
-  },
+// let tasks = [];
 
-  relay: {
-    ffmpeg: '/usr/bin/ffmpeg',
-    tasks: tasks,
-  },
-};
+// function retreiveNodesList() {
+//   fetch('')
+//     .then((response) => response.json())
+//     .then((json) => {
+//       json.map((node) => {
+//         tasks.push({
+//           app: node.name,
+//           mode: 'pull',
+//           edge: 'rtmp://' + node.config.ip,
+//         });
+//         console.log(tasks);
+//       });
+//     });
+// }
 
-var nms = new nodeMediaServer(config);
-retreiveNodesList();
-setTimeout(() => {
-  nms.run();
-}, 6000);
+// retreiveNodesList();
 
-setInterval(() => {
-  fetch('http://rtcc-server.shreveport-it.org:8000/api/server')
-    .then((res) => res.json())
-    .then((json) => {
-      json.node = 'CrimeCamerServer';
-      new streamMons(json).save();
-    });
-}, 10000);
+// setInterval(() => {
+//   fetch('')
+//     .then((res) => res.json())
+//     .then((json) => {
+//       json.node = 'CrimeCamerServer';
+//       new streamMons(json).save();
+//     });
+// }, 10000);
+
+// const config = {
+//   rtmp: {
+//     port: 1936,
+//     chunk_size: 60000,
+//     gop_cache: true,
+//     ping: 30,
+//     ping_timeout: 60,
+//   },
+//   http: {
+//     port: 8001,
+//     allow_origin: '*',
+//   },
+
+//   relay: {
+//     ffmpeg: '/usr/bin/ffmpeg',
+//     tasks: tasks,
+//   },
+// };
+
+// var nms = new nodeMediaServer(config);
+
+// setTimeout(() => {
+//   nms.run();
+// }, 6000);
 
 /**
  * Normalize a port into a number, string, or false.
