@@ -89,7 +89,7 @@ router.get('/streamingserverstats', async (req, res) => {
 });
 
 router.get('/streamstatistics/:ip', async (req, res) => {
-  fetch('http://10.10.30.10:8000/api/streams')
+  fetch('http://rtcc-server.shreveport-it.org:8000/api/streams')
     .then((res) => res.json())
     .then((json) => res.send(json));
 });

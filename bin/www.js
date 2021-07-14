@@ -14,7 +14,7 @@ var { formatArguments, tryValue, updateVideos } = require('../helperFunctions');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
 
 /**
@@ -47,7 +47,7 @@ new nodeMediaServer({
 }).run();
 
 setInterval(() => {
-  fetch('http://10.10.30.10:8000/api/server')
+  fetch('http://rtcc-server.shreveport-it.org:8000/api/server')
     .then((res) => res.json())
     .then((json) => {
       json.node = 'CrimeCamerServer';
