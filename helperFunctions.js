@@ -1,3 +1,5 @@
+var videos = require('./models/videos');
+
 const formatArguments = (template) => {
   return template
     .replace(/\s+/g, ' ')
@@ -14,4 +16,20 @@ const tryValue = (tryFunction) => {
   }
 };
 
-module.exports = { formatArguments, tryValue };
+const cleanupVideos = async () => {
+  console.log('Cleaning videos...');
+  var nowDate = new Date();
+  var deleteDate = nowDate.setDate(nowDate.getDate() - 28);
+  var cleanupDate = nowDate.setDate(nowDate.getDate() - 14);
+
+  videos.deleteMany({
+    dateTime: { $lt: deleteDate },
+  });
+
+  videos.updateMany({
+    dateTime: { $lt: cleanupDate },
+    deletedAt: nowDate,
+  });
+};
+
+module.exports = { formatArguments, tryValue, cleanupVideos };

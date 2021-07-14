@@ -8,11 +8,32 @@ var http = require('http');
 var nodeMediaServer = require('node-media-server');
 var fetch = require('node-fetch');
 var streamMons = require('../models/streamMons.js');
-var { formatArguments, tryValue } = require('../helperFunctions');
+var { formatArguments, tryValue, cleanupVideos } = require('../helperFunctions');
 
 /**
  * Get port from environment and store in Express.
  */
+
+let tasks = []
+
+function retreiveNodesList(){
+ fetch('http://10.10.30.12:3001/api/nodes')
+        .then((response) => response.json())
+        .then((json) => {
+          json.map((node) =>{
+            tasks.push({
+              app: node.name,
+              mode: 'pull',
+              edge: 'rtmp://'+ node.config.ip,
+            })
+            console.log(tasks)
+            
+            }
+
+          )
+        });
+        
+}
 
 var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
@@ -31,20 +52,36 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-new nodeMediaServer({
+setInterval(() => {
+  cleanupVideos();
+}, 900000);
+
+cleanupVideos();
+
+const config = {
   rtmp: {
-    port: 1935,
+    port: 1936,
     chunk_size: 60000,
     gop_cache: true,
     ping: 30,
-    ping_timeout: 60,
+    ping_timeout: 60
   },
   http: {
-    port: 8000,
-    mediaroot: './media',
-    allow_origin: '*',
+    port: 8001,
+    allow_origin: '*'
   },
-}).run();
+  
+relay: {
+  ffmpeg: '/usr/bin/ffmpeg',
+  tasks: tasks
+}
+};
+
+var nms = new NodeMediaServer(config)
+retreiveNodesList()
+    setTimeout(() => {
+      nms.run();  
+    }, 6000);
 
 setInterval(() => {
   fetch('http://rtcc-server.shreveport-it.org:8000/api/server')
