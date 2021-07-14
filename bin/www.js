@@ -8,7 +8,7 @@ var http = require('http');
 var nodeMediaServer = require('node-media-server');
 var fetch = require('node-fetch');
 var streamMons = require('../models/streamMons.js');
-var { formatArguments, tryValue, updateVideos } = require('../helperFunctions');
+var { formatArguments, tryValue } = require('../helperFunctions');
 
 /**
  * Get port from environment and store in Express.
@@ -54,12 +54,6 @@ setInterval(() => {
       new streamMons(json).save();
     });
 }, 10000);
-
-setInterval(() => {
-  updateVideos();
-}, 60000 * 15);
-
-updateVideos();
 
 /**
  * Normalize a port into a number, string, or false.
