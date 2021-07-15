@@ -37,50 +37,48 @@ setInterval(() => {
 
 cleanupVideos();
 
- let tasks = [];
+let tasks = [];
 
- function retreiveNodesList() {
+function retreiveNodesList() {
   fetch('http://rtcc-server.shreveport-it.org/api/nodes')
-     .then((response) => response.json())
-     .then((json) => {
-       json.map((node) => {
-         tasks.push({
-           app: node.name,
-           mode: 'pull',
-           edge: 'rtmp://' + node.config.ip,
-         });
-       });
-     });
- }
+    .then((response) => response.json())
+    .then((json) => {
+      json.map((node) => {
+        tasks.push({
+          app: node.name,
+          mode: 'pull',
+          edge: 'rtmp://' + node.config.ip,
+        });
+      });
+    });
+}
 
- retreiveNodesList();
+retreiveNodesList();
 
- 
-
- const config = {
-   rtmp: {
-     port: 1936,
-     chunk_size: 60000,
-     gop_cache: true,
-     ping: 30,
-     ping_timeout: 60,
-   },
-   http: {
-     port: 8000,
-     allow_origin: '*',
-   },
-
-   relay: {
-     ffmpeg: '/usr/bin/ffmpeg',
-     tasks: tasks,
+const config = {
+  rtmp: {
+    port: 1936,
+    chunk_size: 60000,
+    gop_cache: true,
+    ping: 30,
+    ping_timeout: 60,
   },
- };
+  http: {
+    port: 8000,
+    allow_origin: '*',
+  },
 
- var nms = new nodeMediaServer(config);
+  relay: {
+    ffmpeg: '/usr/bin/ffmpeg',
+    tasks: tasks,
+  },
+};
 
- setTimeout(() => {
-   nms.run();
- }, 6000);
+var nms = new nodeMediaServer(config);
+
+setTimeout(() => {
+  nms.run();
+}, 6000);
 
 /**
  * Normalize a port into a number, string, or false.
