@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
     videos.exists(
       {
         node: video.node,
+        camera: video.camera,
         fileLocation: video.fileLocation,
       },
       function (err, doc) {
