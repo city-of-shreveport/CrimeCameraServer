@@ -37,58 +37,50 @@ setInterval(() => {
 
 cleanupVideos();
 
-// let tasks = [];
+ let tasks = [];
 
-// function retreiveNodesList() {
-//   fetch('')
-//     .then((response) => response.json())
-//     .then((json) => {
-//       json.map((node) => {
-//         tasks.push({
-//           app: node.name,
-//           mode: 'pull',
-//           edge: 'rtmp://' + node.config.ip,
-//         });
-//         console.log(tasks);
-//       });
-//     });
-// }
+ function retreiveNodesList() {
+  fetch('http://rtcc-server.shreveport-it.org/api/nodes')
+     .then((response) => response.json())
+     .then((json) => {
+       json.map((node) => {
+         tasks.push({
+           app: node.name,
+           mode: 'pull',
+           edge: 'rtmp://' + node.config.ip,
+         });
+       });
+     });
+ }
 
-// retreiveNodesList();
+ retreiveNodesList();
 
-// setInterval(() => {
-//   fetch('')
-//     .then((res) => res.json())
-//     .then((json) => {
-//       json.node = 'CrimeCamerServer';
-//       new streamMons(json).save();
-//     });
-// }, 10000);
+ 
 
-// const config = {
-//   rtmp: {
-//     port: 1936,
-//     chunk_size: 60000,
-//     gop_cache: true,
-//     ping: 30,
-//     ping_timeout: 60,
-//   },
-//   http: {
-//     port: 8001,
-//     allow_origin: '*',
-//   },
+ const config = {
+   rtmp: {
+     port: 1936,
+     chunk_size: 60000,
+     gop_cache: true,
+     ping: 30,
+     ping_timeout: 60,
+   },
+   http: {
+     port: 8000,
+     allow_origin: '*',
+   },
 
-//   relay: {
-//     ffmpeg: '/usr/bin/ffmpeg',
-//     tasks: tasks,
-//   },
-// };
+   relay: {
+     ffmpeg: '/usr/bin/ffmpeg',
+     tasks: tasks,
+  },
+ };
 
-// var nms = new nodeMediaServer(config);
+ var nms = new nodeMediaServer(config);
 
-// setTimeout(() => {
-//   nms.run();
-// }, 6000);
+ setTimeout(() => {
+   nms.run();
+ }, 6000);
 
 /**
  * Normalize a port into a number, string, or false.
