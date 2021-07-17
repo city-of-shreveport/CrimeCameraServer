@@ -3,6 +3,11 @@ var fs = require('fs');
 var router = express.Router();
 var videos = require('../models/videos');
 
+router.get('/', async (req, res) => {
+  allVideos = await videos.find({ deletedAt: null }, { node: 1, camera: 1, fileLocation: 1, dateTime: 1 });
+  res.send(allVideos);
+});
+
 router.post('/', async (req, res) => {
   req.body.map((video) => {
     videos.exists(
