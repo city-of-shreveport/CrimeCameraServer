@@ -89,8 +89,8 @@ router.get('/streamingserverstats', async (req, res) => {
 });
 
 router.get('/streamstatistics/:ip', async (req, res) => {
-  fetch('http://10.10.30.10:8000/api/streams')
-    .then((res) => res.json())
-    .then((json) => res.send(json));
+  // fetch('')
+  //   .then((res) => res.json())
+  //   .then((json) => res.send(json));
 });
 module.exports = router;

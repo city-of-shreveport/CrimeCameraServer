@@ -8,13 +8,13 @@ var http = require('http');
 var nodeMediaServer = require('node-media-server');
 var fetch = require('node-fetch');
 var streamMons = require('../models/streamMons.js');
-var { formatArguments, tryValue, updateVideos } = require('../helperFunctions');
+var { formatArguments, tryValue, cleanupVideos } = require('../helperFunctions');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3001');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
@@ -31,9 +31,35 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-new nodeMediaServer({
+setInterval(() => {
+  cleanupVideos();
+}, 900000);
+
+cleanupVideos();
+
+let tasks = [];
+
+function retreiveNodesList() {
+  fetch('http://rtcc-server.shreveport-it.org/api/nodes')
+    .then((response) => response.json())
+    .then((json) => {
+console.log(json)
+      json.map((node) => {
+
+        tasks.push({
+          app: node.name,
+          mode: 'pull',
+          edge: 'rtmp://' + node.config.ip,
+        });
+      });
+    });
+}
+
+
+
+const config = {
   rtmp: {
-    port: 1935,
+    port: 1936,
     chunk_size: 60000,
     gop_cache: true,
     ping: 30,
@@ -41,25 +67,23 @@ new nodeMediaServer({
   },
   http: {
     port: 8000,
-    mediaroot: './media',
     allow_origin: '*',
   },
-}).run();
 
-setInterval(() => {
-  fetch('http://10.10.30.10:8000/api/server')
-    .then((res) => res.json())
-    .then((json) => {
-      json.node = 'CrimeCamerServer';
-      new streamMons(json).save();
-    });
-}, 10000);
+  relay: {
+    ffmpeg: '/usr/bin/ffmpeg',
+    tasks: tasks,
+  },
+};
 
-setInterval(() => {
-  updateVideos();
-}, 60000 * 15);
+var nms = new nodeMediaServer(config);
+setTimeout(() => {
+  retreiveNodesList();
+  setTimeout(() => {
+  nms.run();
+}, 6000);
 
-updateVideos();
+}, 4000);
 
 /**
  * Normalize a port into a number, string, or false.

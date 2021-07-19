@@ -3,6 +3,30 @@ var fs = require('fs');
 var router = express.Router();
 var videos = require('../models/videos');
 
+router.get('/', async (req, res) => {
+  allVideos = await videos.find({ deletedAt: null }, { node: 1, camera: 1, fileLocation: 1, dateTime: 1 });
+  res.send(allVideos);
+});
+
+router.post('/', async (req, res) => {
+  req.body.map((video) => {
+    videos.exists(
+      {
+        node: video.node,
+        camera: video.camera,
+        fileLocation: video.fileLocation,
+      },
+      function (err, doc) {
+        if (!doc) {
+          new videos(video).save();
+        }
+      }
+    );
+  });
+
+  res.send('ok');
+});
+
 router.post('/recordings/', async (req, res) => {
   var response = {};
 
@@ -31,7 +55,7 @@ router.get('/stream/:node/:camera/:file', async (req, res) => {
   var node = req.params.node;
   var camera = req.params.camera;
   var file = req.params.file;
-  var videoPath = `/home/pi/CrimeCameraServer/public/nodes/${node}/${camera}/${file}`;
+  var videoPath = `/home/pi/mounts/${node}/${camera}/${file}`;
   var videoSize = fs.statSync(videoPath).size;
   var chunkSize = 10 ** 6;
   var start = Number(range.replace(/\D/g, ''));
