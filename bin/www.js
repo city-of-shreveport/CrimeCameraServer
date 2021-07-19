@@ -43,7 +43,6 @@ function retreiveNodesList() {
   fetch('http://rtcc-server.shreveport-it.org/api/nodes')
     .then((response) => response.json())
     .then((json) => {
-console.log(json)
       json.map((node) => {
 
         tasks.push({
