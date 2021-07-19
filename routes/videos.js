@@ -74,4 +74,12 @@ router.get('/stream/:node/:camera/:file', async (req, res) => {
   videoStream.pipe(res);
 });
 
+router.get('/stream/:node/:camera/:file/download', async (req, res) => {
+  var node = req.params.node;
+  var camera = req.params.camera;
+  var file = req.params.file;
+  var videoPath = `/home/pi/mounts/${node}/${camera}/${file}`;
+  res.download(videoPath);
+});
+
 module.exports = router;
