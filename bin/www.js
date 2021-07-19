@@ -44,6 +44,7 @@ function retreiveNodesList() {
     .then((response) => response.json())
     .then((json) => {
       json.map((node) => {
+
         tasks.push({
           app: node.name,
           mode: 'pull',
@@ -53,7 +54,7 @@ function retreiveNodesList() {
     });
 }
 
-retreiveNodesList();
+
 
 const config = {
   rtmp: {
@@ -75,10 +76,13 @@ const config = {
 };
 
 var nms = new nodeMediaServer(config);
-
 setTimeout(() => {
+  retreiveNodesList();
+  setTimeout(() => {
   nms.run();
 }, 6000);
+
+}, 4000);
 
 /**
  * Normalize a port into a number, string, or false.
