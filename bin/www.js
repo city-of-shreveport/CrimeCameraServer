@@ -44,7 +44,6 @@ function retreiveNodesList() {
     .then((response) => response.json())
     .then((json) => {
       json.map((node) => {
-
         tasks.push({
           app: node.name,
           mode: 'pull',
@@ -53,8 +52,6 @@ function retreiveNodesList() {
       });
     });
 }
-
-
 
 const config = {
   rtmp: {
@@ -79,9 +76,8 @@ var nms = new nodeMediaServer(config);
 setTimeout(() => {
   retreiveNodesList();
   setTimeout(() => {
-  nms.run();
-}, 6000);
-
+    nms.run();
+  }, 6000);
 }, 4000);
 
 /**
