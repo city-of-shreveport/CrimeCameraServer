@@ -5,7 +5,6 @@
 var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
-var nodeMediaServer = require('node-media-server');
 var fetch = require('node-fetch');
 var streamMons = require('../models/streamMons.js');
 var { formatArguments, tryValue, cleanupVideos } = require('../helperFunctions');
@@ -37,48 +36,6 @@ setInterval(() => {
 
 cleanupVideos();
 
-let tasks = [];
-
-function retreiveNodesList() {
-  fetch('http://rtcc-server.shreveport-it.org/api/nodes')
-    .then((response) => response.json())
-    .then((json) => {
-      json.map((node) => {
-        tasks.push({
-          app: node.name,
-          mode: 'pull',
-          edge: 'rtmp://' + node.config.ip,
-        });
-      });
-    });
-}
-
-const config = {
-  rtmp: {
-    port: 1936,
-    chunk_size: 60000,
-    gop_cache: true,
-    ping: 30,
-    ping_timeout: 60,
-  },
-  http: {
-    port: 8000,
-    allow_origin: '*',
-  },
-
-  relay: {
-    ffmpeg: '/usr/bin/ffmpeg',
-    tasks: tasks,
-  },
-};
-
-var nms = new nodeMediaServer(config);
-setTimeout(() => {
-  retreiveNodesList();
-  setTimeout(() => {
-    nms.run();
-  }, 6000);
-}, 4000);
 
 
 /**
