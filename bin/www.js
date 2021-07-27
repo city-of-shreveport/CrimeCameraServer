@@ -7,7 +7,7 @@ var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
 var fetch = require('node-fetch');
 var streamMons = require('../models/streamMons.js');
-var { formatArguments, tryValue, cleanupVideos } = require('../helperFunctions');
+var { formatArguments, tryValue, cleanupVideos, mountNodes } = require('../helperFunctions');
 
 /**
  * Get port from environment and store in Express.
@@ -36,7 +36,11 @@ setInterval(() => {
 
 cleanupVideos();
 
+setInterval(() => {
+  mountNodes();
+}, 900000);
 
+mountNodes();
 
 /**
  * Normalize a port into a number, string, or false.
