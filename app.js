@@ -1,4 +1,3 @@
-//test edit for git use
 // require basic
 var express = require('express');
 var app = express();
@@ -21,7 +20,7 @@ app.use(cors());
 
 // establish database connection
 mongoose.connect(
-  'mongodb://rtcc-mongo.shreveport-it.org/RTCC',
+  'mongodb://10.10.30.13/RTCC',
   {
     useFindAndModify: false,
     useNewUrlParser: true,
