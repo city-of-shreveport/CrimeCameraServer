@@ -8,7 +8,7 @@ var http = require('http');
 var nodeMediaServer = require('node-media-server');
 var fetch = require('node-fetch');
 var streamMons = require('../models/streamMons.js');
-var { formatArguments, tryValue, cleanupVideos } = require('../helperFunctions');
+var { formatArguments, tryValue, cleanupVideos, mountNodes } = require('../helperFunctions');
 
 /**
  * Get port from environment and store in Express.
@@ -36,6 +36,12 @@ setInterval(() => {
 }, 900000);
 
 cleanupVideos();
+
+setInterval(() => {
+  mountNodes();
+}, 900000);
+
+mountNodes();
 
 let tasks = [];
 
