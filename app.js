@@ -14,13 +14,18 @@ var serversRouter = require('./routes/servers');
 var streamsRouter = require('./routes/streams');
 var videosRouter = require('./routes/videos');
 var cameraConfigRouter = require('./routes/cameraConfig');
+
+// require environment
+require('dotenv').config();
+require('events').EventEmitter.defaultMaxListeners = 100;
+
 // disable cors
 const cors = require('cors');
 app.use(cors());
 
 // establish database connection
 mongoose.connect(
-  'mongodb://rtcc-mongo.shreveport-it.org/RTCC',
+  process.env.MONGO_CONNECTION_STRING,
   {
     useFindAndModify: false,
     useNewUrlParser: true,
