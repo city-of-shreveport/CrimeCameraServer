@@ -6,8 +6,6 @@ var streamingCameras = {};
 var streamMons = require('../models/streamMons.js');
 const fetch = require('node-fetch');
 
-
-
 router.get('/streamingserverstats', async (req, res) => {
   var q = streamMons
     .find({ name: 'rtcc-server' })
@@ -26,10 +24,10 @@ router.get('/streamingserverstats', async (req, res) => {
 });
 
 router.get('/streamstatistics/:ip', async (req, res) => {
-  fetch('http://'+req.params.ip+':8000/api/streams')
-      .then((response) => response.json())
-      .then((json) => {
-         res.send(json);
-      });
+  fetch('http://' + req.params.ip + ':8000/api/streams')
+    .then((response) => response.json())
+    .then((json) => {
+      res.send(json);
+    });
 });
 module.exports = router;

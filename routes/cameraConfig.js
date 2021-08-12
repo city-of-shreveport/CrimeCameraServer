@@ -7,7 +7,7 @@ let authpass = 'UUnv9njxg123';
 let digester = require('request-digest')(user, authpass);
 let digesterHTTP = require('http-digest-client')(user, authpass);
 var nodes = require('../models/nodes');
-let moment = require('moment')
+let moment = require('moment');
 router.get('/snapshot/:nodeName/:camera', async (req, res) => {
   var nodeName = req.params.nodeName;
   var camera = req.params.camera;
@@ -189,8 +189,8 @@ router.get('/setvideoColorConfig/:nodeName/:camera/:setting/:value', async (req,
 
 router.get('/settime/:nodeName/:camera', async (req, res) => {
   //Time format 2016-01-01%2021:02:32 2016-01-01 21:02:32 YYYY-MM-DD HH:MM:SS
-var currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
-console.log(currentDateTime)
+  var currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+  console.log(currentDateTime);
   var nodeName = req.params.nodeName;
   var camera = req.params.camera;
   var time = req.params.time;
