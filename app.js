@@ -20,7 +20,7 @@ app.use(cors());
 
 // establish database connection
 mongoose.connect(
-  'mongodb://10.10.30.13/RTCC',
+  process.env.MONGO_CONNECTION_STRING,
   {
     useFindAndModify: false,
     useNewUrlParser: true,
