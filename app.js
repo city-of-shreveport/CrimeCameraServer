@@ -14,6 +14,10 @@ var serversRouter = require('./routes/servers');
 var streamsRouter = require('./routes/streams');
 var videosRouter = require('./routes/videos');
 var cameraConfigRouter = require('./routes/cameraConfig');
+
+// require .env variables
+require('dotenv').config();
+
 // disable cors
 const cors = require('cors');
 app.use(cors());
