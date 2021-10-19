@@ -6,6 +6,7 @@ var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
 var fetch = require('node-fetch');
+var nodeMediaServer = require('node-media-server');
 var streamMons = require('../models/streamMons.js');
 var { formatArguments, tryValue, cleanupVideos, mountNodes } = require('../helperFunctions');
 
