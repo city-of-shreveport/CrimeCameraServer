@@ -30,6 +30,50 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+let tasks = [];
+
+function retreiveNodesList() {
+  fetch('http://rtcc-server.shreveport-it.org:3000/api/nodes')
+    .then((response) => response.json())
+    .then((json) => {
+      json.map((node) => {
+        tasks.push({
+          app: node.name,
+          mode: 'pull',
+          edge: 'rtmp://' + node.config.ip,
+        });
+      });
+    });
+}
+
+const config = {
+  rtmp: {
+    port: 1936,
+    chunk_size: 60000,
+    gop_cache: true,
+    ping: 30,
+    ping_timeout: 60,
+  },
+  http: {
+    port: 8000,
+    allow_origin: '*',
+  },
+
+  relay: {
+    ffmpeg: '/usr/bin/ffmpeg',
+    tasks: tasks,
+  },
+};
+
+var nms = new nodeMediaServer(config);
+
+setTimeout(() => {
+  retreiveNodesList();
+  setTimeout(() => {
+    nms.run();
+  }, 6000);
+}, 4000);
+
 setInterval(() => {
   cleanupVideos();
 }, 900000);
