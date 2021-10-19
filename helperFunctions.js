@@ -51,7 +51,7 @@ const mountNodes = async () => {
   for (var i = 0; i < nodesToMount.length; i++) {
     await execCommand(`mkdir -p /home/pi/mounts/${nodesToMount[i].config.hostName}`);
     await execCommand(
-      `sshfs -o 'StrictHostKeyChecking no' pi@${nodesToMount[i].config.ip}:/home/pi/videos /home/pi/mounts/${nodesToMount[i].config.hostName}`
+      `sshfs -o 'StrictHostKeyChecking=no' pi@${nodesToMount[i].config.ip}:/home/pi/videos /home/pi/mounts/${nodesToMount[i].config.hostName}`
     );
   }
 };
