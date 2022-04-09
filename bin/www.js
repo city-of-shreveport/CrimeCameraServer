@@ -6,7 +6,7 @@ var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
 var fetch = require('node-fetch');
-var nodeMediaServer = require('node-media-server');
+//var nodeMediaServer = require('node-media-server');
 var streamMons = require('../models/streamMons.js');
 var { formatArguments, tryValue, cleanupVideos, mountNodes } = require('../helperFunctions');
 
@@ -46,7 +46,7 @@ function retreiveNodesList() {
       });
     });
 }
-
+/*
 const config = {
   rtmp: {
     port: 1936,
@@ -67,12 +67,10 @@ const config = {
 };
 
 var nms = new nodeMediaServer(config);
-
+*/
 setTimeout(() => {
   retreiveNodesList();
-  setTimeout(() => {
-    nms.run();
-  }, 6000);
+ 
 }, 4000);
 
 setInterval(() => {

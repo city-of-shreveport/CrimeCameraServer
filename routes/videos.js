@@ -9,20 +9,21 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  req.body.map((video) => {
+  //console.log(req.body)
+ 
     videos.exists(
       {
-        node: video.node,
-        camera: video.camera,
-        fileLocation: video.fileLocation,
+        node: req.body.node,
+        camera: req.body.camera,
+        fileLocation: req.body.fileLocation,
       },
       function (err, doc) {
         if (!doc) {
-          new videos(video).save();
+          new videos(req.body).save();
         }
       }
     );
-  });
+  
 
   res.send('ok');
 });
