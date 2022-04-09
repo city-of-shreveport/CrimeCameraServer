@@ -5,8 +5,8 @@
 var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
-var nodeMediaServer = require('node-media-server');
 var fetch = require('node-fetch');
+var nodeMediaServer = require('node-media-server');
 var streamMons = require('../models/streamMons.js');
 var { formatArguments, tryValue, cleanupVideos, mountNodes } = require('../helperFunctions');
 
@@ -30,18 +30,6 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-
-setInterval(() => {
-  cleanupVideos();
-}, 900000);
-
-cleanupVideos();
-
-setInterval(() => {
-  mountNodes();
-}, 900000);
-
-mountNodes();
 
 let tasks = [];
 
@@ -79,12 +67,25 @@ const config = {
 };
 
 var nms = new nodeMediaServer(config);
+
 setTimeout(() => {
   retreiveNodesList();
   setTimeout(() => {
     nms.run();
   }, 6000);
 }, 4000);
+
+setInterval(() => {
+  cleanupVideos();
+}, 900000);
+
+cleanupVideos();
+
+setInterval(() => {
+  mountNodes();
+}, 900000);
+
+mountNodes();
 
 /**
  * Normalize a port into a number, string, or false.

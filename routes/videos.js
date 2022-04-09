@@ -74,12 +74,91 @@ router.get('/stream/:node/:camera/:file', async (req, res) => {
   videoStream.pipe(res);
 });
 
+router.get('/getlatestVideo/:node/:camera/:time', async (req, res) => {
+  var node = req.params.node;
+  var camera = req.params.camera;
+  var time = req.params.time;
+  videos
+  .find({ node: node, camera: camera })
+  .sort([['createdAt']])
+  .exec(function (err, docs) {
+    if (err) {
+    } else {
+      console.log(docs);
+    }
+  });
+
+  if(time==='15'){
+  videos
+    .find({ node: node, camera: camera})
+    .sort([['createdAt', -1]])
+    .limit(1)
+    .exec(function (err, docs) {
+      if (err) {
+      } else {
+        res.send(docs);
+      }
+    });
+  }
+  if(time==='30'){
+    videos
+      .find({ node: node, camera: camera })
+      .sort([['createdAt', -1]])
+      .limit(2)
+      .exec(function (err, docs) {
+        if (err) {
+        } else {
+          res.send(docs);
+        }
+      });
+    }
+    if(time==='45'){
+      videos
+        .find({ node: node, camera: camera })
+        .sort([['createdAt', -1]])
+        .limit(3)
+        .exec(function (err, docs) {
+          if (err) {
+          } else {
+            res.send(docs);
+          }
+        });
+      }
+      if(time==='60'){
+        videos
+          .find({ node: node, camera: camera })
+          .sort([['createdAt', -1]])
+          .limit(4)
+          .exec(function (err, docs) {
+            if (err) {
+            } else {
+              res.send(docs);
+            }
+          });
+        }
+});
+
+
+
 router.get('/stream/:node/:camera/:file/download', async (req, res) => {
   var node = req.params.node;
   var camera = req.params.camera;
   var file = req.params.file;
   var videoPath = `/home/pi/mounts/${node}/${camera}/${file}`;
-  res.download(videoPath);
+  var options = {
+    root: path.join(__dirname)
+};
+
+res.sendFile(videoPath, options, function (err) {
+    if (err) {
+        next(err);
+    } else {
+        console.log('Sent:', fileName);
+        next();
+    }
+});
 });
 
 module.exports = router;
+
+
