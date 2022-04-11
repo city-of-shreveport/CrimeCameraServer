@@ -1,5 +1,6 @@
 var express = require('express');
 var fs = require('fs');
+var path = require('path');
 var router = express.Router();
 var videos = require('../models/videos');
 
@@ -75,68 +76,51 @@ router.get('/stream/:node/:camera/:file', async (req, res) => {
   videoStream.pipe(res);
 });
 
-router.get('/getlatestVideo/:node/:camera/:time', async (req, res) => {
+router.get('/getlatestVideos/:node', async (req, res) => {
   var node = req.params.node;
   var camera = req.params.camera;
-  var time = req.params.time;
-  videos
-  .find({ node: node, camera: camera })
-  .sort([['createdAt']])
-  .exec(function (err, docs) {
-    if (err) {
-    } else {
-      console.log(docs);
-    }
-  });
 
-  if(time==='15'){
+
+  var videoFilesAllCameras = {
+    camera1:[],
+    camera2:[],
+    camera3:[]
+  }
+ 
   videos
-    .find({ node: node, camera: camera})
-    .sort([['createdAt', -1]])
-    .limit(1)
+    .find({ node: node, camera: "camera1"})
+    .sort([['dateTime', -1]])
+    .limit(8)
     .exec(function (err, docs) {
       if (err) {
       } else {
-        res.send(docs);
-      }
-    });
-  }
-  if(time==='30'){
-    videos
-      .find({ node: node, camera: camera })
-      .sort([['createdAt', -1]])
-      .limit(2)
-      .exec(function (err, docs) {
-        if (err) {
-        } else {
-          res.send(docs);
-        }
-      });
-    }
-    if(time==='45'){
-      videos
-        .find({ node: node, camera: camera })
-        .sort([['createdAt', -1]])
-        .limit(3)
-        .exec(function (err, docs) {
-          if (err) {
-          } else {
-            res.send(docs);
-          }
-        });
-      }
-      if(time==='60'){
+        videoFilesAllCameras.camera1 = docs;
         videos
-          .find({ node: node, camera: camera })
-          .sort([['createdAt', -1]])
-          .limit(4)
+          .find({ node: node, camera: "camera2"})
+          .sort([['dateTime', -1]])
+          .limit(8)
           .exec(function (err, docs) {
             if (err) {
             } else {
-              res.send(docs);
+              videoFilesAllCameras.camera2 = docs;
+              videos
+                .find({ node: node, camera: "camera3"})
+                .sort([['dateTime', -1]])
+                .limit(8)
+                .exec(function (err, docs) {
+                  if (err) {
+                  } else {
+                    videoFilesAllCameras.camera3 = docs;
+                    res.send(videoFilesAllCameras);
+                  }
+                });
             }
           });
-        }
+
+        
+      }
+    });
+ 
 });
 
 
@@ -147,17 +131,11 @@ router.get('/stream/:node/:camera/:file/download', async (req, res) => {
   var file = req.params.file;
   var videoPath = `/home/pi/mounts/${node}/${camera}/${file}`;
   var options = {
-    root: path.join(__dirname)
+    
 };
+ 
+res.download(videoPath);
 
-res.sendFile(videoPath, options, function (err) {
-    if (err) {
-        next(err);
-    } else {
-        console.log('Sent:', fileName);
-        next();
-    }
-});
 });
 
 module.exports = router;
