@@ -14,6 +14,7 @@ const schema = mongoose.Schema({
   camera: { type: String, default: '' },
   hash: { type: String, default: '' },
   dateTime: { type: Date, default: Date.now },
+  backedUpToNode:{type: String, default: '' },
   deletedAt: {
     type: Date,
     default: null,

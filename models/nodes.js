@@ -34,6 +34,7 @@ const schema = mongoose.Schema({
     buddyDriveMountPath: { type: String, default: '' },
     buddyDriveEncryptionKey: { type: String, default: '' },
     serverURL: { type: String, default: '' },
+    currentBuddy:{type: String, default: '' },
     buddyDrives: {
       buddy1: {
         hostName: { type: String, default: '' },
