@@ -13,6 +13,20 @@ router.get('/', async (req, res) => {
   });
 });
 
+router.get('/recentlyCheckedIn', async (req, res) => {
+  nodes.find({
+    lastCheckIn: {
+      $gt: new Date(Date.now() - 86400000)
+    }
+  }, function (err, docs) {
+    if(err) {
+      res.send(err);
+    } else {
+      res.send(docs);      
+    }
+  })
+});
+
 router.post('/', async (req, res) => {
   var newNode = new nodes({
     name: req.body.name,
