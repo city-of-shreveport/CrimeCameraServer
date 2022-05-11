@@ -5,6 +5,7 @@ const { spawn } = require('child_process');
 var nodes = require('../models/nodes');
 var { formatArguments } = require('../helperFunctions');
 const fetch = require('node-fetch');
+const { SlowBuffer } = require('buffer');
 router.get('/', async (req, res) => {
   perfMons.find({}, function (err, docs) {
     if (err) {
@@ -69,5 +70,17 @@ router.get('/:nodeName', async (req, res) => {
       }
     });
 });
-
+router.get('/latest/:nodeName', async (req, res) => {
+  perfMons
+    .find({ node: req.params.nodeName })
+    .sort([['createdAt', -1]])
+    .limit(1)
+    .exec(function (err, docs) {
+      if (err) {
+      } else {
+        res.send(docs);
+        console.log(docs)
+      }
+    });
+});
 module.exports = router;

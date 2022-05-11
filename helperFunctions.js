@@ -84,36 +84,43 @@ const checkNodesBuddy = async () => {
   console.log('Checking if Nodes have a buddy...');
   var nowDate = new Date();
   var checkInDate = nowDate.setMinutes(nowDate.getMinutes() - 15);
-  var nodesToCheck = await nodes.find({ lastCheckIn: { $gt: checkInDate } });
+  var nodesToCheck = await nodes.find();
+  var nodesToCheckDist = await nodes.find();
   var closestDist = 5000;
   var currentNodeLat;
   var currentNodeLong;
   for (var i = 0; i < nodesToCheck.length; i++) {
     //Does node have a buddy its backing up to?
-    if(nodesToCheck.currentBuddy==null){
+    //console.log(nodesToCheck[i].currentBuddy)
+    console.log(nodesToCheck[i].currentBuddy)
+    if(nodesToCheck[i].currentBuddy===undefined){
         //get Location
-        currentNodeLat = nodesToCheck.config.locationLat;
-        currentNodeLong = nodesToCheck.config.locationLong;
+        console.log(nodesToCheck[i].name)
+        currentNodeLat = nodesToCheck[i].config.locationLat;
+        currentNodeLong = nodesToCheck[i].config.locationLong;
         //Check distence from each node
-        for (var d = 0; d < nodesToCheckDist.length; d++) {
-          let distenceAway = calcCrow(currentNodeLat,currentNodeLong,nodesToCheckDist.config.locationLat,nodesToCheckDist.config.locationLong).toFixed(1)
+        
+        for (var d = 0; d < nodesToCheckDist[d].length; d++) {
+          let distenceAway = calcCrow(currentNodeLat,currentNodeLong,  nodesToCheckDist[d].config.locationLat,  nodesToCheckDist[d].config.locationLong)
+          console.log(distenceAway)
           if(distenceAway>closestDist){
+            console.log("closeetrsNode " + nodesToCheckDist[d].name)
             closestDist = distenceAway;
-            if(nodesToCheck.config.buddyDrives.buddy1.hostName==null){
+            if(nodesToCheckDist[d].config.buddyDrives.buddy1.hostName==null){
                 //UPDATE NODE WITH THIS NODES NAME AS BUDDY1
                 //Update Current Node with nodesToCheck.NodeName
-              nodes.findOneAndUpdate({ name: nodesToCheck.name}, { $set: {currentBuddy: nodesToCheckDist.name}}).exec(function (err, node) {
+              nodes.findOneAndUpdate({ name: nodesToCheck[i].name}, { $set: {currentBuddy: nodesToCheckDist[d].name}}).exec(function (err, node) {
                   if (err) {
                     
                   } else {
                     
                   }
                 });
-                nodes.findOneAndUpdate({ name: nodesToCheckDist.name}, { $set: {
+                nodes.findOneAndUpdate({ name: nodesToCheckDist[d].name}, { $set: {
                   config:{
                   buddyDrives:{
-                    buddy2:{
-                      hostName: nodesToCheckDist.name}
+                    buddy1:{
+                      hostName: nodesToCheck[d].name}
                     }
                   }
                 }
@@ -127,21 +134,21 @@ const checkNodesBuddy = async () => {
                
             }
             
-            else if(nodesToCheck.config.buddyDrives.buddy2.hostName==null){
+            else if(nodesToCheckDist[d].config.buddyDrives.buddy2.hostName==null){
                 //UPDATE NODE WITH THIS NODES NAME AS BUDDY2
                 //Update Current Node with nodesToCheck.NodeName
-                 nodes.findOneAndUpdate({ name: nodesToCheck.name}, { $set: {currentBuddy: nodesToCheckDist.name}}).exec(function (err, node) {
+                 nodes.findOneAndUpdate({ name: nodesToCheck.name}, { $set: {currentBuddy: nodesToCheckDist[d].name}}).exec(function (err, node) {
                   if (err) {
                     
                   } else {
                     
                   }
                 });
-                nodes.findOneAndUpdate({ name: nodesToCheckDist.name}, { $set: {
+                nodes.findOneAndUpdate({ name: nodesToCheckDist[d].name}, { $set: {
                   config:{
                     buddyDrives:{
                       buddy2:{
-                        hostName: nodesToCheckDist.name}
+                        hostName: nodesToCheckDist[d].name}
                       }
                     }
                   }

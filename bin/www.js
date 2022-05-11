@@ -6,7 +6,7 @@ var app = require('../app');
 var debug = require('debug')('CrimeCameraServer:server');
 var http = require('http');
 var fetch = require('node-fetch');
-var { formatArguments, tryValue, cleanupVideos, mountNodes } = require('../helperFunctions');
+var { formatArguments, tryValue, cleanupVideos, mountNodes,checkNodesBuddy } = require('../helperFunctions');
 
 /**
  * Get port from environment and store in Express.
@@ -67,20 +67,20 @@ const config = {
 var nms = new nodeMediaServer(config);
 */
 setTimeout(() => {
-  retreiveNodesList();
+  //();
  
 }, 4000);
 
 setInterval(() => {
-  cleanupVideos();
+  //cleanupVideos();
 }, 900000);
 
-cleanupVideos();
+//cleanupVideos();
 
 setInterval(() => {
   mountNodes();
 }, 900000);
-
+//checkNodesBuddy();
 mountNodes();
 
 /**

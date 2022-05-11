@@ -7,10 +7,11 @@ router.get('/', async (req, res) => {
     if (err) {
       res.send(err);
     } else {
+      console.log(docs)
       res.send(docs);
     }
   });
-});
+}); 
 
 router.post('/', async (req, res) => {
   var newServer = new servers({
@@ -21,7 +22,7 @@ router.post('/', async (req, res) => {
     lastCheckIn: new Date(),
   });
   console.log(newServer);
-  await newServer.save();
+   newServer.save();
   res.send(newServer);
 });
 
