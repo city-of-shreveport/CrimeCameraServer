@@ -165,7 +165,9 @@ router.get('/:nodeName', async (req, res) => {
   });
 });
 
-router.post('/:nodeName', async (req, res) => {
+router.post('/updateNode/:nodeName', async (req, res) => {
+  console.log(req.body)
+  console.log("made ithere");
   nodes.findOneAndUpdate({ name: req.params.nodeName }, { $set: req.body }).exec(function (err, node) {
     if (err) {
       res.status(500).send(err);
