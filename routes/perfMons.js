@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
   let nmapScan = null;
   nodePerfmon.cameraStatus = {};
   nodes.findOne({ name: req.body.node }, function (err, doc) {
-    if (doc) {
+  
       nmapScan = spawn('nmap', ['-p', '554-556', doc.config.ip]);
 
       nmapScan.stdout.on('data', (data) => {
@@ -47,14 +47,13 @@ router.post('/', async (req, res) => {
             nodePerfmon.cameraStatus.camera3 = false;
           }
         }
-
+        
+      });
+      nmapScan.stdout.on('close', function(code) {
+      
+        })
         new perfMons(nodePerfmon).save();
         res.end();
-      });
-    } else {
-      new perfMons(nodePerfmon).save();
-      res.end();
-    }
   });
 });
 
@@ -62,7 +61,7 @@ router.get('/:nodeName', async (req, res) => {
   perfMons
     .find({ node: req.params.nodeName })
     .sort([['createdAt', -1]])
-    .limit(20)
+    .limit(10)
     .exec(function (err, docs) {
       if (err) {
       } else {
@@ -83,4 +82,17 @@ router.get('/latest/:nodeName', async (req, res) => {
       }
     });
 });
+router.get('/removeLogs', async (req, res) => {
+  perfMons.deleteMany( { createdAt : {"$lt" : new Date(Date.now() - 2*60*60 * 1000) } })
+  .exec(function(err,docs){
+    console.log(err)
+
+
+  })
+  res.send('good')
+});
+
 module.exports = router;
+
+
+

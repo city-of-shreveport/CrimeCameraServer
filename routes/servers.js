@@ -26,4 +26,30 @@ router.post('/', async (req, res) => {
   res.send(newServer);
 });
 
+
+
+router.get('/:serverName', async (req, res) => {
+  servers.findOne({ name: req.params.serverName }, function (err, doc) {
+    if (err) {
+      res.send(err);
+      console.log(err);
+    } else {
+      res.send(doc);
+      res.end();
+    }
+  });
+});
+
+
+router.post('/updateServer/:serverName', async (req, res) => {
+  console.log(req.body)
+  console.log("made ithere");
+  servers.findOneAndUpdate({ name: req.params.serverName }, { $set: req.body }).exec(function (err, node) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(node);
+    }
+  });
+});
 module.exports = router;
