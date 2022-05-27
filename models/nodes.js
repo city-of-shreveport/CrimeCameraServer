@@ -37,10 +37,10 @@ const schema = mongoose.Schema({
     currentBuddy:{type: String, default: '' },
     buddyDrives: {
       buddy1: {
-        hostName: { type: String, default: '' },
+        hostName: { type: String, default: 'none' },
         sshfsMountPath: { type: String, default: '' },
       },
-      buddy2: { hostName: { type: String, default: '' }, sshfsMountPath: { type: String, default: '' } },
+      buddy2: { hostName: { type: String, default: 'none' }, sshfsMountPath: { type: String, default: '' } },
     },
     cameras: {
       camera1: {

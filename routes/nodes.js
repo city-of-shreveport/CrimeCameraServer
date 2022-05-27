@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var nodes = require('../models/nodes');
-
+var moment = require('moment')
 router.get('/', async (req, res) => {
   nodes.find({}, function (err, docs) {
     if (err) {
@@ -79,58 +79,11 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/seed', async (req, res) => {
+  console.timeLog(req)
   nodeNumbers = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
-    '19',
-    '20',
-    '21',
-    '22',
-    '23',
-    '24',
-    '25',
-    '26',
-    '27',
-    '28',
-    '29',
-    '30',
-    '31',
-    '32',
-    '33',
-    '34',
-    '35',
-    '36',
-    '37',
-    '38',
-    '39',
-    '40',
+    '52',
     '41',
-    '42',
-    '43',
-    '44',
-    '45',
-    '46',
-    '47',
-    '48',
-    '49',
-    '50',
-  ];
+    ];
 
   for (var i = 0; i < nodeNumbers.length; i++) {
     new nodes({
@@ -157,6 +110,7 @@ router.get('/:nodeName', async (req, res) => {
   nodes.findOne({ name: req.params.nodeName }, function (err, doc) {
     if (err) {
       res.send(err);
+      console.log("Error")
       console.log(err);
     } else {
       res.send(doc);
@@ -188,5 +142,104 @@ router.post('/sysInfo/:nodeName', async (req, res) => {
       }
     });
 });
+
+router.post('/configureBuddies/:nodeName', async (req, res) => {
+  function findNext(){
+    
+    nodes.countDocuments().exec(function (err, count) {
+      // Get a random entry
+      var random = Math.floor(Math.random() * count)
+      // Again query all users but only fetch one offset by our random #
+      nodes.findOne().skip(random).exec(
+        function (err, doc) {
+          // Tada! random user
+          var now = moment(new Date()); //todays date
+          var end = moment(doc.lastCheckIn); // another date
+          var duration = moment.duration(now.diff(end));
+          var hours = duration.asHours();
+          console.log(hours)
+          if(hours<96){
+
+          console.log(doc.config.buddyDrives.buddy1.hostName)
+          if(doc.config.buddyDrives.buddy1.hostName==='' || doc.config.buddyDrives.buddy1.hostName===undefined || doc.config.buddyDrives.buddy1.hostName==='none'){
+            let mountPoint = '/home/pi/remote_backups/'+ req.params.nodeName
+            let data = {
+                buddyDrives:{
+                  buddy1:{
+                    hostName: req.params.nodeName,
+                    sshfsMountPath: mountPoint
+                  }
+              }
+            }
+            nodes
+            .findOneAndUpdate({ name: doc.config.hostName }, { $set: {  'config.buddyDrives.buddy1.hostName': req.params.nodeName, 'config.buddyDrives.buddy1.sshfsMountPath':mountPoint} })
+            .exec(function (err, node) {
+              if (err) {
+                console.log(err)
+                res.status(500).send(err);
+              } else {
+                nodes
+                  .findOneAndUpdate({ name: req.params.nodeName}, { $set: { 'config.currentBuddy': doc.config.hostName} })
+                  .exec(function (err, node) {
+                    if (err) {
+                      console.log(err)
+                      res.status(500).send(err);
+                    } else {
+                      console.log(node)
+                      res.status(200).send('Node updated!');
+                      res.end();
+                    }
+                  });
+              }
+            });
+
+          }
+
+
+
+
+
+            else if(doc.config.buddyDrives.buddy2.hostName==='' || doc.config.buddyDrives.buddy2.hostName===undefined || doc.config.buddyDrives.buddy2.hostName==='none'){
+              let mountPoint = '/home/pi/remote_backups/'+ req.params.nodeName
+              let data = {
+                buddyDrives:{
+                  buddy2:{
+                    hostName: req.params.nodeName,
+                    sshfsMountPath: mountPoint
+                  }
+                }
+              }
+              nodes
+              .findOneAndUpdate({ name: doc.config.hostName }, { $set: {  'config.buddyDrives.buddy2.hostName': req.params.nodeName,'config.buddyDrives.buddy2.sshfsMountPath':mountPoint} })
+              .exec(function (err, node) {
+                if (err) {
+                  res.status(500).send(err);
+                } else {
+                  nodes
+                    .findOneAndUpdate({ name: req.params.nodeName}, { $set: { 'config.currentBuddy': doc.config.hostName} })
+                    .exec(function (err, node) {
+                      if (err) {
+                        res.status(500).send(err);
+                      } else {
+                        res.status(200).send('Node updated!');
+                        res.end();
+                      }
+                    });
+                }
+              });
+            
+            }
+          else{
+            findNext();
+          }  
+        }
+        else{findNext();}        
+      })
+    })
+  }
+  findNext();
+});
+
+
 
 module.exports = router;
