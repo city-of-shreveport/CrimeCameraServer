@@ -14,9 +14,11 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/recentlyCheckedIn', async (req, res) => {
+  var timeframe = 60 * 60 * 1000; //One Hour
+  
   nodes.find({
     lastCheckIn: {
-      $gt: new Date(Date.now() - 86400000)
+      $gt: new Date(Date.now() - timeframe)
     }
   }, function (err, docs) {
     if(err) {
