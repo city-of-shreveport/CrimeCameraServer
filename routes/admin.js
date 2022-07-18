@@ -26,7 +26,7 @@ const adminJs = new AdminJS({
                        'config.buddyDriveMountPath',
                        'config.buddyDriveEncryptionKey'],
       
-      showProperties: ['name', 'config.ip', 'config.locationLat', 'config.locationLong', 
+      showProperties: ['name', 'config.ip', 'lastCheckIn', 'config.locationLat', 'config.locationLong', 
                        'config.videoDriveDevicePath', 
                        'config.videoDriveMountPath',
                        'config.videoDriveEncryptionKey',

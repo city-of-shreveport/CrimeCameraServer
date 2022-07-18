@@ -191,6 +191,18 @@ router.post('/:nodeName', async (req, res) => {
   });
 });
 
+router.post('/checkin/:hostname', async(req, res) => {
+  nodes
+    .findOneAndUpdate({ "config.hostName": req.params.hostname }, { $set: { lastCheckIn: new Date() } })
+    .exec(function (err, node) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send('Node updated!');
+      }
+    });
+})
+
 router.post('/sysInfo/:nodeName', async (req, res) => {
   nodes
     .findOneAndUpdate({ name: req.params.nodeName }, { $set: { lastCheckIn: new Date(), sysInfo: req.body } })
